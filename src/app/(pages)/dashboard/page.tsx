@@ -48,7 +48,7 @@
                 birthDate: item.birthday.toLocaleDateString(), // Exibindo as datas formatadas
                 deathDate: item.deathday.toLocaleDateString(),
                 biography: item.biography ?? "", // Atribui uma string vazia se biography for null
-                imageUrl: item.profileImg, // Ajustar para a imagem real
+                imageUrl: item.profileImg ?? "", // Ajustar para a imagem real
               }}
             />
           </div>
