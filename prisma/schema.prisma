@@ -1,0 +1,157 @@
+datasource db {
+  provider = "postgresql" // ou "sqlite" se preferir
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String            @id @default(cuid())
+  name            String?
+  email           String            @unique
+  emailVerified   DateTime?
+  image           String?
+  password        String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  accounts        Account[]
+  sessions        Session[]
+  profiles        Profile[]
+  orders          Order[]
+  subscriptions   Subscription[] // Adicione este campo para a relação com Subscription
+  MemoriaProfiles MemoriaProfiles[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model MemoriaProfiles {
+  id         String   @id @default(uuid())
+  slug       String   @unique
+  name       String
+  profileImg String?
+  images     String[]
+  birthday   DateTime
+  deathday   DateTime
+  biography  String?
+  views      Int
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Views {
+  id Int @id @default(autoincrement())
+  profileId  String
+  date    DateTime
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  name       String
+  biography  String
+  images     String[]
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  paymentId  String?  @unique // Campo único para busca
+  isApproved Boolean  @default(false)
+}
+
+model Subscription {
+  id              Int       @id @default(autoincrement())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  plan            String
+  active          Boolean   @default(false)
+  startDate       DateTime?
+  endDate         DateTime?
+  qrCodes         Int       @default(0)
+  stripeInvoiceId String?   @unique // Torne-o único para busca
+}
+
+model Order {
+  id           Int            @id @default(autoincrement())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  products     Product[]
+  totalPrice   Float
+  status       String // Pending, Paid, Shipped
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  transactions Transaction[] // Adicione este campo para a relação com Transaction
+  OrderProduct OrderProduct[]
+}
+
+model Product {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique // Torna o campo name único
+  description  String
+  price        Float
+  stock        Int            @default(0)
+  orders       Order[]
+  OrderProduct OrderProduct[]
+}
+
+model OrderProduct {
+  orderId   Int
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([orderId, productId])
+}
+
+enum TransactionStatus {
+  Success
+  Failed
+}
+
+model Transaction {
+  id        Int               @id @default(autoincrement())
+  orderId   Int
+  order     Order             @relation(fields: [orderId], references: [id])
+  amount    Float
+  status    TransactionStatus
+  createdAt DateTime          @default(now())
+}
+
+model FinancialReport {
+  id          Int      @id @default(autoincrement())
+  totalIncome Float    @default(0)
+  totalSales  Int      @default(0)
+  date        DateTime @default(now())
+}
