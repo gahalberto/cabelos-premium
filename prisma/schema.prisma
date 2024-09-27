@@ -18,10 +18,85 @@ model User {
   updatedAt       DateTime          @updatedAt
   accounts        Account[]
   sessions        Session[]
-  profiles        Profile[]
-  orders          Order[]
-  subscriptions   Subscription[] // Adicione este campo para a relação com Subscription
   MemoriaProfiles MemoriaProfiles[]
+}
+
+model MemoriaProfiles {
+  id         String     @id @default(uuid())
+  slug       String     @unique
+  name       String?
+  profileImg String?
+  images     String[]
+  birthday   DateTime?
+  deathday   DateTime?
+  biography  String?
+  views      Int      @default(0)
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+  orders     Order[]    // Adicione este campo para criar a relação inversa com o modelo `Order`
+}
+
+model Subscription {
+  id              Int            @id @default(autoincrement())
+  profileId       Int
+  plan            Plan           // Relaciona a assinatura com o plano (Basic, Silver, Premium)
+  active          Boolean        @default(false)
+  startDate       DateTime?
+  endDate         DateTime?
+  qrCodes         Int            @default(0)
+  stripeInvoiceId String?        @unique
+}
+
+model Order {
+  id           Int            @id @default(autoincrement())
+  profileId    String          // Alterado de Int para String para corresponder ao id da tabela MemoriaProfiles
+  profile      MemoriaProfiles @relation(fields: [profileId], references: [id]) // Atualizando a relação com o campo correto
+  products     Product[]
+  totalPrice   Float
+  status       String          // Pending, Paid, Shipped
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  transactions Transaction[]   // Relação com a tabela Transaction
+  OrderProduct OrderProduct[]
+}
+
+model Product {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  description  String
+  price        Float
+  stock        Int            @default(0)
+  orders       Order[]
+  OrderProduct OrderProduct[]
+}
+
+model OrderProduct {
+  orderId   Int
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([orderId, productId])
+}
+
+enum Plan {
+  Basic
+  Silver
+  Premium
+}
+
+enum TransactionStatus {
+  Success
+  Failed
+}
+
+model Transaction {
+  id        Int               @id @default(autoincrement())
+  orderId   Int
+  order     Order             @relation(fields: [orderId], references: [id])
+  amount    Float
+  status    TransactionStatus
+  createdAt DateTime          @default(now())
 }
 
 model Account {
@@ -60,93 +135,10 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model MemoriaProfiles {
-  id         String   @id @default(uuid())
-  slug       String   @unique
-  name       String
-  profileImg String?
-  images     String[]
-  birthday   DateTime
-  deathday   DateTime
-  biography  String?
-  views      Int
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-}
-
 model Views {
   id Int @id @default(autoincrement())
   profileId  String
   date    DateTime
-}
-
-model Profile {
-  id         Int      @id @default(autoincrement())
-  name       String
-  biography  String
-  images     String[]
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  paymentId  String?  @unique // Campo único para busca
-  isApproved Boolean  @default(false)
-}
-
-model Subscription {
-  id              Int       @id @default(autoincrement())
-  userId          String
-  user            User      @relation(fields: [userId], references: [id])
-  plan            String
-  active          Boolean   @default(false)
-  startDate       DateTime?
-  endDate         DateTime?
-  qrCodes         Int       @default(0)
-  stripeInvoiceId String?   @unique // Torne-o único para busca
-}
-
-model Order {
-  id           Int            @id @default(autoincrement())
-  userId       String
-  user         User           @relation(fields: [userId], references: [id])
-  products     Product[]
-  totalPrice   Float
-  status       String // Pending, Paid, Shipped
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  transactions Transaction[] // Adicione este campo para a relação com Transaction
-  OrderProduct OrderProduct[]
-}
-
-model Product {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique // Torna o campo name único
-  description  String
-  price        Float
-  stock        Int            @default(0)
-  orders       Order[]
-  OrderProduct OrderProduct[]
-}
-
-model OrderProduct {
-  orderId   Int
-  productId Int
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
-
-  @@id([orderId, productId])
-}
-
-enum TransactionStatus {
-  Success
-  Failed
-}
-
-model Transaction {
-  id        Int               @id @default(autoincrement())
-  orderId   Int
-  order     Order             @relation(fields: [orderId], references: [id])
-  amount    Float
-  status    TransactionStatus
-  createdAt DateTime          @default(now())
 }
 
 model FinancialReport {

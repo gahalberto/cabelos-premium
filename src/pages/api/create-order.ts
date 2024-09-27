@@ -3,14 +3,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { userId, product, totalPrice } = req.body;
+    const { profileId, product, totalPrice } = req.body;
 
     try {
       // Log para capturar os dados recebidos na requisição
-      console.log("Dados recebidos na criação do pedido:", { userId, product, totalPrice });
+      console.log("Dados recebidos na criação do pedido:", { profileId, product, totalPrice });
 
       // Verifica se todos os campos obrigatórios estão presentes
-      if (!userId || !product || !totalPrice) {
+      if (!profileId || !product || !totalPrice) {
         console.error("Campos obrigatórios ausentes");
         return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
       }
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Criação do pedido no banco de dados
       const order = await db.order.create({
         data: {
-          userId,
+          profileId,
           products: {
             connect: [{ id: productData.id }], // Conecta o pedido ao produto pelo seu id
           },

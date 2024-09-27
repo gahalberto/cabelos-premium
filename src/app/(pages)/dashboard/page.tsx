@@ -44,9 +44,9 @@
             <FollowingPointerDemo
               profile={{
                 id: item.id,
-                name: item.name,
-                birthDate: item.birthday.toLocaleDateString(), // Exibindo as datas formatadas
-                deathDate: item.deathday.toLocaleDateString(),
+                name: item.name || 'Edite seu perfil!',
+                birthDate: item.birthday ? item.birthday.toLocaleDateString() : "", // Verifica se birthday existe antes de chamar toLocaleDateString
+                deathDate: item.deathday ? item.deathday.toLocaleDateString() : "", // Verifica se deathday existe antes de chamar toLocaleDateString
                 biography: item.biography ?? "", // Atribui uma string vazia se biography for null
                 imageUrl: item.profileImg ?? "", // Ajustar para a imagem real
               }}

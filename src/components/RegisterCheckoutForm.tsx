@@ -1,3 +1,4 @@
+import { createProfile } from "@/app/_actions/createProfile";
 import { registerUser } from "@/app/_actions/register/postRegister";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
@@ -64,6 +65,11 @@ const RegisterCheckout = ({ product }: { product: string }) => {
 
                 const stripe = await stripePromise;
 
+                console.log("CRIANDO PERFIL....")
+                const profile = await createProfile({ userId: updatedSession.user.id });
+                
+                console.log("PERFIL CRIADO", profile.id)
+
                 console.log("[LOG] Criando pedido no banco de dados...");
                 const orderResponse: Response = await fetch('/api/create-order', {
                     method: 'POST',
@@ -71,7 +77,7 @@ const RegisterCheckout = ({ product }: { product: string }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        userId: updatedSession.user.id,  // Usando a sessão atualizada
+                        profileId: profile.id,  // Agora usando o ID do perfil criado
                         product: product,
                         totalPrice: 100,
                     }),
@@ -211,13 +217,6 @@ const RegisterCheckout = ({ product }: { product: string }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <button
-                            type="submit"
-                            className="w-full flex text-center justify-center bg-orange-500 text-white p-2 rounded hover:bg-orange-400 transition"
-                        >
-                            Continuar com <Image src={'/images/Logo_PagBank.png'} width={80} height={80} alt="" />
-                        </button>
-
                         <button
                             onClick={handleSubmit(onSubmit)}
                             className="w-full flex text-center justify-center bg-blue-300 text-white p-2 rounded hover:bg-blue-300 transition"
