@@ -9,6 +9,7 @@ type ProfilePropsType = {
         deathDate: string;
         biography: string;
         imageUrl: string;
+        status: string
     };
 };
 
@@ -35,7 +36,8 @@ export function FollowingPointerDemo({ profile }: ProfilePropsType) {
                             {profile.name}
                         </h2>
                         <h2 className="font-normal my-4 text-sm text-zinc-500">
-                            {profile.biography.slice(0, 100)}...
+                        {(profile.status === 'Paid' && profile.name == '') ? 'Seu perfil foi aprovado, comece agora mesmo editando abaixo!' : `${profile.biography.slice(0, 100)}...`}
+                        {(profile.status === 'Pending') ? 'O Pagamento do seu perfil está pendente! Tente novamente mais tarde, enviaremos um  e-mail quando for aprovado! Mas enquanto isso você pode começar a editar o perfil!' : `${profile.biography.slice(0, 100)}...`}
                         </h2>
                         <div className="flex flex-row justify-between items-center mt-10">
                             <span className="text-sm text-gray-500">
@@ -44,7 +46,7 @@ export function FollowingPointerDemo({ profile }: ProfilePropsType) {
 
                             </span>
                             <div className="relative z-10 px-6 py-2 bg-black text-white font-bold rounded-xl block text-xs">
-                                Editar
+                            {profile.name != '' ? 'Editar Perfil' : 'Finalize o perfil '}
                             </div>
                         </div>
                     </div>
