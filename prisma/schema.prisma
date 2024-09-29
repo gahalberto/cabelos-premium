@@ -22,41 +22,43 @@ model User {
 }
 
 model MemoriaProfiles {
-  id         String     @id @default(uuid())
-  slug       String     @unique
+  id         String    @id @default(uuid())
+  slug       String    @unique
   name       String?
   profileImg String?
   images     String[]
   birthday   DateTime?
   deathday   DateTime?
   biography  String?
-  views      Int      @default(0)
+  views      Int       @default(0)
   userId     String
-  user       User       @relation(fields: [userId], references: [id])
-  orders     Order[]    // Adicione este campo para criar a relação com Order
+  user       User      @relation(fields: [userId], references: [id])
+  orders     Order[] // Relação com pedidos
+  paymentId  String? // Campo opcional para armazenar o ID do pagamento do Stripe
+  isApproved Boolean   @default(false) // Adiciona o campo isApproved
 }
 
 model Subscription {
-  id              Int            @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   profileId       Int
-  plan            Plan           // Relaciona a assinatura com o plano (Basic, Silver, Premium)
-  active          Boolean        @default(false)
+  plan            Plan // Relaciona a assinatura com o plano (Basic, Silver, Premium)
+  active          Boolean   @default(false)
   startDate       DateTime?
   endDate         DateTime?
-  qrCodes         Int            @default(0)
-  stripeInvoiceId String?        @unique
+  qrCodes         Int       @default(0)
+  stripeInvoiceId String?   @unique
 }
 
 model Order {
-  id           Int            @id @default(autoincrement())
-  profileId    String          // Alterado de Int para String para corresponder ao id da tabela MemoriaProfiles
+  id           Int             @id @default(autoincrement())
+  profileId    String // Alterado de Int para String para corresponder ao id da tabela MemoriaProfiles
   profile      MemoriaProfiles @relation(fields: [profileId], references: [id]) // Relacionando com MemoriaProfiles
   products     Product[]
   totalPrice   Float
-  status       String          // Pending, Paid, Shipped
+  status       String // Pending, Paid, Shipped
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
-  transactions Transaction[]   // Relação com a tabela Transaction
+  transactions Transaction[] // Relação com a tabela Transaction
   OrderProduct OrderProduct[]
 }
 
@@ -136,9 +138,9 @@ model VerificationToken {
 }
 
 model Views {
-  id Int @id @default(autoincrement())
-  profileId  String
-  date    DateTime
+  id        Int      @id @default(autoincrement())
+  profileId String
+  date      DateTime
 }
 
 model FinancialReport {

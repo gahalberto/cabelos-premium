@@ -34,12 +34,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log(`Pagamento realizado com sucesso: ${paymentIntent.id}`);
 
         // Atualize o perfil no banco de dados após o pagamento
-        const profile = await db.profile.findFirst({
+        const profile = await db.memoriaProfiles.findFirst({
           where: { paymentId: paymentIntent.id },
         });
 
         if (profile) {
-          await db.profile.update({
+          await db.memoriaProfiles.update({
             where: { id: profile.id }, // Agora você usa o id do Profile encontrado
             data: { isApproved: true },
           });
@@ -91,3 +91,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end('Method Not Allowed');
   }
 }
+
