@@ -27,9 +27,11 @@ model MemoriaProfiles {
   name       String?
   profileImg String?
   images     String[]
+  videoUrl   String?
   birthday   DateTime?
   deathday   DateTime?
   biography  String?
+  phrase     String?
   views      Int       @default(0)
   userId     String
   user       User      @relation(fields: [userId], references: [id])

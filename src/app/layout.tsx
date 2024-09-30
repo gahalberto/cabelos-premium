@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google"
 import "./globals.css"
 import AuthProvider from "./providers/auth"
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/toaster"
 import Footer from "@/components/Footer"
 import { NavigationMenuDemo } from "@/components/Menu"
 import '@fontsource/roboto/300.css';

@@ -3,7 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/app/_lib/utils";
 import { Icons } from "@/components/icons";
-import { HomeIcon, InfoIcon, LogOutIcon, MailIcon } from "lucide-react";
+import { HomeIcon, InfoIcon, LayoutDashboardIcon, LogOutIcon, MailIcon } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -102,7 +102,7 @@ export function NavigationMenuDemo() {
               <SheetHeader>
                 <SheetTitle>MENU</SheetTitle>
                 <SheetDescription>
-                  Aqui está o conteúdo do menu lateral.
+                  Sua conta
                 </SheetDescription>
               </SheetHeader>
               <div className="flex items-center justify-between gap-3 border-b border-gray-300 py-5">                {data?.user ? (
@@ -147,6 +147,19 @@ export function NavigationMenuDemo() {
 
 
               <div className="flex flex-col space-y-2 mt-5">
+                {data?.user.id && (
+                  <div>
+                    <Link
+                      href="/dashboard"
+                      className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
+                    >
+                      <LayoutDashboardIcon className="w-5 h-5" />
+                      Seus perfis
+                    </Link>
+
+                  </div>
+                )}
+
                 <Link
                   href="/"
                   className="p-3 text-black hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
@@ -171,9 +184,9 @@ export function NavigationMenuDemo() {
 
                 <div
                   className="cursor-pointer p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
-                onClick={() => signOut()}
+                  onClick={() => signOut()}
                 >
-                  <LogOutIcon /> Sair 
+                  <LogOutIcon /> Sair
                 </div>
 
               </div>
