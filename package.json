@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node --transpile-only --loader ts-node/esm prisma/seed.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
