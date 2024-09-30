@@ -39,7 +39,7 @@ const RegisterCheckout = ({ product }: { product: string }) => {
         try {
             console.log("[LOG] Tentando registrar usuário...");
             const response = await registerUser(data);
-            
+
             if (response) {
                 console.log("[LOG] Usuário registrado com sucesso, tentando logar...");
                 const signInResult = await signIn("credentials", {
@@ -47,11 +47,11 @@ const RegisterCheckout = ({ product }: { product: string }) => {
                     email: data.email,
                     password: data.password,
                 });
-    
+
                 if (!signInResult || signInResult.error) {
                     throw new Error("[ERROR] Erro ao fazer login do usuário após registro");
                 }
-    
+
                 console.log("[LOG] Login bem-sucedido", signInResult);
 
                 // Esperar a sessão ser atualizada corretamente
@@ -67,7 +67,7 @@ const RegisterCheckout = ({ product }: { product: string }) => {
 
                 console.log("CRIANDO PERFIL....")
                 const profile = await createProfile({ userId: updatedSession.user.id });
-                
+
                 console.log("PERFIL CRIADO", profile.id)
 
                 console.log("[LOG] Criando pedido no banco de dados...");
@@ -107,16 +107,18 @@ const RegisterCheckout = ({ product }: { product: string }) => {
                 console.log("[LOG] Sessão de checkout criada com sucesso", stripeSession);
 
                 const result = await stripe!.redirectToCheckout({ sessionId: stripeSession.id });
-                if (result.error) {
-                    setError(result.error.message ?? "[ERROR] Ocorreu um erro desconhecido");
-                }
+                console.error("Erro ao redirecionar para o checkout do Stripe", result.error);
+                setError(result.error.message ?? "[ERROR] Ocorreu um erro desconhecido");
+            } else {
+                console.log("Redirecionamento bem-sucedido");
             }
+            
         } catch (err) {
             console.error("[ERROR] Erro no processo de registro ou checkout", err);
             setError("Ocorreu um erro ao registrar ou redirecionar para o checkout: " + (err as Error).message);
         }
     };
-          
+
     if (status === "loading") {
         return <p>Carregando...</p>;
     }
