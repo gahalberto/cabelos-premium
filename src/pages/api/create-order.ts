@@ -15,6 +15,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
       }
 
+      // Verifica se o perfil existe antes de criar o pedido
+      const profile = await db.memoriaProfiles.findUnique({
+        where: { id: profileId },
+      });
+
+      if (!profile) {
+        console.error("Perfil não encontrado");
+        return res.status(404).json({ error: 'Perfil não encontrado' });
+      }
+
       // Busca o produto pelo nome, usando ProductWhereInput
       const productData = await db.product.findFirst({
         where: { name: product }, // Busca o produto pelo nome
