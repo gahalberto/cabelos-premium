@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Card, CardContent, CardHeader, TextField, Button, MenuItem, Select, FormControl, InputLabel, FormHelperText } from "@mui/material"
+import { Card, CardContent, CardHeader, TextField, Button, MenuItem, Select, FormControl, InputLabel, FormHelperText, Divider } from "@mui/material"
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 import { CardDescription, CardTitle } from "./ui/card"
@@ -115,6 +115,7 @@ export function EditProfileForm({ profileId }: ProfilePropsType) {
                     <CardDescription>Atualize as informações sobre seu ente querido.</CardDescription>
                 </CardHeader>
                 <CardContent>
+                <Divider className="text-xl mb-10">Informações do Perfil do ente-querido</Divider>
                     {/* Renderizar o formulário somente após carregar os dados */}
                     {profileData && (
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -287,7 +288,7 @@ export function EditProfileForm({ profileId }: ProfilePropsType) {
 
                             {/* Botão de Submissão */}
                             <Button type="submit" variant="contained" color="primary">
-                                Salvar
+                                Salvar Informações
                             </Button>
                         </form>
                     )}

@@ -1,5 +1,5 @@
 "use client"
-import { Button, Card, CardContent, CardHeader, ImageList, ImageListItem } from "@mui/material";
+import { Avatar, Button, Card, CardContent, CardHeader, Divider, IconButton, ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
 import { CardDescription, CardTitle } from "./ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,10 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { useEffect, useState } from "react";
 import { fetchProfileData } from "@/app/_actions/fetchProfileData";
+import { InfoIcon } from "lucide-react";
+import { DeleteForever } from "@mui/icons-material";
+import { DeleteProfilePhoto } from "@/app/_actions/deleteProfilePhoto";
+import Image from "next/image";
 
 const imageUploadSchema = z.object({
     profileImg: z.any().optional(), // Campo para imagem de perfil
@@ -42,31 +46,33 @@ const ImageUploud = ({ profileId }: ProfilePropsType) => {
     const { toast } = useToast()
     const [profileData, setProfileData] = useState<z.infer<typeof formSchema> | null>(null)
 
-    useEffect(() => {
-        async function loadProfileData() {
-            try {
-                const profile = await fetchProfileData(profileId);
+    async function loadProfileData() {
+        try {
+            const profile = await fetchProfileData(profileId);
 
-                const birthday = profile.birthday ? new Date(profile.birthday) : new Date();
-                const deathday = profile.deathday ? new Date(profile.deathday) : null;
+            const birthday = profile.birthday ? new Date(profile.birthday) : new Date();
+            const deathday = profile.deathday ? new Date(profile.deathday) : null;
 
-                setProfileData({
-                    profileName: profile.name || "",
-                    phrase: profile.phrase || "",
-                    biography: profile.biography || "",
-                    birthDay: birthday.getDate(),
-                    birthMonth: birthday.getMonth() + 1,
-                    birthYear: birthday.getFullYear(),
-                    deathDay: deathday ? deathday.getDate() : 1,
-                    deathMonth: deathday ? deathday.getMonth() + 1 : 1,
-                    deathYear: deathday ? deathday.getFullYear() : 1900,
-                    images: profile.images || [] // Certifique-se de que está buscando as imagens corretamente
-                });
-            } catch (error) {
-                console.error("Erro ao carregar os dados do perfil:", error);
-            }
+            setProfileData({
+                profileName: profile.name || "",
+                phrase: profile.phrase || "",
+                biography: profile.biography || "",
+                birthDay: birthday.getDate(),
+                birthMonth: birthday.getMonth() + 1,
+                birthYear: birthday.getFullYear(),
+                deathDay: deathday ? deathday.getDate() : 1,
+                deathMonth: deathday ? deathday.getMonth() + 1 : 1,
+                deathYear: deathday ? deathday.getFullYear() : 1900,
+                profileImg: profile.profileImg || "", // Adicionando o campo de imagem de perfil
+                images: profile.images || [] // Certifique-se de que está buscando as imagens corretamente
+            });
+        } catch (error) {
+            console.error("Erro ao carregar os dados do perfil:", error);
         }
+    }
 
+
+    useEffect(() => {
         loadProfileData();
     }, [profileId]);
 
@@ -92,7 +98,7 @@ const ImageUploud = ({ profileId }: ProfilePropsType) => {
                 method: 'POST',
                 body: formData,
             });
-
+            loadProfileData();
             toast({
                 variant: "destructive",
                 title: "Imagens Atualizadas com Sucesso",
@@ -110,18 +116,31 @@ const ImageUploud = ({ profileId }: ProfilePropsType) => {
         }
     }
 
+
+    const handleDeletePhoto = async (imageUrl: string) => {
+        if (confirm("Você tem certeza que deseja excluir essa foto?")) {
+            const deletePhoto = await DeleteProfilePhoto(profileId, imageUrl);
+            if (deletePhoto) {
+                loadProfileData();
+                toast({
+                    variant: "destructive",
+                    title: "Foto Deletada com sucesso!",
+                });
+
+            }
+        }
+    }
+
     return (
         <>
             {/* Card de Upload de Imagens */}
-            <Card className="mt-10">
-                <CardHeader>
-                    <CardTitle>Upload de Imagens</CardTitle>
-                    <CardDescription>Envie a imagem de perfil e outras imagens.</CardDescription>
-                </CardHeader>
-                <CardContent>
+            <Card className="" >
+                <CardContent className="flex-col justify-center">
                     <form onSubmit={handleImageSubmit(onImageSubmit)} className="space-y-4">
                         <div>
-                            <label htmlFor="profileImg">Imagem de Perfil</label>
+                            <label htmlFor="profileImg">
+                                {profileData?.profileImg ? 'Mudar a foto do perfil' : 'Envie uma foto de Perfil'}
+                            </label>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -131,7 +150,9 @@ const ImageUploud = ({ profileId }: ProfilePropsType) => {
                         </div>
 
                         <div>
-                            <label htmlFor="images">Imagens Adicionais</label>
+                            <label htmlFor="images">
+                            {profileData?.images ? 'Adicionar fotos ao Albúm' : 'Envie suas primeiras fotos ao Albúm'}
+                            </label>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -143,17 +164,33 @@ const ImageUploud = ({ profileId }: ProfilePropsType) => {
 
                         {/* Botão de Submissão */}
                         <Button type="submit" variant="contained" color="primary">
-                            Atualizar Informações
+                            Enviar fotos
                         </Button>
                     </form>
+                    <Divider className="text-xl mb-6 mt-10">Foto Principal do Perfil</Divider>
 
-                    <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+                    <div className="flex justify-center">
+                        <Avatar className="w-48 h-48 mb-10 flex shadow-black shadow-md" alt='oie' src={`/uploads/${profileData?.profileImg}`} />
+                    </div>
+
+                    <Divider className="text-xl mb-6 mt-10">Fotos do Albúm</Divider>
+
+                    <ImageList sx={{ width: 550, height: 450 }} className="mt-10">
                         {profileData?.images?.map((item: string, index: number) => (
                             <ImageListItem key={index}>
                                 <img
                                     src={`/uploads/${item}`} // Corrigindo a fonte da imagem
                                     alt={`Imagem ${index + 1}`} // Dando um valor padrão para o alt
                                     loading="lazy"
+                                />
+                                <ImageListItemBar
+                                    subtitle={item}
+                                    actionIcon={
+                                        <Button size="small" variant="contained" color="error"
+                                            onClick={() => handleDeletePhoto(item)}
+                                        >
+                                            <DeleteForever /></Button>
+                                    }
                                 />
                             </ImageListItem>
                         ))}
