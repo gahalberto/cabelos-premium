@@ -79,7 +79,7 @@ export function NavigationMenuDemo() {
   const handleLoginWithGoogleClick = async () => await signIn("google");
 
   return (
-    <div className="bg-gray-200 shadow fixed top-0 left-0 w-full z-50">
+    <div className="bg-gray-200 shadow  w-full z-50">
       {/* Container flex para alinhar logotipo à esquerda e menu ao centro */}
       <div className="flex items-center justify-between p-4">
         {/* Logotipo à esquerda */}

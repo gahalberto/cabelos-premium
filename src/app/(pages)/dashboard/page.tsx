@@ -3,7 +3,6 @@
 import { getProfilesByUser } from "@/app/_actions/getProfilesByUser";
 import { FollowingPointerDemo } from "@/components/dashboardPerfil";
 import { Button } from "@mui/material";
-import { MemoriaProfiles } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 

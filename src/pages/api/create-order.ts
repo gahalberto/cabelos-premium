@@ -16,9 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Verifica se o perfil existe antes de criar o pedido
-      const profile = await db.memoriaProfiles.findUnique({
-        where: { id: profileId },
+      const profile = await db.memoriaProfiles.findFirst({
+        where: { userId: profileId },
       });
+
+      console.log("encontrou perfil")
 
       if (!profile) {
         console.error("Perfil não encontrado");
@@ -39,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Criação do pedido no banco de dados
       const order = await db.order.create({
         data: {
-          profileId,
+          profileId: profile.id,
           products: {
             connect: [{ id: productData.id }], // Conecta o pedido ao produto pelo seu id
           },

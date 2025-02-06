@@ -27,7 +27,7 @@ const HeaderBanner = () => {
             Com o InMemorian, crie homenagens digitais para eternizar a memória dos seus entes queridos. Personalize uma página com fotos, biografias e recordações especiais que manterão viva a lembrança de quem sempre fará parte de sua história.
           </p>
           {/* Espaçamento entre o texto e o botão */}
-          <Button className="w-70 mt-6 bg-orange-400">Comece Agora - Crie Sua Homenagem</Button>
+          <Button className="w-70 mt-10 bg-blue-400">Comece Agora - Crie Sua Homenagem</Button>
         </div>
       </div>
     </div>

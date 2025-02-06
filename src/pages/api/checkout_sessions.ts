@@ -3,25 +3,23 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import stripe from '@/app/_lib/stripe';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { plan, orderId } = req.body;  // Agora recebemos o orderId também
+  const { orderId } = req.body;  // Agora recebemos o orderId também
 
   // Substitua pelos Price IDs reais do Stripe
-  const priceMap: Record<string, string> = {
-    basic: 'price_1PzQxlAPi1RoFAXHbwR52LRs',  // Substitua pelo ID real do preço do plano Básico
-    silver: 'price_1Pzd4fAPi1RoFAXHzoOw6yyk', // Substitua pelo ID real do preço do plano Silver
-    premium: 'price_1Pzd5NAPi1RoFAXHjTD8Ily8', // Substitua pelo ID real do preço do plano Premium
-  };
+  // const priceMap: Record<string, string> = {
+  //   basic: 'price_1Qp7ymHuFaJMNSgMfynMaZEr',  // Substitua pelo ID real do preço do plano Básico
+  // };
 
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
-          price: priceMap[plan],
+          price: `price_1Qp7ymHuFaJMNSgMfynMaZEr`,
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: 'payment',
       metadata: {
         orderId: orderId,  // Adicionando o orderId como metadata
       },

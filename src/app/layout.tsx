@@ -23,8 +23,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className} style={{ paddingTop: '60px' }}> {/* Adicione padding-top aqui */}
-        <AuthProvider>
+<body className={inter.className} style={{  overflowX: 'hidden' }}>
+<AuthProvider>
           <NavigationMenuDemo />
           <div className="flex h-full flex-col">
             <div className="flex-1">{children}</div>
