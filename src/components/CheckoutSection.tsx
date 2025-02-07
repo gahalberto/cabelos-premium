@@ -1,22 +1,10 @@
 "use client";
-import Image from "next/image";
 import { useState } from "react";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
 import RegisterCheckout from "./RegisterCheckoutForm";
 
-// Carregue o Stripe com a chave pública
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 // Dados simulados do produto
 const product = {
@@ -28,58 +16,17 @@ const product = {
     rating: 4.9,
     reviews: 1891,
     options: [
-        { id: 1, label: "Perfil Básico", price: "R$ 29,00", stripePlan: "basic" },
-        { id: 2, label: "Perfil Premium", price: "R$ 49,00", save: "R$ 30,00", stripePlan: "silver" },
+        { id: 1, label: "Perfil Básico", amount: 29, price: "R$ 29", stripePlan: "basic" },
+        { id: 2, label: "Perfil Premium", amount: 49,  price: "R$ 49", save: "R$ 30,00", stripePlan: "silver" },
         // { id: 3, label: "Comprar 3", price: "R$ 147,00", save: "R$ 50,00", stripePlan: "premium" },
     ],
 };
 
 const CheckoutSection = () => {
-    const [imageSelected, setImageSelected] = useState("/images/image-example.png");
     const [selectedOption, setSelectedOption] = useState(1);
     const [error, setError] = useState<string | null>(null);
 
-    const handleCheckout = async (plan: string) => {
-        const stripe = await stripePromise;
 
-        try {
-            const response = await fetch("/api/checkout_sessions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ plan }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Falha ao criar a sessão de checkout");
-            }
-
-            const session = await response.json();
-
-            // Redirecione o usuário para o Stripe Checkout
-            const result = await stripe!.redirectToCheckout({ sessionId: session.id });
-
-            if (result.error) {
-                setError(result.error.message as string);
-            }
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                setError(error.message);
-                console.error("Erro ao redirecionar para o checkout:", error);
-            } else {
-                setError("Ocorreu um erro desconhecido.");
-            }
-        }
-
-    };
-
-    // Lista de imagens
-    const images = [
-        "/images/inmemirian_tag.png",
-        "/images/image-example.png",
-        "/images/destaques.png",
-    ];
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
@@ -151,7 +98,7 @@ const CheckoutSection = () => {
                 </div>
 
                 {/* Botão de Adicionar ao Carrinho */}
-                        <RegisterCheckout product={product.options.find(option => option.id === selectedOption)?.stripePlan || ''} />
+                        <RegisterCheckout amount={selectedOption === 1 ? 29 : 49} product={product.options.find(option => option.id === selectedOption)?.stripePlan || ''} />
 
                 {error && <div className="text-red-500 mt-2">{error}</div>}
             </div>

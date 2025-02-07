@@ -7,4 +7,10 @@ export default {
     // Ignorar os erros do ESLint durante o build
     ignoreDuringBuilds: true,
   },
+  api: {
+    bodyParse: true,
+  },
+  env: {
+    NEXT_PUBLIC_ASAAS: process.env.NEXT_PUBLIC_ASAAS,
+  },
 };

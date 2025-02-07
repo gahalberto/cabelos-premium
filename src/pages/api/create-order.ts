@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Verifica se o perfil existe antes de criar o pedido
       const profile = await db.memoriaProfiles.findFirst({
-        where: { userId: profileId },
+        where: { id: profileId },
       });
 
       console.log("encontrou perfil")
