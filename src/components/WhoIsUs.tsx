@@ -7,14 +7,12 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import {
   Card,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
 import { CardContent } from "@mui/material";
-import { Star, StarIcon } from "lucide-react";
-import { StarBorder, StarRounded } from "@mui/icons-material";
+import { StarRounded } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 const roboto = Roboto({
   weight: "400",
@@ -27,6 +25,8 @@ const WhoIsUs = () => {
       duration: 1000, // duração das animações
     });
   }, []);
+
+  const router = useRouter();
 
   return (
     <div className="w-full bg-[#030D20] pb-10">
@@ -170,7 +170,7 @@ const WhoIsUs = () => {
                     </p>
                   </div>
                   <div className="mt-4 flex items-center justify-center">
-                    <Button className="bg-red-400 text-white font-bold shadow-sm shadow-black px-10 mt-6">
+                    <Button  onClick={() => router.push('/criar-perfil')} className="bg-red-400 text-white font-bold shadow-sm shadow-black px-10 mt-6">
                       Quero fazer meu site memorial
                     </Button>
                   </div>
@@ -244,7 +244,7 @@ const WhoIsUs = () => {
                     </p>
                   </div>
                   <div className="mt-4 flex items-center justify-center">
-                    <Button className="bg-red-400 text-white font-bold shadow-sm shadow-black px-10 mt-6">
+                    <Button onClick={() => router.push('/criar-perfil')} className="bg-red-400 text-white font-bold shadow-sm shadow-black px-10 mt-6">
                       Quero fazer meu site memorial
                     </Button>
                   </div>
