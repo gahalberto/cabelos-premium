@@ -8,10 +8,16 @@ const generateSlugHash = () => {
 };
 
 export const createProfile = async (data: {
+  name: string;
+  birthday: Date;
+  deathday: Date;
+  biography: string;
   userId: string;
+  phrase: string;
+  videoUrl?: string
 }) => {
   // Gera um slug baseado no nome ou um hash aleatório se o nome não for fornecido
-  let slug = generateSlugHash();
+  const slug = generateSlugHash();
 
   // Garante que o slug seja único no banco de dados
   let uniqueSlug = slug;

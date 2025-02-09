@@ -1,15 +1,19 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
-import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import { randomBytes } from "crypto";
 
-export const registerUser = async (data: { name: string; email: string; password: string }) => {
+export const registerUser = async (email: string, name: string) => {
   // Criptografar a senha antes de salvar
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+   function generatePassword(length = 12) {
+    return randomBytes(length).toString('base64').slice(0, length);
+  }
+  
+  const hashedPassword = generatePassword();
 
   const existingUser = await db.user.findUnique({
-    where: { email: data.email },
+    where: { email: email },
   });
 
   if (existingUser) {
@@ -17,8 +21,8 @@ export const registerUser = async (data: { name: string; email: string; password
   } else {
     const user = await db.user.create({
       data: {
-        name: data.name,
-        email: data.email,
+        name: name,
+        email: email,
         password: hashedPassword, // Armazena a senha criptografada
       },
     });

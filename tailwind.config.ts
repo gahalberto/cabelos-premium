@@ -25,7 +25,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        roboto: ['Roboto', 'sans-serif'], // Adiciona a fonte Roboto
+        roboto: ['Roboto', 'sans-serif'],
+        cinzel: ['Cinzel', 'sans-serif'],        // Adiciona a fonte Roboto
       },
       colors: {
         background: 'hsl(var(--background))',
