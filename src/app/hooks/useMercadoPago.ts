@@ -10,12 +10,13 @@ const useMercadoPago = () => {
     });
   }, []);
 
-  async function createCheckout(testeId: string, userEmail?: string) {
+  async function createCheckout(testeId: string, userEmail?: string, price?: number) {
     console.log("COMECANDO O CREATE CHECKOUT")
     try {
       const response = await axios.post("/api/mercado-pago/create-checkout", {
         testeId,
         userEmail,
+        price: price || 29,
       });
 
       if (response.data.initPoint) {

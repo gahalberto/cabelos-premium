@@ -1,40 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Preference } from "mercadopago";
 import mpClient from "@/app/_lib/mercado-pago";
-import { db } from "@/app/_lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { testeId, userEmail } = await req.json();
-
-    const userAlreadyExist = await db.user.findFirst({
-      where: userEmail
-    })
-
-    if(userAlreadyExist) throw new Error("User already exists");
-
-    const user =  await db.user.create({
-      data: {
-        email: userEmail,
-        password: '12345678910',
-      }
-    })
+    const { userId, userEmail, price } = await req.json();
     
     const preference = new Preference(mpClient);
     const createdPreference = await preference.create({
       body: {
-        external_reference: testeId,
-        metadata: { testeId },
+        external_reference: userId,
+        metadata: { userId },
         payer: userEmail ? { email: userEmail } : undefined,
         items: [
           {
-            id: "123",
-            title: "Plano Memorial",
+            id: userId,
+            title: "Plano Memorial SaaS",
             quantity: 1,
-            unit_price: 49.9,
+            unit_price: price,
             currency_id: "BRL",
           },
         ],
+        // TESTUSER469406399
+        // YpNXxuX7OK
+        // TESTUSER215011834
+        // ta5hFgR5Dz
         auto_return: "approved",
         back_urls: {
           success: `${req.headers.get("origin")}/sucesso`,
@@ -48,6 +38,7 @@ export async function POST(req: NextRequest) {
       preferenceId: createdPreference.id,
       initPoint: createdPreference.init_point,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error(err);
     return NextResponse.json(

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PaymentResponse } from "mercadopago/dist/clients/payment/commonTypes";
 
 export async function handleMercadoPagoPayment(paymentData: PaymentResponse) {

@@ -41,7 +41,7 @@ const RegisterPage = () => {
     setIsSubmitting(true);
     setError(null); // Resetando erro antes do envio
     try {
-      const response = await registerUser(data);
+      const response = await registerUser(data.email, data.name)
 
       if (response) {
         // Loga o usuário após o registro

@@ -25,13 +25,13 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { registerUser } from "@/app/_actions/register/postRegister";
 import { createProfile } from "@/app/_actions/createProfile";
+import { CircularProgress } from "@mui/material";
 
 const CriarPerfil = () => {
   const [date, setDate] = useState<Date>();
@@ -39,10 +39,21 @@ const CriarPerfil = () => {
   const [bio, setBio] = useState("");
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setUserEmail] = useState("");
   // const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [musicLink, setMusicLink] = useState("");
+  const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [selectedPlan, setSelectedPlan] = useState('basic'); // 'basic' ou 'premium'
+  const [price, setPrice] = useState(29); // Valor inicial para o plano 'basic'
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePlanChange = (plan: any) => {
+    setSelectedPlan(plan);
+    setPrice(plan === 'basic' ? 29 : 49);
+  };
 
   const { createCheckout } = useMercadoPago(); // ← Nome correto
 
@@ -81,11 +92,34 @@ const CriarPerfil = () => {
   };
 
   const createAccount = async () => {
-    const data = await registerUser(email, name);
-    const profile = await createProfile()
-    await createCheckout(data.user.id, data.user.email);
-  }
+    setLoading(true);
+    if(!name || !bio){
+      alert('Preenchar as informações do formulário para a criação do perfil.')
+      setLoading(false)
+    }
 
+    if(!userName || !email){
+      alert('Digite um nome e um e-mail para as opções de pagamento.')
+    }
+
+    // Ensure date and deathDate are Date objects
+    const formattedBirthday = date instanceof Date ? date : new Date();
+    const formattedDeathday =
+      deathDate instanceof Date ? deathDate : new Date();
+
+    const data = await registerUser(email, name);
+    
+    await createProfile({
+      name,
+      biography: bio,
+      birthday: formattedBirthday,
+      deathday: formattedDeathday,
+      videoUrl: musicLink,
+      userId: data.user.id,
+    });
+    await createCheckout(data.user.id, data.user.email, price);
+    setLoading(false);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#030D20]">
@@ -101,260 +135,220 @@ const CriarPerfil = () => {
 
           <Tabs defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-slate-600 text-white">
-              <TabsTrigger className="bg-slate-700 text-black" value="basic">
+              <TabsTrigger className="bg-slate-700 text-black" value="basic" 
+                  onClick={() => handlePlanChange('basic')}>
                 R$ 29 - Básico
               </TabsTrigger>
-              <TabsTrigger className="bg-slate-700 text-black" value="premium">
+              <TabsTrigger className="bg-slate-700 text-black" value="premium"
+                  onClick={() => handlePlanChange('premium')}>
                 R$ 49 - Completo
               </TabsTrigger>
             </TabsList>
 
-          {/* Aba R$29 */}
-          <TabsContent value="basic" className="pt-4">
-          <div className="mt-4 space-y-1">
-              <Label className="text-white text-sm">Nome do falecido:</Label>
-              <Input
-                type="email"
-                placeholder="Ex: Huilton Nascimento"
-                className="text-white border-red-500 focus-within:border-yellow-400"
-                value={name}
-                onChange={handleNameChange}
-              />
-            </div>
-
-            <div className="mt-4 flex gap-4">
-              <div className="flex flex-col">
-                <Label className="text-white mb-2 text-sm">
-                  Data de nascimento:
-                </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon />
-                      {date ? (
-                        format(date, "PPP")
-                      ) : (
-                        <span>Escolha uma data</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                      locale={ptBR}
-                    />
-                  </PopoverContent>
-                </Popover>
+            {/* Aba R$29 */}
+            <TabsContent value="basic" className="pt-4">
+              <div className="mt-4 space-y-1">
+                <Label className="text-white text-sm">Nome do falecido:</Label>
+                <Input
+                  type="email"
+                  placeholder="Ex: Huilton Nascimento"
+                  className="text-white border-red-500 focus-within:border-yellow-400"
+                  value={name}
+                  onChange={handleNameChange}
+                />
               </div>
 
-              <div className="flex flex-col">
-                <Label className="text-white mb-2 text-sm">
-                  Data de falecimento:
-                </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
-                        !deathDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon />
-                      {deathDate ? (
-                        format(deathDate, "PPP")
-                      ) : (
-                        <span>Escolha uma data</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      className="text-white border-red-500 focus-within:border-yellow-400"
-                      selected={deathDate}
-                      locale={ptBR}
-                      onSelect={setDeathDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+              <div className="mt-4 flex gap-4">
+                <div className="flex flex-col">
+                  <Label className="text-white mb-2 text-sm">
+                    Data de nascimento:
+                  </Label>
+                  <Input
+                    type="date"
+                    value={date ? date.toISOString().split("T")[0] : ""}
+                    onChange={(e) => setDate(new Date(e.target.value))}
+                    className="text-white border-red-500 focus-within:border-yellow-400"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <Label className="text-white mb-2 text-sm">
+                    Data de falecimento:
+                  </Label>
+                  <Input
+                    type="date"
+                    value={
+                      deathDate ? deathDate.toISOString().split("T")[0] : ""
+                    }
+                    onChange={(e) => setDeathDate(new Date(e.target.value))}
+                    className="text-white border-red-500 focus-within:border-yellow-400"
+                  />
+                </div>
               </div>
-            </div>
-
-            <div className="mt-6 space-y-2">
-              <Label className="text-white mb-2 text-sm">
-                Biografia/Mensagem:
-              </Label>
-              <Textarea
-                placeholder="Digite aqui sua mensagem ou biografia."
-                className="h-40 text-white border-red-500 focus-within:border-yellow-400"
-                maxLength={2000}
-                value={bio}
-                onChange={handleBioChange}
-              />
-              <p className="text-gray-400 text-xs text-right">
-                {bio.length} / 2000 caracteres
-              </p>
-            </div>
-
-            <div className="grid w-full items-center space-y-2 mt-4">
-              <Label className="text-white" htmlFor="picture">
-                Escolher fotos (Máximo 3)
-              </Label>
-              <Input
-                id="picture"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="text-white w-full border-red-500 focus-within:border-yellow-400"
-                multiple
-              />
-            </div>
-          </TabsContent>
-
-          {/* Aba R$49 */}
-          <TabsContent value="premium" className="pt-4">
-            <div className="mt-4 space-y-1">
-              <Label className="text-white text-sm">Nome do falecido:</Label>
-              <Input
-                type="email"
-                placeholder="Ex: Huilton Nascimento"
-                className="text-white border-red-500 focus-within:border-yellow-400"
-                value={name}
-                onChange={handleNameChange}
-              />
-            </div>
-
-            <div className="mt-4 flex gap-4">
-              <div className="flex flex-col">
+              <div className="mt-6 space-y-2">
                 <Label className="text-white mb-2 text-sm">
-                  Data de nascimento:
+                  Biografia/Mensagem:
                 </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon />
-                      {date ? (
-                        format(date, "PPP")
-                      ) : (
-                        <span>Escolha uma data</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                      locale={ptBR}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Textarea
+                  placeholder="Digite aqui sua mensagem ou biografia."
+                  className="h-40 text-white border-red-500 focus-within:border-yellow-400"
+                  maxLength={2000}
+                  value={bio}
+                  onChange={handleBioChange}
+                />
+                <p className="text-gray-400 text-xs text-right">
+                  {bio.length} / 2000 caracteres
+                </p>
               </div>
 
-              <div className="flex flex-col">
-                <Label className="text-white mb-2 text-sm">
-                  Data de falecimento:
+              <div className="grid w-full items-center space-y-2 mt-4">
+                <Label className="text-white" htmlFor="picture">
+                  Escolher fotos (Máximo 3)
                 </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
-                        !deathDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon />
-                      {deathDate ? (
-                        format(deathDate, "PPP")
-                      ) : (
-                        <span>Escolha uma data</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      className="text-white border-red-500 focus-within:border-yellow-400"
-                      selected={deathDate}
-                      locale={ptBR}
-                      onSelect={setDeathDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input
+                  id="picture"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="text-white w-full border-red-500 focus-within:border-yellow-400"
+                  multiple
+                />
               </div>
-            </div>
+            </TabsContent>
 
-            <div className="mt-6 space-y-2">
-              <Label className="text-white mb-2 text-sm">
-                Biografia/Mensagem:
-              </Label>
-              <Textarea
-                placeholder="Digite aqui sua mensagem ou biografia."
-                className="h-40 text-white border-red-500 focus-within:border-yellow-400"
-                maxLength={2000}
-                value={bio}
-                onChange={handleBioChange}
-              />
-              <p className="text-gray-400 text-xs text-right">
-                {bio.length} / 2000 caracteres
-              </p>
-            </div>
+            {/* Aba R$49 */}
+            <TabsContent value="premium" className="pt-4">
+              <div className="mt-4 space-y-1">
+                <Label className="text-white text-sm">Nome do falecido:</Label>
+                <Input
+                  type="email"
+                  placeholder="Ex: Huilton Nascimento"
+                  className="text-white border-red-500 focus-within:border-yellow-400"
+                  value={name}
+                  onChange={handleNameChange}
+                />
+              </div>
 
-            <div className="grid w-full items-center space-y-2 mt-4">
-              <Label className="text-white" htmlFor="picture">
-                Escolher fotos (Máximo 3)
-              </Label>
-              <Input
-                id="picture"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="text-white w-full border-red-500 focus-within:border-yellow-400"
-                multiple
-              />
-            </div>
+              <div className="mt-4 flex gap-4">
+                <div className="flex flex-col">
+                  <Label className="text-white mb-2 text-sm">
+                    Data de nascimento:
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {date ? (
+                          format(date, "PPP")
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                        locale={ptBR}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-            {/* Campo adicional para música */}
-            <div className="mt-4 space-y-1">
-              <Label className="text-white text-sm">
-                Link da música (YouTube/Spotify):
-              </Label>
-              <Input
-                type="url"
-                placeholder="Cole o link da música aqui"
-                className="text-white border-red-500 focus-within:border-yellow-400"
-                value={musicLink}
-                onChange={(e) => setMusicLink(e.target.value)}
-              />
-              <p className="text-gray-400 text-xs mt-1">
-                Exemplo: https://youtube.com/watch?v=...
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+                <div className="flex flex-col">
+                  <Label className="text-white mb-2 text-sm">
+                    Data de falecimento:
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] justify-start text-left font-normal text-white border-red-500 focus-within:border-yellow-400",
+                          !deathDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {deathDate ? (
+                          format(deathDate, "PPP")
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        className="text-white border-red-500 focus-within:border-yellow-400"
+                        selected={deathDate}
+                        locale={ptBR}
+                        onSelect={setDeathDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
 
-      <div className="flex-col justify-center items-center space-y-8 sticky top-4 ">
+              <div className="mt-6 space-y-2">
+                <Label className="text-white mb-2 text-sm">
+                  Biografia/Mensagem:
+                </Label>
+                <Textarea
+                  placeholder="Digite aqui sua mensagem ou biografia."
+                  className="h-40 text-white border-red-500 focus-within:border-yellow-400"
+                  maxLength={2000}
+                  value={bio}
+                  onChange={handleBioChange}
+                />
+                <p className="text-gray-400 text-xs text-right">
+                  {bio.length} / 2000 caracteres
+                </p>
+              </div>
+
+              <div className="grid w-full items-center space-y-2 mt-4">
+                <Label className="text-white" htmlFor="picture">
+                  Escolher fotos (Máximo 3)
+                </Label>
+                <Input
+                  id="picture"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="text-white w-full border-red-500 focus-within:border-yellow-400"
+                  multiple
+                />
+              </div>
+
+              {/* Campo adicional para música */}
+              <div className="mt-4 space-y-1">
+                <Label className="text-white text-sm">
+                  Link da música (YouTube/Spotify):
+                </Label>
+                <Input
+                  type="url"
+                  placeholder="Cole o link da música aqui"
+                  className="text-white border-red-500 focus-within:border-yellow-400"
+                  value={musicLink}
+                  onChange={(e) => setMusicLink(e.target.value)}
+                />
+                <p className="text-gray-400 text-xs mt-1">
+                  Exemplo: https://youtube.com/watch?v=...
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        <div className="flex-col justify-center items-center space-y-8 sticky top-4 ">
           <BrowserFrame slug={slug}>
             <div className="mx-0">
               <div className="relative h-64 w-full">
@@ -385,8 +379,8 @@ const CriarPerfil = () => {
                   {deathDate && ` - ${format(deathDate, "dd/MM/yyyy")}`}
                 </p>
                 <p className="italic text-gray-700 mt-2">
-                  Não viva para que a sua presença seja notada, mas para que a sua
-                  falta seja sentida
+                  Não viva para que a sua presença seja notada, mas para que a
+                  sua falta seja sentida
                 </p>
                 <div className="mt-8">
                   <h2 className="text-2xl font-bold mb-4">Biografia</h2>
@@ -404,53 +398,54 @@ const CriarPerfil = () => {
                 Criar Memorial e Receber QR CODE
               </Button>
             </DialogTrigger>
-            
-            <DialogContent className="bg-white max-w-[90vw] md:max-w-[425px]">
+
+            <DialogContent className="flex flex-col  justify-center bg-white max-w-[90vw] md:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Finalizar Compra</DialogTitle>
                 <DialogDescription>
                   Digite seu e-mail para receber acesso de edição
                 </DialogDescription>
               </DialogHeader>
-              
-              <div className="grid gap-4 py-4">
-              <div className="space-y-2">
-                  <Label htmlFor="email" className="text-left">
-                    Nome
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Pedro Pascal"
-                    className="w-full"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-left">
-                    E-mail
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    className="w-full"
-                    name={email}
-                    onChange={(e) => setUserEmail(e.target.value)}
-
-                  />
-                </div>
-              </div>
-              
-              <DialogFooter>
-                <Button
-                  onClick={() => createAccount()}
-                  className="w-full bg-blue-400 hover:bg-blue-700 text-white text-lg py-6"
-                >
-                  Pagar com Mercado Pago
-                </Button>
-              </DialogFooter>
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <div className="grid gap-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-left">
+                        Nome
+                      </Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Pedro Pascal"
+                        className="w-full"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-left">
+                        E-mail
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="seu@email.com"
+                        className="w-full"
+                        name={email}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => createAccount()}
+                    className="w-full bg-blue-400 hover:bg-blue-700 text-white text-lg py-6"
+                  >
+                    Pagar com Mercado Pago
+                  </Button>
+                </>
+              )}
             </DialogContent>
           </Dialog>
         </div>

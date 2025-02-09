@@ -4,7 +4,7 @@ import { db } from "@/app/_lib/prisma";
 import jwt from 'jsonwebtoken';
 import { randomBytes } from "crypto";
 
-export const registerUser = async (email: string, name: string) => {
+export const registerUser = async (email: string, name?: string) => {
   // Criptografar a senha antes de salvar
    function generatePassword(length = 12) {
     return randomBytes(length).toString('base64').slice(0, length);
@@ -21,7 +21,7 @@ export const registerUser = async (email: string, name: string) => {
   } else {
     const user = await db.user.create({
       data: {
-        name: name,
+        name: name || 'John Doe',
         email: email,
         password: hashedPassword, // Armazena a senha criptografada
       },

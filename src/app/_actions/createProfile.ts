@@ -13,7 +13,7 @@ export const createProfile = async (data: {
   deathday: Date;
   biography: string;
   userId: string;
-  phrase: string;
+  phrase?: string;
   videoUrl?: string
 }) => {
   // Gera um slug baseado no nome ou um hash aleatório se o nome não for fornecido
@@ -31,6 +31,11 @@ export const createProfile = async (data: {
   // Cria o perfil com o slug único
  return await db.memoriaProfiles.create({
     data: {
+      name: data.name,
+      birthday: data.birthday,
+      deathday: data.deathday,
+      biography: data.biography,
+      videoUrl: data.videoUrl || '',
       userId: data.userId,
       slug: uniqueSlug, // Usa o slug gerado com o hash
       views: 0, // Define views como 0 por padrão
