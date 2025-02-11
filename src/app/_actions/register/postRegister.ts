@@ -3,6 +3,8 @@
 import { db } from "@/app/_lib/prisma";
 import jwt from 'jsonwebtoken';
 import { randomBytes } from "crypto";
+import { sendWelcomeEmail } from "@/app/services/emailService";
+import crypto from "crypto";
 
 export const registerUser = async (email: string, name?: string) => {
   // Criptografar a senha antes de salvar
@@ -19,11 +21,16 @@ export const registerUser = async (email: string, name?: string) => {
   if (existingUser) {
     throw new Error("Este e-mail já está em uso.");
   } else {
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+
     const user = await db.user.create({
       data: {
         name: name || 'John Doe',
         email: email,
         password: hashedPassword, // Armazena a senha criptografada
+        isVerified: false,
+        verificationToken: verificationToken
       },
     });
 
@@ -31,6 +38,9 @@ export const registerUser = async (email: string, name?: string) => {
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
+
+    await sendWelcomeEmail(email, user.name || 'Novo Usuário', verificationToken);
+
 
     // Retornar o token junto com a resposta
     return { user, token };

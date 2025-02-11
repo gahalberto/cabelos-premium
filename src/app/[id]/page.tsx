@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { FaInfoCircle, FaHistory, FaCamera, FaHeart } from 'react-icons/fa'; // Importa os ícones
+import { db } from '../_lib/prisma';
 
 type ParamsType = {
   params: {
@@ -7,28 +8,15 @@ type ParamsType = {
   };
 };
 
-const profileData = {
-  id: 'lily-johnson',
-  name: 'Michael Jackson',
-  birthDate: '03/09/1985',
-  deathDate: '10/12/2023',
-  quote: 'Spread kindness like wildflowers, for even in the darkest moments, it blooms eternal.',
-  biography: `
-    Lily Johnson was born in Los Angeles on September 3, 1985. She was a vibrant soul, known for her infectious laughter and compassionate heart. 
-    From a young age, Lily possessed an adventurous spirit, always eager to explore the world around her. She had a love for literature and spent 
-    countless hours lost in the pages of her favorite novels, dreaming of distant lands and exciting adventures. After graduating from college with 
-    a degree in literature, Lily met the love of her life, Michael. Their whirlwind romance quickly blossomed, and they were married on a beautiful 
-    spring day in 2010. Together, they embarked on a journey filled with love, laughter, and endless possibilities. In 2022, Lily joyfully discovered 
-    that she was expecting their first child.
-  `,
-  imageUrl: '/photos/jackson.png', // Ajuste o caminho da imagem de acordo com seu projeto
-};
-
-const ProfilePage = ({ params }: ParamsType) => {
+const ProfilePage = async ({ params }: ParamsType) => {
   const { id } = params;
 
   // Carregar dados com base no `id`, aqui estou simulando a busca do perfil
-  const profile = profileData.id === id ? profileData : null;
+  const profile = await db.memoriaProfiles.findUnique({
+    where: {
+      id
+    }
+  });
 
   if (!profile) {
     return <p>Perfil não encontrado</p>;
@@ -39,21 +27,21 @@ const ProfilePage = ({ params }: ParamsType) => {
       {/* Cabeçalho com imagem e nome */}
       <div className="text-center">
         <div className="relative h-64 w-full">
-          <Image
-            src={profile.imageUrl}
+          {/* <Image
+            src={profile.name}
             alt={`${profile.name}'s Profile Image`}
             fill
             className="rounded-lg object-cover"
-          />
+          /> */}
         </div>
         <div className="relative -mt-12">
-          <Image
+          {/* <Image
             src={profile.imageUrl}
             alt={profile.name}
             width={120}
             height={120}
             className={`rounded-full border-4 border-white mx-auto`}
-          />
+          /> */}
         </div>
         <h1 className="text-3xl font-bold mt-4">{profile.name}</h1>
         <p className="text-gray-500">

@@ -8,17 +8,19 @@ generator client {
 }
 
 model User {
-  id              String            @id @default(cuid())
-  name            String?
-  email           String            @unique
-  emailVerified   DateTime?
-  image           String?
-  password        String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  accounts        Account[]
-  sessions        Session[]
-  MemoriaProfiles MemoriaProfiles[]
+  id                String            @id @default(cuid())
+  name              String?
+  email             String            @unique
+  emailVerified     DateTime?
+  isVerified        Boolean
+  verificationToken String
+  image             String?
+  password          String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  accounts          Account[]
+  sessions          Session[]
+  MemoriaProfiles   MemoriaProfiles[]
 }
 
 model MemoriaProfiles {
