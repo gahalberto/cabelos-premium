@@ -23,25 +23,54 @@ model User {
   MemoriaProfiles   MemoriaProfiles[]
 }
 
+enum Plano {
+  Basic
+  Premium
+}
+
 model MemoriaProfiles {
-  id         String    @id @default(uuid())
-  slug       String    @unique
-  name       String?
-  profileImg String?
-  images     String[]
-  videoUrl   String?
-  birthday   DateTime?
-  deathday   DateTime?
-  biography  String?
-  phrase     String?
-  views      Int       @default(0)
-  userId     String
-  user       User      @relation(fields: [userId], references: [id])
-  orders     Order[] // Relação com pedidos
-  paymentId  String? // Campo opcional para armazenar o ID do pagamento do Stripe
-  isApproved Boolean   @default(false) // Adiciona o campo isApproved
-  created_At DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id              String            @id @default(uuid())
+  slug            String            @unique
+  name            String?
+  profileImg      String?
+  images          String[]
+  videoUrl        String?
+  birthday        DateTime?
+  deathday        DateTime?
+  biography       String?
+  phrase          String?
+  views           Int               @default(0)
+  userId          String
+  user            User              @relation(fields: [userId], references: [id])
+  orders          Order[] // Relação com pedidos
+  paymentId       String? // Campo opcional para armazenar o ID do pagamento do Stripe
+  plan            Plano             @default(Basic) // Adiciona o campo plan
+  isApproved      Boolean           @default(false) // Adiciona o campo isApproved
+  created_At      DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  ProfilePhotos   ProfilePhotos[]
+  ProfileTributes ProfileTributes[]
+}
+
+model ProfilePhotos {
+  id        Int             @id @default(autoincrement())
+  profileId String
+  profile   MemoriaProfiles @relation(fields: [profileId], references: [id])
+  imageUrl  String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model ProfileTributes {
+  id        Int       @id @default(autoincrement())
+  profileId String
+  name      String
+  email     String
+  message   String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  profile MemoriaProfiles @relation(fields: [profileId], references: [id])
 }
 
 model Subscription {

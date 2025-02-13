@@ -14,6 +14,7 @@ import { CardContent } from "@mui/material";
 import { StarRounded } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin"],

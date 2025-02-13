@@ -21,6 +21,7 @@ export const registerUser = async (email: string, name?: string) => {
   if (existingUser) {
     throw new Error("Este e-mail já está em uso.");
   } else {
+    
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
 
@@ -36,7 +37,7 @@ export const registerUser = async (email: string, name?: string) => {
 
     // Gerar um token JWT de confirmação
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
+      expiresIn: "999h",
     });
 
     await sendWelcomeEmail(email, user.name || 'Novo Usuário', verificationToken);

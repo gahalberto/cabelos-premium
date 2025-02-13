@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { ChangeEvent, useState } from "react";
 import "aos/dist/aos.css";
@@ -29,13 +30,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { registerUser } from "@/app/_actions/register/postRegister";
-import { createProfile } from "@/app/_actions/createProfile";
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
+import { registerUser } from "@/app/_actions/register/postRegister";
 
 const CriarPerfil = () => {
-  const [date, setDate] = useState<Date>();
-  const [deathDate, setDeathDate] = useState<Date>();
+  const [date, setDate] = useState<Date | null>(null);
+  const [deathDate, setDeathDate] = useState<Date | null>(null);
   const [bio, setBio] = useState("");
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
@@ -46,23 +47,30 @@ const CriarPerfil = () => {
   const [musicLink, setMusicLink] = useState("");
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedPlan, setSelectedPlan] = useState('basic'); // 'basic' ou 'premium'
+  const [selectedPlan, setSelectedPlan] = useState("Basic"); // 'basic' ou 'premium'
   const [price, setPrice] = useState(29); // Valor inicial para o plano 'basic'
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePlanChange = (plan: any) => {
     setSelectedPlan(plan);
-    setPrice(plan === 'basic' ? 29 : 49);
+    setPrice(plan === "Basic" ? 29 : 49);
   };
 
   const { createCheckout } = useMercadoPago(); // ← Nome correto
 
+  // Processar upload de imagens e armazenar arquivos no estado
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    if (files.length > 9) {
+      alert("Você pode enviar no máximo 9 imagens.");
+      return;
     }
+
+    setSelectedFiles(Array.from(files)); // Armazena os arquivos para envio posterior
+    setImageUrls(Array.from(files).map((file) => URL.createObjectURL(file))); // Cria prévias das imagens
   };
 
   const slugify = (text: string) => {
@@ -91,33 +99,58 @@ const CriarPerfil = () => {
     }
   };
 
+  // Cria um perfil e envia as imagens junto
   const createAccount = async () => {
     setLoading(true);
-    if(!name || !bio){
-      alert('Preenchar as informações do formulário para a criação do perfil.')
-      setLoading(false)
+
+    if (!name || !bio) {
+      alert("Preencha as informações do formulário para a criação do perfil.");
+      setLoading(false);
+      return;
     }
 
-    if(!userName || !email){
-      alert('Digite um nome e um e-mail para as opções de pagamento.')
+    if (!userName || !email) {
+      alert("Digite um nome e um e-mail para as opções de pagamento.");
+      setLoading(false);
+      return;
     }
 
-    // Ensure date and deathDate are Date objects
-    const formattedBirthday = date instanceof Date ? date : new Date();
-    const formattedDeathday =
-      deathDate instanceof Date ? deathDate : new Date();
+    const newUser = await registerUser(email, name);
 
-    const data = await registerUser(email, name);
-    
-    await createProfile({
-      name,
-      biography: bio,
-      birthday: formattedBirthday,
-      deathday: formattedDeathday,
-      videoUrl: musicLink,
-      userId: data.user.id,
-    });
-    await createCheckout(data.user.id, data.user.email, price);
+    const formattedBirthday = date ? date.toISOString() : "";
+    const formattedDeathday = deathDate ? deathDate.toISOString() : "";
+
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("biography", bio);
+      formData.append("birthday", formattedBirthday);
+      formData.append("deathday", formattedDeathday);
+      formData.append("videoUrl", musicLink);
+      formData.append("userId", newUser.user.id);
+      formData.append("plan", selectedPlan);
+
+      // Adiciona as imagens ao FormData
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      // Envia os dados para a API
+      const response = await axios.post("/api/create-profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 201) {
+        console.log("Perfil criado com sucesso!", response.data);
+        await createCheckout(userName, email, price);
+      } else {
+        alert("Erro ao criar perfil.");
+      }
+    } catch (error) {
+      console.error("Erro ao criar o perfil:", error);
+      alert("Erro ao criar o perfil.");
+    }
+
     setLoading(false);
   };
 
@@ -135,12 +168,18 @@ const CriarPerfil = () => {
 
           <Tabs defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-slate-600 text-white">
-              <TabsTrigger className="bg-slate-700 text-black" value="basic" 
-                  onClick={() => handlePlanChange('basic')}>
+              <TabsTrigger
+                className="bg-slate-700 text-black"
+                value="basic"
+                onClick={() => handlePlanChange("Basic")}
+              >
                 R$ 29 - Básico
               </TabsTrigger>
-              <TabsTrigger className="bg-slate-700 text-black" value="premium"
-                  onClick={() => handlePlanChange('premium')}>
+              <TabsTrigger
+                className="bg-slate-700 text-black"
+                value="premium"
+                onClick={() => handlePlanChange("Premium")}
+              >
                 R$ 49 - Completo
               </TabsTrigger>
             </TabsList>
@@ -166,7 +205,10 @@ const CriarPerfil = () => {
                   <Input
                     type="date"
                     value={date ? date.toISOString().split("T")[0] : ""}
-                    onChange={(e) => setDate(new Date(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDate(value ? new Date(value) : null); // Trata o caso de valor vazio
+                    }}
                     className="text-white border-red-500 focus-within:border-yellow-400"
                   />
                 </div>
@@ -180,7 +222,10 @@ const CriarPerfil = () => {
                     value={
                       deathDate ? deathDate.toISOString().split("T")[0] : ""
                     }
-                    onChange={(e) => setDeathDate(new Date(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDeathDate(value ? new Date(value) : null); // Trata o caso de valor vazio
+                    }}
                     className="text-white border-red-500 focus-within:border-yellow-400"
                   />
                 </div>
@@ -253,12 +298,13 @@ const CriarPerfil = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
+                        
                         mode="single"
-                        selected={date}
-                        onSelect={setDate}
+                        selected={date || undefined} // Converte `null` para `undefined`
+                        onSelect={(day) => setDate(day || null)} // Converte `undefined` para `null`
                         initialFocus
                         locale={ptBR}
-                      />
+                      />{" "}
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -287,12 +333,11 @@ const CriarPerfil = () => {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        className="text-white border-red-500 focus-within:border-yellow-400"
-                        selected={deathDate}
-                        locale={ptBR}
-                        onSelect={setDeathDate}
+                        selected={deathDate || undefined} // Converte `null` para `undefined`
+                        onSelect={(day) => setDeathDate(day || null)} // Converte `undefined` para `null`
                         initialFocus
-                      />
+                        locale={ptBR}
+                      />{" "}
                     </PopoverContent>
                   </Popover>
                 </div>

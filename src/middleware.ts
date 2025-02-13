@@ -11,10 +11,8 @@ export default withAuth(
     callbacks: {
       authorized: ({ token }) => {
         if (token) {
-          console.log('User authorized with token:', token);
           return true;
         }
-        console.log('User not authorized, no token found');
         return false;
       },
     },

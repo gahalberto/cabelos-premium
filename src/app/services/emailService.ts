@@ -338,7 +338,7 @@ export const sendWelcomeEmail = async (toEmail: string, userName: string, verifi
                           <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tbody>
                               <tr>
-                                <td> <a href="https://inmemorian.com.br/verify-email?email=${toEmail}?token=${verificationToken}" target="_blank">Confirma E-mail</a> </td>
+                                <td> <a href="https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}" target="_blank">Confirma E-mail</a> </td>
                               </tr>
                             </tbody>
                           </table>
@@ -347,7 +347,7 @@ export const sendWelcomeEmail = async (toEmail: string, userName: string, verifi
                     </tbody>
                   </table>
                   <p>Caso o botão não esteja funcionando acesse o link abaixo</p>
-                  <a href="https://inmemorian.com.br/verify-email?email=${toEmail}?token=${verificationToken}">https://inmemorian.com.br/verify-email?email=${toEmail}?token=${verificationToken}</a>
+                  <a href="https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}">https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}</a>
                 </td>
               </tr>
 

@@ -1,12 +1,26 @@
 "use client";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { getSession, signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  
+  const verifySession = async () => {
+    const  session = await getSession();
+    if (session) {
+      // Se o usuário já estiver logado, redirecionar para a página inicial
+      router.push("/dashboard");
+    }
+  }
+
+  useEffect(() => {
+    verifySession()
+  }, []);
 
   // Função para login com email e senha
   const handleLogin = async (e: React.FormEvent) => {
@@ -21,6 +35,10 @@ const LoginPage = () => {
 
     if (res?.error) {
       setError("Credenciais inválidas. Verifique seu email e senha.");
+    }
+    
+    if (res?.ok) {
+      router.push("/dashboard");
     }
   };
 

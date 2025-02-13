@@ -4,12 +4,16 @@
 import { db } from "../_lib/prisma"
 
 export const getProfilesByUser = async (userId: string) => {
-    return await db.memoriaProfiles.findMany({
+    console.log("userId", userId);
+
+    const profile =  await db.memoriaProfiles.findMany({
         where: {
             userId,
         },
         include: {
             orders: true, // Inclua as ordens relacionadas
+            ProfilePhotos: true, // Inclua as fotos relacionadas
         },
     });
+    return profile
 };
