@@ -40,7 +40,6 @@ import {
 } from "@/components/ui/popover";
 import { Copy, LinkedinIcon, Share2 } from "lucide-react";
 import Head from "next/head";
-import { Metadata, ResolvingMetadata } from "next";
 
 type ParamsType = {
   params: {
@@ -52,32 +51,6 @@ type MemoriaProfilesType = MemoriaProfiles & {
   ProfilePhotos: ProfilePhotos[];
   ProfileTributes?: ProfileTributes[];
 };
-
-type Props = {
-  params: Promise<{ slug: string }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
-export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  // read route params
-  const slug = (await params).slug
- 
-  // fetch data
-  const profile = await getProfilesBySlug(slug);
- 
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || []
- 
-  return {
-    title: profile?.name,
-    openGraph: {
-      images: `https://inmemorian.com.br/${profile?.profileImg}`,
-    },
-  }
-}
-
 
 // Schema de validação com Zod
 const TributeSchema = z.object({
@@ -92,7 +65,7 @@ const TributeSchema = z.object({
 
 type TributeFormData = z.infer<typeof TributeSchema>;
 
-const ProfilePage = ({ params }: ParamsType) => {
+export async function ProfilePage ({ params }: ParamsType) {
   const { slug } = params;
   const [profile, setProfile] = useState<MemoriaProfilesType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -508,5 +481,3 @@ const ProfilePage = ({ params }: ParamsType) => {
     </>
   );
 };
-
-export default ProfilePage;
