@@ -11,6 +11,7 @@ export const getProfilesBySlug = async (slug: string) => {
         },
         include: {
             ProfilePhotos: true, // Inclua as fotos relacionadas
+            ProfileTributes: true,
         },
     });
 };
