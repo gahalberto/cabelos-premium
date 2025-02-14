@@ -39,6 +39,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Copy, LinkedinIcon, Share2 } from "lucide-react";
+import Head from "next/head";
 
 type ParamsType = {
   params: {
@@ -77,6 +78,13 @@ const ProfilePage = ({ params }: ParamsType) => {
     ? `https://inmemorian.com.br/${profile.slug}`
     : "#";
   const shareText = `Veja esse memorial incrível: ${shareUrl}`;
+
+  const shareTitle = profile?.name || "InMemorian";
+  const shareDescription =
+    profile?.biography?.substring(0, 150) ||
+    "Veja esse memorial incrível no InMemorian!";
+  const shareImage = profile?.profileImg || "/images/no-avatar.webp";
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -146,6 +154,26 @@ const ProfilePage = ({ params }: ParamsType) => {
 
   return (
     <>
+          <Head>
+        {/* Open Graph para Facebook, WhatsApp, LinkedIn */}
+        <meta property="og:title" content={shareTitle} />
+        <meta property="og:description" content={shareDescription} />
+        <meta property="og:image" content={shareImage} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={shareDescription} />
+        <meta name="twitter:image" content={shareImage} />
+
+        {/* Título da página */}
+        <title>{shareTitle} - InMemorian</title>
+      </Head>
+
       <div className="mx-0">
         <div className="relative h-64 w-full">
           <Image

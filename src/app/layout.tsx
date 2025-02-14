@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./providers/auth";
 import { Toaster } from "@/components/ui/toaster";
-import Footer from "@/components/Footer";
 import { NavigationMenuDemo } from "@/components/Menu";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -10,7 +9,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Cinzel } from "next/font/google";
 
-const cinzel = Cinzel({ variable: "--font-cinzel", subsets: ["latin"] });
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -39,7 +37,6 @@ export default function RootLayout({
           <div className="flex h-full flex-col">
             <div className="flex-1">{children}</div>
           </div>
-          {!hideFooter && <Footer />} {/* Renderiza o Footer apenas se hideFooter for false */}
         </AuthProvider>
         <Toaster />
       </body>
