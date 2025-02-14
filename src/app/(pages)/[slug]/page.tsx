@@ -73,7 +73,7 @@ export async function generateMetadata(
   return {
     title: profile?.name,
     openGraph: {
-      images: `http://inmemorian.com.br/${profile?.profileImg}`,
+      images: `https://inmemorian.com.br/${profile?.profileImg}`,
     },
   }
 }
