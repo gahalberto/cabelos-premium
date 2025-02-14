@@ -146,42 +146,49 @@ const ProfilePage = ({ params }: ParamsType) => {
 
   return (
     <>
-      <Head>
-        <title>{profile?.name} - InMemorian</title>
-        <meta
-          name="description"
-          content={profile?.biography || "Veja essa linda homenagem."}
-        />
+{profile && (
+  <Head>
+    <title>{profile.name} - InMemorian</title>
+    <meta
+      name="description"
+      content={profile.biography || "Eternize as memórias de quem você ama."}
+    />
 
-        {/* Open Graph para Facebook e WhatsApp */}
-        <meta property="og:title" content={`${profile?.name} - InMemorian`} />
-        <meta
-          property="og:description"
-          content={profile?.biography || "Veja essa linda homenagem."}
-        />
-        <meta
-          property="og:image"
-          content={profile?.profileImg || "/images/no-avatar.webp"}
-        />
-        <meta
-          property="og:url"
-          content={`https://inmemorian.com.br/${profile?.slug}`}
-        />
-        <meta property="og:type" content="website" />
+    {/* Open Graph para Facebook e WhatsApp */}
+    <meta
+      property="og:title"
+      content={`${profile.name} - InMemorian`}
+    />
+    <meta
+      property="og:description"
+      content={profile.biography || "Eternize as memórias de quem você ama."}
+    />
+    <meta
+      property="og:image"
+      content={profile.profileImg || "/images/no-avatar.webp"}
+    />
+    <meta
+      property="og:url"
+      content={`https://inmemorian.com.br/${profile.slug}`}
+    />
+    <meta property="og:type" content="website" />
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${profile?.name} - InMemorian`} />
-        <meta
-          name="twitter:description"
-          content={profile?.biography || "Veja essa linda homenagem."}
-        />
-        <meta
-          name="twitter:image"
-          content={profile?.profileImg || "/images/no-avatar.webp"}
-        />
-      </Head>
-
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content={`${profile.name} - InMemorian`}
+    />
+    <meta
+      name="twitter:description"
+      content={profile.biography || "Eternize as memórias de quem você ama."}
+    />
+    <meta
+      name="twitter:image"
+      content={profile.profileImg || "/images/no-avatar.webp"}
+    />
+  </Head>
+)}
       <div className="mx-0">
         <div className="relative h-64 w-full">
           <Image
