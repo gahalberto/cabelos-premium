@@ -79,13 +79,6 @@ const ProfilePage = ({ params }: ParamsType) => {
     : "#";
   const shareText = `Veja esse memorial incrível: ${shareUrl}`;
 
-  const shareTitle = profile?.name || "InMemorian";
-  const shareDescription =
-    profile?.biography?.substring(0, 150) ||
-    "Veja esse memorial incrível no InMemorian!";
-  const shareImage = profile?.profileImg || "/images/no-avatar.webp";
-
-
   useEffect(() => {
     const fetchProfile = async () => {
       const data = await getProfilesBySlug(params.slug);
@@ -97,7 +90,6 @@ const ProfilePage = ({ params }: ParamsType) => {
     fetchProfile();
   }, [params.slug]);
 
-  // Configuração do react-hook-form com Zod
   const {
     register,
     handleSubmit,
@@ -154,24 +146,40 @@ const ProfilePage = ({ params }: ParamsType) => {
 
   return (
     <>
-          <Head>
-        {/* Open Graph para Facebook, WhatsApp, LinkedIn */}
-        <meta property="og:title" content={shareTitle} />
-        <meta property="og:description" content={shareDescription} />
-        <meta property="og:image" content={shareImage} />
-        <meta property="og:url" content={shareUrl} />
+      <Head>
+        <title>{profile?.name} - InMemorian</title>
+        <meta
+          name="description"
+          content={profile?.biography || "Veja essa linda homenagem."}
+        />
+
+        {/* Open Graph para Facebook e WhatsApp */}
+        <meta property="og:title" content={`${profile?.name} - InMemorian`} />
+        <meta
+          property="og:description"
+          content={profile?.biography || "Veja essa linda homenagem."}
+        />
+        <meta
+          property="og:image"
+          content={profile?.profileImg || "/images/no-avatar.webp"}
+        />
+        <meta
+          property="og:url"
+          content={`https://inmemorian.com.br/${profile?.slug}`}
+        />
         <meta property="og:type" content="website" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
 
-        {/* Twitter Card */}
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={shareTitle} />
-        <meta name="twitter:description" content={shareDescription} />
-        <meta name="twitter:image" content={shareImage} />
-
-        {/* Título da página */}
-        <title>{shareTitle} - InMemorian</title>
+        <meta name="twitter:title" content={`${profile?.name} - InMemorian`} />
+        <meta
+          name="twitter:description"
+          content={profile?.biography || "Veja essa linda homenagem."}
+        />
+        <meta
+          name="twitter:image"
+          content={profile?.profileImg || "/images/no-avatar.webp"}
+        />
       </Head>
 
       <div className="mx-0">
