@@ -81,14 +81,13 @@ const ProfilePage = ({ params }: ParamsType) => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = await getProfilesBySlug(params.slug);
+      setIsLoading(true);
+      const data = await getProfilesBySlug(slug);
       setProfile(data);
-      if (data?.name) {
-        document.title = `${data.name} - InMemorian`;
-      }
+      setIsLoading(false);
     };
     fetchProfile();
-  }, [params.slug]);
+  }, [slug]);
 
   const {
     register,
