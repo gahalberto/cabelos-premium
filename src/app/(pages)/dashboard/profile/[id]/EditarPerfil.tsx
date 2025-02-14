@@ -48,6 +48,14 @@ const EditPerfilForm = ({ profile }: PropsType) => {
       return;
     }
 
+    const maxImages = profile.plan === "Basic" ? 3 : 9;
+    const totalImages = images.length + files.length; // Total de imagens já enviadas + novas
+
+    if (totalImages > maxImages) {
+      alert(`Seu plano ${profile.plan}, Você só pode enviar no máximo ${maxImages} imagens.`);
+      return; 
+    }
+
     setSelectedFiles(Array.from(files)); // Armazena os arquivos para envio posterior
     setImageUrls(Array.from(files).map((file) => URL.createObjectURL(file))); // Cria prévias das imagens
   };

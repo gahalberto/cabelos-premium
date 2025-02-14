@@ -16,6 +16,12 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "InMemorian",
   description: "Eternize as memórias de quem você ama",
+  icons: {
+    icon: "/images/favcon.png", // Caminho do favicon na pasta public/
+    shortcut: "/images/favcon.png", // Ícone de atalho
+    apple: "/images/favcon.png", // Ícone para dispositivos Apple
+  },
+
 };
 
 export default function RootLayout({

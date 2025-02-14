@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { FaCamera, FaHeart, FaHome } from "react-icons/fa";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MemoriaProfiles,
   ProfilePhotos,
@@ -27,6 +27,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateTribute } from "@/app/_actions/saveTribute";
 import { useToast } from "@/hooks/use-toast";
+import Head from "next/head";
+
 
 type ParamsType = {
   params: {
@@ -52,6 +54,47 @@ const TributeSchema = z.object({
 
 type TributeFormData = z.infer<typeof TributeSchema>;
 
+const YouTubeAudioPlayer = ({ videoId }: { videoId: string }) => {
+  const [playing, setPlaying] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
+  useEffect(() => {
+    console.log("Component Loaded"); // Debugging to check if the component is rendered
+  }, []);
+
+  const togglePlayback = () => {
+    if (!iframeRef.current) return;
+
+    const iframe = iframeRef.current;
+    const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&controls=0&showinfo=0&modestbranding=1&enablejsapi=1`;
+
+    if (!playing) {
+      iframe.src = src; // Set the src when playing is triggered
+      setPlaying(true);
+    } else {
+      iframe.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); // Pause video
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <div className="relative w-full max-w-md mx-auto">
+      <iframe
+        ref={iframeRef}
+        width="300"
+        height="200"
+        allow="autoplay"
+        className="opacity-0 absolute"
+        />
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={togglePlayback}
+        >
+        {playing ? "Pause" : "Play"} Music
+      </button>
+    </div>
+  );
+}
 const ProfilePage = ({ params }: ParamsType) => {
   const { slug } = params;
   const [profile, setProfile] = useState<MemoriaProfilesType | null>(null);
@@ -61,6 +104,17 @@ const ProfilePage = ({ params }: ParamsType) => {
   const [imageDialogOpen, setImageDialogOpen] = useState(false); // Estado para controlar o Dialog da foto
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para armazenar a imagem selecionada
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const data = await getProfilesBySlug(params.slug);
+      setProfile(data);
+      if (data?.name) {
+        document.title = `${data.name} - InMemorian`;
+      }
+    };
+    fetchProfile();
+  }, [params.slug]);
 
   // Configuração do react-hook-form com Zod
   const {
@@ -118,6 +172,7 @@ const ProfilePage = ({ params }: ParamsType) => {
   }
 
   return (
+    <>
     <div className="mx-0">
       <div className="relative h-64 w-full">
         <Image
@@ -159,6 +214,8 @@ const ProfilePage = ({ params }: ParamsType) => {
                 {profile.biography ||
                   `Huilton Nascimento foi um homem de estrada...`}
               </p>
+              <YouTubeAudioPlayer videoId="IaIPEWZahcsn" />
+
             </div>
           </div>
         )}
@@ -323,6 +380,8 @@ const ProfilePage = ({ params }: ParamsType) => {
         </div>
       </div>
     </div>
+      </>
+
   );
 };
 
