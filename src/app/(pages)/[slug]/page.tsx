@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: ParamsType): Promise<Metadata
 
   const title = `${profile.name} - InMemorian`;
   const description = profile.biography || "Eternize as memórias de quem você ama.";
-  const imageUrl = profile.profileImg || "/images/no-avatar.webp";
+  const imageUrl = profile.profileImg
+    ? `https://inmemorian.com.br/${profile.profileImg}` // URL absoluta
+    : "https://inmemorian.com.br/images/no-avatar.webp"; // Imagem padrão
   const pageUrl = `https://inmemorian.com.br/${profile.slug}`;
 
   return {
