@@ -4,9 +4,9 @@ export default {
       "images.unsplash.com",
       "images.pexels.com",
       "upload.wikimedia.org",
-      "inmemorian.com.br", 
+      "inmemorian.com.br", // 🔥 Permite carregar imagens do seu próprio domínio
     ],
-    unoptimized: true, 
+    unoptimized: true, // 🔥 Evita que Next.js tente otimizar imagens locais
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -16,13 +16,5 @@ export default {
   },
   env: {
     NEXT_PUBLIC_ASAAS: process.env.NEXT_PUBLIC_ASAAS,
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/photos/:path*", // 🔥 Evita que o Next.js processe essa rota
-        destination: "/public/photos/:path*",
-      },
-    ];
   },
 };
