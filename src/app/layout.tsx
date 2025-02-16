@@ -8,12 +8,13 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Cinzel } from "next/font/google";
+import { Raleway } from 'next/font/google';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "InMemorian",
-  description: "Eternize as memórias de quem você ama",
+  title: "Cabelos Premium",
+  description: "A melhor loja de cabelos do Brasil",
   icons: {
     icon: "/images/favcon.png", // Caminho do favicon na pasta public/
     shortcut: "/images/favcon.png", // Ícone de atalho

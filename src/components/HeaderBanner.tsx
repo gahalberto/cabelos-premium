@@ -10,7 +10,7 @@ const HeaderBanner = () => {
         loop
         muted
       >
-        <source src="/images/banner1.mp4" type="video/mp4" />
+        <source src="/images/cabelos.mp4" type="video/mp4" />
         Seu navegador não suporta o elemento de vídeo.
       </video>
 
@@ -20,14 +20,14 @@ const HeaderBanner = () => {
       {/* Conteúdo do banner (texto, descrição e botão) */}
       <div className="relative z-10 flex items-center justify-center h-full">
         <div className="flex flex-col items-center text-center max-w-2xl px-4">
-          <h1 className="text-white text-4xl font-bold">
-            Eternize as Memórias de Quem Você Ama
+          <h1 className="text-white text-4xl font-raleway">
+          Bronzerion Hair Extesion
           </h1>
-          <p className="text-lg mt-4 text-gray-300">
+          {/* <p className="text-lg mt-4 text-gray-300">
             Com o InMemorian, crie homenagens digitais para eternizar a memória dos seus entes queridos. Personalize uma página com fotos, biografias e recordações especiais que manterão viva a lembrança de quem sempre fará parte de sua história.
-          </p>
+          </p> */}
           {/* Espaçamento entre o texto e o botão */}
-          <Button className="w-70 mt-10 bg-blue-400">Comece Agora - Crie Sua Homenagem</Button>
+          {/* <Button className="w-70 mt-10 bg-blue-400">Comece Agora - Crie Sua Homenagem</Button> */}
         </div>
       </div>
     </div>

@@ -35,14 +35,14 @@ export function NavigationMenuDemo() {
   const { data } = useSession();
 
   return (
-    <div className="bg-gray-200 shadow w-full z-50">
+    <div className="bg-emerald-100 shadow w-full z-50">
       {/* Container flex para alinhar logotipo à esquerda e menu ao centro */}
       <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
         {/* Logotipo à esquerda */}
         <div className="flex items-center">
           <Link href="/">
             <Image
-              src={"/images/logo.png"}
+              src={"/images/logo-cabelos.png"}
               alt="Logotipo"
               width={220}
               height={50}
@@ -126,14 +126,14 @@ export function NavigationMenuDemo() {
                   className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
                 >
                   <InfoIcon className="w-5 h-5" />
-                  Sobre
+                  Lançamentos
                 </Link>
                 <Link
                   href="/contact"
                   className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
                 >
                   <MailIcon className="w-5 h-5" />
-                  Contato
+                  Coleção
                 </Link>
 
                 <div
@@ -158,10 +158,9 @@ export function NavigationMenuDemo() {
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "flex items-center gap-2"
+                        "flex items-center gap-2 font-raleway"
                       )}
                     >
-                      <LayoutDashboardIcon className="w-5 h-5" />
                       Seus perfis
                     </NavigationMenuLink>
                   </Link>
@@ -173,11 +172,10 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2"
+                      "flex items-center gap-2 font-raleway"
                     )}
                   >
-                    <HomeIcon className="w-5 h-5" />
-                    Início
+                   Início
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -187,11 +185,10 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2"
+                      "flex items-center gap-2 font-raleway"
                     )}
                   >
-                    <InfoIcon className="w-5 h-5" />
-                    Sobre
+                    Lançamentos
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -201,14 +198,40 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2"
+                      "flex items-center gap-2 font-raleway"
                     )}
                   >
-                    <MailIcon className="w-5 h-5" />
-                    Contato
+                    Coleção
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link href="/contact" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "flex items-center gap-2 font-raleway"
+                    )}
+                  >
+                    Torne-se um expert
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link href="/contact" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "flex items-center gap-2 font-raleway"
+                    )}
+                  >
+                    Produtos
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
 
               {/* Botão de Sair ou Login */}
               {data?.user ? (
@@ -225,16 +248,15 @@ export function NavigationMenuDemo() {
                   </div>
                 </NavigationMenuItem>
               ) : (
-                <NavigationMenuItem>
-                  <Link href="/login" legacyBehavior passHref>
+                <NavigationMenuItem className="">
+                  <Link href="/login"  className=""legacyBehavior passHref>
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "flex items-center gap-2"
+                        "flex items-center gap-2 font-raleway"
                       )}
                     >
-                      <LogInIcon className="w-5 h-5" />
-                      Login
+                      Contato
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>

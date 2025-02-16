@@ -26,7 +26,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
-        cinzel: ['Cinzel', 'sans-serif'],        // Adiciona a fonte Roboto
+        raleway: ['Raleway', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
