@@ -30,14 +30,18 @@ import { Avatar } from "./ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { signOut, useSession } from "next-auth/react";
 import { LogInIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export function NavigationMenuDemo() {
   const { data } = useSession();
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
-    <div className="bg-emerald-100 shadow w-full z-50">
+    <div className="bg-[#F5E8DD] shadow w-full z-50">
       {/* Container flex para alinhar logotipo à esquerda e menu ao centro */}
-      <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
         {/* Logotipo à esquerda */}
         <div className="flex items-center">
           <Link href="/">
@@ -158,7 +162,7 @@ export function NavigationMenuDemo() {
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "flex items-center gap-2 font-raleway"
+                        "flex items-center gap-2 font-raleway text-black"
                       )}
                     >
                       Seus perfis
@@ -172,7 +176,7 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway"
+                      "flex items-center gap-2 font-raleway text-black"
                     )}
                   >
                    Início
@@ -185,7 +189,7 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway"
+                      "flex items-center gap-2 font-raleway text-black"
                     )}
                   >
                     Lançamentos
@@ -198,7 +202,7 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway"
+                      "flex items-center gap-2 font-raleway text-black"
                     )}
                   >
                     Coleção
@@ -207,16 +211,36 @@ export function NavigationMenuDemo() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/contact" legacyBehavior passHref>
-                  <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway"
-                    )}
-                  >
-                    Torne-se um expert
-                  </NavigationMenuLink>
-                </Link>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <NavigationMenuLink
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "flex items-center gap-2 font-raleway text-black cursor-pointer"
+                      )}
+                    >
+                      Torne-se um expert
+                    </NavigationMenuLink>
+                  </DialogTrigger>
+                  <DialogContent className="bg-white">
+                    <DialogHeader>
+                      <DialogTitle>Cadastre seu salão</DialogTitle>
+                      <DialogDescription>
+                        Preencha as informações abaixo para se tornar um expert.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-3">
+                      <Input placeholder="Nome do salão" />
+                      <Input placeholder="CNPJ" />
+                      <Input placeholder="CPF" />
+                      <Input placeholder="Instagram" />
+                      <Input placeholder="Endereço completo" />
+                      <Input placeholder="Email" />
+                      <Input placeholder="Telefone" />
+                    </div>
+                    <Button className="w-full mt-4">Enviar</Button>
+                  </DialogContent>
+                </Dialog>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -224,7 +248,7 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway"
+                      "flex items-center gap-2 font-raleway text-black"
                     )}
                   >
                     Produtos
@@ -239,7 +263,7 @@ export function NavigationMenuDemo() {
                   <div
                     className={cn(
                       navigationMenuTriggerStyle(),
-                      "cursor-pointer flex items-center gap-2"
+                      "cursor-pointer flex items-center gap-2 text-black"
                     )}
                     onClick={() => signOut()}
                   >
@@ -253,7 +277,7 @@ export function NavigationMenuDemo() {
                     <NavigationMenuLink
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "flex items-center gap-2 font-raleway"
+                        "flex items-center gap-2 font-raleway text-black"
                       )}
                     >
                       Contato
