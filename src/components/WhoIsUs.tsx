@@ -1,18 +1,14 @@
 "use client";
-import { Roboto } from "next/font/google";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useRouter } from "next/navigation";
 import { Separator } from "./ui/separator";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import Image from "next/image";
-
-const roboto = Roboto({
-  weight: "400",
-  subsets: ["latin"],
-});
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 const WhoIsUs = () => {
   useEffect(() => {
@@ -21,201 +17,319 @@ const WhoIsUs = () => {
     });
   }, []);
 
-  const router = useRouter();
-
   return (
     <>
-      {/* Seção 1: A Marca Da Sua Extensão */}
-      <section className="w-full bg-emerald-100 py-16 px-4 sm:px-10 md:px-20 lg:px-36">
-        <header className="text-center">
-          <h1 className="text-4xl font-raleway">
-            A Marca Da Sua <span className="font-bold">Extensão</span>
-          </h1>
-          <Separator className="my-6 bg-gray-400 mx-auto w-16" />
+      <style jsx global>{`
+        .swiper-pagination-bullet-active {
+          background-color: #d97706 !important;
+        }
+        
+        .swiper-button-next,
+        .swiper-button-prev {
+          color: #d97706 !important;
+        }
+        
+        .swiper-slide {
+          height: auto !important;
+        }
+        
+        .candy-swiper {
+          padding-bottom: 50px !important;
+        }
+      `}</style>
+      
+      {/* Seção Lançamento */}
+      <section className="w-full bg-white py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+        <header className="text-center mb-16">
+          <h1 className="text-5xl font-raleway text-gray-800 ">Lançamento</h1>
+          <Separator className="my-6 bg-amber-600 mx-auto w-16" />
         </header>
 
-        <article className="mt-12 text-center">
-          <h2 className="text-3xl font-raleway mb-8">Lançamentos</h2>
-          <p className="text-lg font-raleway max-w-2xl mx-auto leading-relaxed">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
-          </p>
-        </article>
+        <div className="max-w-6xl mx-auto space-y-24">
+          {/* Primeiro Bloco */}
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="md:w-1/2" data-aos="fade-right">
+              <p className="text-xl text-gray-700 leading-relaxed">
+                A Cabelos Premium tem o prazer de apresentar uma inovação exclusiva para os profissionais da beleza: a nova técnica de Mega Hair com fitas de alta performance, desenvolvida para atender às necessidades de praticidade, conforto e qualidade que só os maiores salões exigem.
+              </p>
+            </div>
+            <div className="md:w-1/2" data-aos="fade-left">
+              <Image
+                src="/images/finura.jpg"
+                alt="Finura"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-xl"
+              />
+            </div>
+          </div>
 
-        <div className="mt-12 mx-auto max-w-4xl">
-          <Image
-            src="/images/longbanner.png"
-            alt="Cabelos Premium"
-            width={1200}
-            height={400}
-            layout="responsive"
-            className="rounded-lg shadow-lg"
-          />
+          {/* Segundo Bloco */}
+          <div className="flex flex-col-reverse md:flex-row items-center gap-12">
+            <div className="md:w-1/2" data-aos="fade-right">
+              <Image
+                src="/images/tecnica-maleavel.jpg"
+                alt="Técnica Maleável"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-xl"
+              />
+            </div>
+            <div className="md:w-1/2" data-aos="fade-left">
+              <p className="text-xl text-gray-700 leading-relaxed">
+                Após meses de pesquisa e desenvolvimento, nosso produto foi criado com um único objetivo: oferecer aos profissionais da beleza uma solução eficiente e duradoura, sem abrir mão do conforto e da elegância. A necessidade de um produto que fosse fácil de aplicar, seguro e confortável para o cliente é o maior objetivo por trás dessa inovação.
+              </p>
+            </div>
+          </div>
+
+          {/* Terceiro Bloco */}
+          <div className="text-center" data-aos="fade-up">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
+              Agora, você pode ter acesso e em mãos uma técnica de mega hair única, feita sob medida para quem busca excelência no serviço e resultados impecáveis. Uma verdadeira revolução no mercado de extensões capilares.
+            </p>
+            <h2 className="text-3xl font-bold text-amber-600 mb-6">
+              Exclusivo para Salões e Profissionais da Beleza
+            </h2>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-12">
+              Com a Cabelos Premium, você terá uma ferramenta poderosa em seu salão para lotar sua agenda e faturar números nunca vistos antes. Aplique a técnica de mega hair com facilidade e rapidez, sem perder tempo ou comprometer a qualidade do serviço. Sinta a diferença e ofereça uma experiência premium aos seus clientes.
+            </p>
+            <Image
+              src="/images/livros-caixa-cabelo.jpg"
+              alt="Livros e Caixa de Cabelo"
+              width={800}
+              height={400}
+              className="rounded-lg shadow-xl mx-auto"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Seção 2: Por que escolher a Cabelos Premium? */}
-      <section className="w-full bg-white py-16 px-4 sm:px-10 md:px-20 lg:px-36">
-        <div className="max-w-6xl mx-auto bg-white p-8 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="md:w-1/2">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
-              Por que escolher a{" "}
-              <span className="text-amber-600">Cabelos Premium?</span>
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Somos a única empresa do Brasil que trabalha com autênticos
-              cabelos do Sul, reconhecidos mundialmente pela sua qualidade.
-            </p>
+      {/* Seção Coleção Candy */}
+      <section className="w-full bg-emerald-50 py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+        <header className="text-center mb-16">
+          <h1 className="text-5xl font-raleway text-gray-800">Coleção</h1>
+          <h2 className="text-3xl text-amber-600 mt-4">Candy, uma doce coleção</h2>
+          <Separator className="my-6 bg-amber-600 mx-auto w-16" />
+        </header>
 
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold text-gray-700">
-                  ✅ Qualidade superior
-                </h3>
-                <p className="text-gray-600 text-sm mt-2">
-                  Cabelos naturais, 100% do Sul. Fios selecionados, macios,
-                  extra finos, saudáveis e brilhantes.
-                </p>
+        <div className="max-w-6xl mx-auto space-y-24">
+          {/* Introdução */}
+          <div className="text-center" data-aos="fade-up">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
+              Apresentamos a primeira coleção: Candy. Criada especialmente para nossas Sweet Darlings, mulheres exigentes e poderosas, mas muito doces.
+            </p>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-12">
+              São 6 tonalidades exclusivas, desenvolvidas para atender aos variados gostos e estilos de mesclagens e tons de descoloração.
+            </p>
+            <div className="max-w-4xl mx-auto">
+              <Swiper
+                slidesPerView={1}
+                spaceBetween={30}
+                pagination={{
+                  clickable: true,
+                }}
+                navigation={true}
+                autoplay={{
+                  delay: 3500,
+                  disableOnInteraction: false,
+                }}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                  },
+                }}
+                modules={[Pagination, Navigation, Autoplay]}
+                className="candy-swiper"
+              >
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/toffee.jpg"
+                      alt="Toffee"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Toffee</h4>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/vanilla.jpg"
+                      alt="Vanilla"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Vanilla</h4>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/6-cores.jpg"
+                      alt="Caramel"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Caramel</h4>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/6-cores.jpg"
+                      alt="Chocolate"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Chocolate</h4>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/6-cores.jpg"
+                      alt="Honey"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Honey</h4>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="p-2">
+                    <Image
+                      src="/images/6-cores.jpg"
+                      alt="Blonde"
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Blonde</h4>
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
+          </div>
+
+          {/* Diferencial */}
+          <div data-aos="fade-up" className="mb-12">
+            <h3 className="text-2xl font-bold text-center mb-8 text-amber-600">
+              A primeira marca que trabalha com fitas EXCLUSIVAMENTE COM CABELOS BRASILEIROS DO SUL
+            </h3>
+            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mb-8">
+              Cada fita mede 5cm. São finas, flexíveis e confortáveis, proporcionando um resultado impecável e natural. A técnica de mega hair mais avançada no mercado, garante um acabamento suave e invisível, totalmente leve e confortável, ideal para quem busca o melhor resultado em extensão capilar.
+            </p>
+            <Image
+              src="/images/fita-fina.jpg"
+              alt="Fita Fina"
+              width={800}
+              height={400}
+              className="rounded-lg shadow-xl mx-auto"
+            />
+          </div>
+
+          {/* Cores */}
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className="space-y-6" data-aos="fade-right">
+              <h3 className="text-2xl font-bold text-amber-600">Toffee</h3>
+              <p className="text-xl text-gray-700">Uma cor quente e sofisticada, com tons de caramelo e dourado.</p>
+              <Image
+                src="/images/toffee.jpg"
+                alt="Toffee"
+                width={500}
+                height={300}
+                className="rounded-lg shadow-xl"
+              />
+            </div>
+            <div className="space-y-6" data-aos="fade-left">
+              <h3 className="text-2xl font-bold text-amber-600">Vanilla</h3>
+              <p className="text-xl text-gray-700">Um tom suave e delicado, perfeito para iluminar os fios.</p>
+              <Image
+                src="/images/vanilla.jpg"
+                alt="Vanilla"
+                width={500}
+                height={300}
+                className="rounded-lg shadow-xl"
+              />
+            </div>
+          </div>
+
+          {/* Características */}
+          <div data-aos="fade-up" className="mb-12">
+            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mb-12">
+              Cada kit é ideal para criar efeitos naturais e discretos, sem comprometer a leveza e o conforto dos fios naturais. Por ser mais fina e flexível, a fita se adapta facilmente a qualquer tipo de cabelo, garantindo uma aplicação precisa e duradoura.
+            </p>
+            <Image
+              src="/images/flexivel.jpg"
+              alt="Flexível"
+              width={800}
+              height={400}
+              className="rounded-lg shadow-xl mx-auto"
+            />
+          </div>
+
+          {/* Benefícios */}
+          <div data-aos="fade-up" className="mb-12">
+            <h3 className="text-3xl font-bold text-center mb-12 text-amber-600">
+              Por que escolher o Mega Hair Candy?
+            </h3> 
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="flex items-start gap-4">
+                <span className="text-amber-600 text-2xl">✅</span>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Conforto e Leveza</h4>
+                  <p className="text-gray-600">As fitas são finas e flexíveis, proporcionando uma sensação de leveza durante o uso.</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-700">✅ Durabilidade</h3>
-                <p className="text-gray-600 text-sm mt-2">
-                  Nossos fios mantêm sua integridade, maciez e brilho ao longo
-                  do tempo, resistindo ao uso contínuo.
-                </p>
+              <div className="flex items-start gap-4">
+                <span className="text-amber-600 text-2xl">✅</span>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Durabilidade e Segurança</h4>
+                  <p className="text-gray-600">Feitas com cabelo 100% brasileiro do Sul, garantem resistência e longevidade.</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-700">✅ Excelência</h3>
-                <p className="text-gray-600 text-sm mt-2">
-                  Compromisso com a entrega, garantia do produto e atendimento
-                  personalizado.
-                </p>
+              <div className="flex items-start gap-4">
+                <span className="text-amber-600 text-2xl">✅</span>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Estilo e Versatilidade</h4>
+                  <p className="text-gray-600">Diversas tonalidades para atender os vários gostos de descoloração.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-amber-600 text-2xl">✅</span>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Qualidade Pro</h4>
+                  <p className="text-gray-600">Produto exclusivo para salões e profissionais da beleza, desenvolvido com os mais altos padrões do mercado.</p>
+                </div>
               </div>
             </div>
-
-            <button
-              onClick={() => router.push("https://wa.me/seunumerodewhatsapp")}
-              className="mt-8 bg-amber-600 text-white py-3 px-6 rounded-lg hover:bg-amber-700 transition duration-300"
-            >
-              Fazer minha cotação agora pelo WhatsApp
-            </button>
-          </div>
-
-          <div className="md:w-1/2 flex justify-center">
-            <Image
-              src="/images/cabelos-banner-1.png"
-              width={600}
-              height={600}
-              alt="Cabelos Premium"
-              className="rounded-lg shadow-lg"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Seção 3: Laces e Próteses */}
-      <section className="w-full bg-emerald-100 py-16 px-4 sm:px-10 md:px-20 lg:px-36">
-        <header className="text-center">
-          <h1 className="text-4xl font-raleway">Laces e Próteses</h1>
-          <Separator className="my-6 bg-gray-400 mx-auto w-16" />
-        </header>
-
-        <article className="mt-12 text-center">
-          <p className="text-lg font-raleway max-w-5xl mx-auto leading-relaxed">
-            Nossas perucas são uma ótima escolha para quem quer mudar o visual
-            de forma rápida e sem agredir os fios, ideal também para quem está
-            em tratamento quimioterápico, para pessoas que sofrem com alopecia
-            ou estão em processo de transição capilar. São costuradas fio a fio,
-            confeccionadas com cabelos naturais do sul, oferecendo leveza e
-            naturalidade. Proporcionam conforto e praticidade para o uso diário.
-            Sua alta tecnologia imita o couro cabeludo, tornando o uso
-            imperceptível.
-          </p>
-        </article>
-      </section>
-
-      {/* Vídeo em background */}
-      <div className="relative h-[600px] w-full">
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-100"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="/images/video-perucas-2.mp4" type="video/mp4" />
-          Seu navegador não suporta o elemento de vídeo.
-        </video>
-      </div>
-
-      {/* Seção 4: Topo & Rabo */}
-      <section className="w-full bg-white py-16 px-4 sm:px-10 md:px-20 lg:px-36">
-        <header className="text-center">
-          <h1 className="text-4xl font-raleway">Topo & Rabo</h1>
-          <Separator className="my-6 bg-gray-400 mx-auto w-16" />
-        </header>
-
-        <article className="mt-12 text-center">
-          <p className="text-lg font-raleway max-w-5xl mx-auto leading-relaxed">
-            O topo capilar é confeccionado em uma tela fina, onde os fios são
-            costurados fio a fio, simulando o couro cabeludo. Pode ser colado ou
-            fixado com presilhas estilo TIC TAC, são ideais para pessoas que
-            apresentam falhas ou querem adicionar volume. O Rabo é colocado por
-            cima do seu rabo de cavalo natural, fixado por um feltro adesivo,
-            resultando em naturalidade e aumento de volume. Ideal para quem
-            busca um visual elegante e sofisticado, seja para uso diário ou
-            ocasiões especiais. Personalizamos o topo e rabo de acordo com a
-            necessidade de nossas clientes.
-          </p>
-        </article>
-      </section>
-
-      {/* Vídeo em background */}
-      <div className="relative h-[600px] w-full">
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-100"
-          autoPlay
-          loop
-          muted
-        >
-          <source src="/images/video-perucas-3.mp4" type="video/mp4" />
-          Seu navegador não suporta o elemento de vídeo.
-        </video>
-      </div>
-
-            {/* Seção 2: Por que escolher a Cabelos Premium? */}
-            <section className="w-full bg-emerald-100 py-16 px-4 ">
-            <header className="text-center">
-          <h1 className="text-4xl font-raleway">Mega Hair</h1>
-          <Separator className="my-6 bg-gray-400 mx-auto w-16" />
-        </header>
-
-        <div className="max-w-6xl mx-auto  p-8 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="md:w-1/2">
-            <p className="text-gray-600 mb-6">
-            O mega hair é a escolha ideal para quem busca não apenas volume e comprimento, mas uma verdadeira transformação no visual com naturalidade e sofisticação. Confeccionados com cabelos 100% naturais do Sul, mechas macias, brilhantes e duráveis, trazendo harmonia e naturalidade sem comprometer o movimento e a leveza dos fios.
-
-O processo é cuidadoso e feito de forma personalizada, respeitando o estilo e as necessidades de cada cliente, seja para dar mais volume, alongar os cabelos ou até criar um visual renovado.
-
-Além de agregar a beleza instantânea, nosso mega hair proporciona durabilidade. Com ele, você melhora seu visual e eleva sua autoestima com um produto desenvolvido para oferecer o melhor em estética e conforto. 
-
+            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mt-12">
+              O Mega Hair Candy é a escolha certa para quem busca oferecer aos seus clientes a melhor experiência em extensões capilares, com a garantia de resultados naturais e duradouros. Disponível apenas para profissionais de beleza, nossa coleção é a ferramenta perfeita para levar o seu salão a um novo patamar.
             </p>
           </div>
-
-          <div className="md:w-1/2 flex justify-center">
-            <Image
-              src="/images/meganew.webp"
-              width={600}
-              height={600}
-              alt="Cabelos Premium"
-              className="rounded-lg shadow-lg"
-            />
-          </div>
         </div>
       </section>
 
-
+      {/* Seção Final */}
+      <section className="w-full bg-amber-50 py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+        <div className="max-w-4xl mx-auto text-center" data-aos="fade-up">
+          <h2 className="text-4xl font-bold text-amber-600">
+            Feita por profissionais, para profissionais
+          </h2>
+        </div>
+      </section>
     </>
   );
 };

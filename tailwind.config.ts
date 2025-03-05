@@ -5,8 +5,8 @@ const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenCo
 
 // Função para adicionar as variáveis CSS para as cores do Tailwind
 function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
 
@@ -27,6 +27,7 @@ const config: Config = {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
         raleway: ['Raleway', 'sans-serif'],
+        unna: ['var(--font-unna)', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

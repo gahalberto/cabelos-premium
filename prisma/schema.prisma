@@ -184,3 +184,21 @@ model FinancialReport {
   totalSales  Int      @default(0)
   date        DateTime @default(now())
 }
+
+model Contact {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    ContactStatus @default(Pending)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+enum ContactStatus {
+  Pending
+  Read
+  Responded
+}

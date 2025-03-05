@@ -1,27 +1,24 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import { cn } from "@/app/_lib/utils";
-import { Icons } from "@/components/icons";
 import {
   HomeIcon,
-  InfoIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  MailIcon,
+  SearchIcon,
+  ShoppingBagIcon,
+  UserIcon,
+  HeartIcon,
+  MenuIcon,
 } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -29,181 +26,261 @@ import {
 import { Avatar } from "./ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { signOut, useSession } from "next-auth/react";
-import { LogInIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 
 export function NavigationMenuDemo() {
   const { data } = useSession();
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
-    <div className="bg-[#F5E8DD] shadow w-full z-50">
-      {/* Container flex para alinhar logotipo à esquerda e menu ao centro */}
-      <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
-        {/* Logotipo à esquerda */}
+    <div className="bg-[#F0EFDB] w-full z-50 border-b border-[#e6d7c9]">
+      {/* Barra superior com informações sobre os cabelos */}
+      <div className="w-full bg-[#f5f5f5] py-4 text-center">
+        <p className="text font-bold text-[#2f5233] flex items-center justify-center">
+          <span className="mr-2">🇧🇷</span> Os Legitimos Cabelos Brasileiros do Sul 
+        </p>
+      </div>
+      
+
+      {/* Container principal do menu */}
+      <div className="max-w-6xl mx-auto flex items-center justify-center py-4 px-4">
+        {/* Logotipo */}
         <div className="flex items-center">
           <Link href="/">
             <Image
-              src={"/images/logo-cabelos.png"}
+              src={"/images/logoouro.png"}
               alt="Logotipo"
-              width={220}
+              width={400}
               height={50}
+              className="h-auto"
             />
           </Link>
         </div>
 
+        {/* Ícones de ação para desktop */}
+        <div className="hidden md:flex items-center gap-6 absolute right-4">
+          {/* Busca */}
+          <button 
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="text-[#b08c4f] hover:text-[#8a6d3b] transition-colors"
+          >
+            <SearchIcon className="h-5 w-5" />
+          </button>
+          
+          {/* Favoritos */}
+          <Link href="/wishlist" className="text-[#b08c4f] hover:text-[#8a6d3b] transition-colors">
+            <HeartIcon className="h-5 w-5" />
+          </Link>
+          
+          {/* Carrinho */}
+          <Link href="/cart" className="text-[#b08c4f] hover:text-[#8a6d3b] transition-colors relative">
+            <ShoppingBagIcon className="h-5 w-5" />
+            <span className="absolute -top-2 -right-2 bg-[#b08c4f] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              0
+            </span>
+          </Link>
+          
+          {/* Conta */}
+          {data?.user ? (
+            <div className="relative group">
+              <Avatar className="h-8 w-8 border-2 border-[#b08c4f] cursor-pointer">
+                <AvatarImage src={data.user.image || undefined} />
+              </Avatar>
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                <div className="p-3 border-b border-gray-100">
+                  <p className="font-medium text-sm font-unna">{data.user.name}</p>
+                  <p className="text-xs text-gray-500 font-unna">{data.user.email}</p>
+                </div>
+                <Link href="/account" className="block px-4 py-2 text-sm hover:bg-gray-50 font-unna">Minha Conta</Link>
+                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50 font-unna">Meus Pedidos</Link>
+                <button 
+                  onClick={() => signOut()} 
+                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50 font-unna"
+                >
+                  Sair
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link href="/login" className="text-[#b08c4f] hover:text-[#8a6d3b] transition-colors">
+              <UserIcon className="h-5 w-5" />
+            </Link>
+          )}
+        </div>
+
         {/* Ícone de menu hambúrguer em dispositivos móveis */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-4">
+          <Link href="/cart" className="text-[#b08c4f] relative">
+            <ShoppingBagIcon className="h-5 w-5" />
+            <span className="absolute -top-2 -right-2 bg-[#b08c4f] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              0
+            </span>
+          </Link>
+          
           <Sheet>
-            {/* Botão do ícone do menu como SheetTrigger */}
             <SheetTrigger asChild>
-              <button className="text-gray-600 focus:outline-none">
-                <Icons.menu className="h-6 w-6" />{" "}
-                {/* Ícone de menu hambúrguer */}
+              <button className="text-[#b08c4f] focus:outline-none">
+                <MenuIcon className="h-6 w-6" />
               </button>
             </SheetTrigger>
 
-            {/* Conteúdo do menu lateral */}
-            <SheetContent className="bg-white w-[300px] sm:w-[400px] overflow-y-auto">
+            <SheetContent className="bg-[#f9f3ee] w-[300px] sm:w-[350px] overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center">
                     <Image
-                      src={"/images/logo.png"}
+                      src={"/images/logoouro.png"}
                       alt="Logotipo"
-                      width={180}
-                      height={50}
+                      width={150}
+                      height={40}
                     />
                   </div>
                 </SheetTitle>
-                <SheetDescription>Menu de navegação</SheetDescription>
               </SheetHeader>
-              <div className="flex items-center justify-between gap-3 border-b border-gray-300 py-5">
-                {" "}
-                {data?.user ? (
-                  <div className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage src={data.user.image || undefined} />
-                    </Avatar>
-
-                    <div className="">
-                      <p className="font-bold">{data.user.name}</p>
-                      <p className="text-sm">{data.user.email}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <LogInIcon className="text-blue-600" />
-                    <Link href={"/login"}>
-                      <h2 className="text-lg font-bold text-blue-600">
-                        Faça o seu login
-                      </h2>
-                    </Link>
-                  </div>
-                )}
+              
+              <div className="mt-6 px-2">
+                <Input 
+                  placeholder="Buscar produtos..." 
+                  className="bg-white border-[#e6d7c9] focus:border-[#b08c4f] focus:ring-[#b08c4f]"
+                />
               </div>
-
-              <div className="flex flex-col space-y-2 mt-5">
-                {data?.user.id && (
-                  <div>
-                    <Link
-                      href="/dashboard"
-                      className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
-                    >
-                      <LayoutDashboardIcon className="w-5 h-5" />
-                      Seus perfis
-                    </Link>
-                  </div>
-                )}
-
+              
+              <div className="flex flex-col space-y-1 mt-6">
                 <Link
                   href="/"
-                  className="p-3 text-black hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
+                  className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors flex items-center gap-2 text-base font-unna"
                 >
-                  <HomeIcon className="w-5 h-5" />
+                  <HomeIcon className="w-4 h-4" />
                   Início
                 </Link>
+                
+                <div className="p-3 text-gray-800 font-medium text-base font-unna">Produtos</div>
+                
+                <Link
+                  href="/category/perucas"
+                  className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
+                >
+                  Perucas
+                </Link>
+                
+                <Link
+                  href="/category/extensoes"
+                  className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
+                >
+                  Extensões
+                </Link>
+                
+                <Link
+                  href="/category/apliques"
+                  className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
+                >
+                  Apliques
+                </Link>
+                
+                <Link
+                  href="/category/acessorios"
+                  className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
+                >
+                  Acessórios
+                </Link>
+                
+                <Link
+                  href="/category/cosmeticos"
+                  className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
+                >
+                  Cosméticos
+                </Link>
+                
+                <div className="border-t border-[#e6d7c9] my-2"></div>
+                
                 <Link
                   href="/about"
-                  className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
+                  className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
                 >
-                  <InfoIcon className="w-5 h-5" />
-                  Lançamentos
+                  Sobre Nós
                 </Link>
+                
                 <Link
-                  href="/contact"
-                  className="p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
+                  href="/contato"
+                  className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors text-base font-unna"
                 >
-                  <MailIcon className="w-5 h-5" />
-                  Coleção
+                  Contato
                 </Link>
-
-                <div
-                  className="cursor-pointer p-3 text-blue-600 hover:text-gray-800 hover:bg-gray-300 rounded transition-colors flex items-center gap-2"
-                  onClick={() => signOut()}
-                >
-                  <LogOutIcon /> Sair
-                </div>
+                
+                {data?.user ? (
+                  <>
+                    <div className="border-t border-[#e6d7c9] my-2"></div>
+                    <div className="p-3 flex items-center gap-2">
+                      <Avatar className="h-8 w-8 border-2 border-[#b08c4f]">
+                        <AvatarImage src={data.user.image || undefined} />
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-sm">{data.user.name}</p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/account"
+                      className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors font-unna"
+                    >
+                      Minha Conta
+                    </Link>
+                    <Link
+                      href="/orders"
+                      className="p-3 pl-6 text-gray-700 hover:bg-[#e6d7c9] rounded-md transition-colors font-unna"
+                    >
+                      Meus Pedidos
+                    </Link>
+                    <button
+                      className="p-3 pl-6 text-left w-full text-red-500 hover:bg-[#e6d7c9] rounded-md transition-colors font-unna"
+                      onClick={() => signOut()}
+                    >
+                      Sair
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="p-3 text-[#b08c4f] hover:bg-[#e6d7c9] rounded-md transition-colors flex items-center gap-2 text-base font-unna"
+                  >
+                    <UserIcon className="w-4 h-4" />
+                    Entrar / Cadastrar
+                  </Link>
+                )}
               </div>
             </SheetContent>
           </Sheet>
         </div>
-
-        {/* Menu para telas maiores */}
-        <div className={`flex-1 justify-end hidden md:flex`}>
-          <NavigationMenu>
-            <NavigationMenuList className="flex space-x-4">
-              {/* Links do menu */}
-              {data?.user.id && (
-                <NavigationMenuItem>
-                  <Link href="/dashboard" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "flex items-center gap-2 font-raleway text-black"
-                      )}
-                    >
-                      Seus perfis
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              )}
-
+      </div>
+      
+      {/* Menu de navegação principal - apenas desktop */}
+      <div className="hidden md:block border-t bg-[#8a7d5c] border-[#e6d7c9]">
+        <div className="max-w-4xl mx-auto flex justify-center">
+          <NavigationMenu className="justify-center">
+            <NavigationMenuList className="flex space-x-10">
               <NavigationMenuItem>
                 <Link href="/" legacyBehavior passHref>
                   <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway text-black"
-                    )}
+                    className="group inline-flex h-12 w-max items-center justify-center rounded-md px-4 py-2 text-2xl font-unna text-[#F0EFDB] transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                   >
-                   Início
+                    Home
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/about" legacyBehavior passHref>
+                <Link href="/category/perucas" legacyBehavior passHref>
                   <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway text-black"
-                    )}
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-2xl text-[#F0EFDB] font-medium transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50 font-unna"
                   >
-                    Lançamentos
+                    Lançamento
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link href="/contact" legacyBehavior passHref>
+                <Link href="/category/extensoes" legacyBehavior passHref>
                   <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway text-black"
-                    )}
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-2xl text-[#F0EFDB] font-medium transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50 font-unna"
                   >
                     Coleção
                   </NavigationMenuLink>
@@ -211,84 +288,84 @@ export function NavigationMenuDemo() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogTrigger asChild>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "flex items-center gap-2 font-raleway text-black cursor-pointer"
-                      )}
-                    >
-                      Torne-se um expert
-                    </NavigationMenuLink>
-                  </DialogTrigger>
-                  <DialogContent className="bg-white">
-                    <DialogHeader>
-                      <DialogTitle>Cadastre seu salão</DialogTitle>
-                      <DialogDescription>
-                        Preencha as informações abaixo para se tornar um expert.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-3">
-                      <Input placeholder="Nome do salão" />
-                      <Input placeholder="CNPJ" />
-                      <Input placeholder="CPF" />
-                      <Input placeholder="Instagram" />
-                      <Input placeholder="Endereço completo" />
-                      <Input placeholder="Email" />
-                      <Input placeholder="Telefone" />
-                    </div>
-                    <Button className="w-full mt-4">Enviar</Button>
-                  </DialogContent>
-                </Dialog>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <Link href="/contact" legacyBehavior passHref>
+                <Link href="/category/apliques" legacyBehavior passHref>
                   <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "flex items-center gap-2 font-raleway text-black"
-                    )}
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 font-medium text-2xl text-[#F0EFDB] transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50 font-unna"
                   >
-                    Produtos
+                    Torne-se Expert
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
 
-
-              {/* Botão de Sair ou Login */}
-              {data?.user ? (
-                <NavigationMenuItem>
-                  <div
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      "cursor-pointer flex items-center gap-2 text-black"
-                    )}
-                    onClick={() => signOut()}
+              <NavigationMenuItem>
+                <Link href="/category/acessorios" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 font-medium text-2xl text-[#F0EFDB] transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50 font-unna"
                   >
-                    <LogOutIcon className="w-5 h-5" />
-                    Sair
-                  </div>
-                </NavigationMenuItem>
-              ) : (
-                <NavigationMenuItem className="">
-                  <Link href="/login"  className=""legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "flex items-center gap-2 font-raleway text-black"
-                      )}
-                    >
-                      Contato
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              )}
+                    Cosméticos
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link href="/contato" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 font-medium text-2xl text-[#F0EFDB] transition-colors hover:text-[#b08c4f] focus:outline-none disabled:pointer-events-none disabled:opacity-50 font-unna"
+                  >
+                    Contato
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </div>
+      
+      {/* Modal de busca */}
+      {searchOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium font-unna">Buscar produtos</h3>
+              <button 
+                onClick={() => setSearchOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="relative">
+              <Input 
+                placeholder="Digite o que você procura..." 
+                className="pr-10 border-[#e6d7c9] focus:border-[#b08c4f] focus:ring-[#b08c4f]"
+                autoFocus
+              />
+              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#b08c4f]">
+                <SearchIcon className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 font-unna">Sugestões:</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <button className="px-3 py-1 bg-[#f9f3ee] text-sm rounded-full hover:bg-[#e6d7c9] font-unna">
+                  Perucas loiras
+                </button>
+                <button className="px-3 py-1 bg-[#f9f3ee] text-sm rounded-full hover:bg-[#e6d7c9] font-unna">
+                  Extensões de cabelo
+                </button>
+                <button className="px-3 py-1 bg-[#f9f3ee] text-sm rounded-full hover:bg-[#e6d7c9] font-unna">
+                  Apliques naturais
+                </button>
+                <button className="px-3 py-1 bg-[#f9f3ee] text-sm rounded-full hover:bg-[#e6d7c9] font-unna">
+                  Shampoo para perucas
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

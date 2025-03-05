@@ -1,50 +1,53 @@
-import Link from "next/link";
-import { FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaInstagram, FaPhone, FaGlobe } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#020B1C] border-t-2 border-indigo-950 text-white p-6 text-center pt-10">
+    <footer className="bg-[#f5f0e6] py-20 px-4 sm:px-10 md:px-20 lg:px-36">
       <div className="container mx-auto">
-        <h2 className="text-lg font-bold flex items-center justify-center gap-2">
-          <span className="text-pink-500 text-2xl"></span> InMemorian
-        </h2>
-        <p className="mt-2 text-gray-400">
-          Eternizar as pessoas mais queridas
-        </p>
-        <p className="mt-2 text-gray-500 text-sm">Copyright &copy; 2025 - Todos os direitos reservados</p>
-        
-        <div className="mt-4 text-center flex justify-center items-center">
-          <button className="flex items-center gap-2 bg-gray-800 px-4 py-2 rounded-md text-sm">
-            <img
-                      src="/images/yossi.png"
-                      alt="Gabriel Alberto"
-              className="rounded-full w-8 h-8"
-            />
-            Feito por Gabriel Alberto
-          </button>
+        <div className="relative mb-12">
+          <h2 className="text-5xl font-raleway text-center text-[#333333] uppercase tracking-wider">
+            Canais de Atendimento
+          </h2>
+          <div className="absolute left-0 right-0 bottom-0 flex items-center justify-center">
+            <div className="h-[2px] w-full bg-[#b08c4f] relative">
+              <div className="absolute -top-[6px] left-[25%] w-4 h-4 rounded-full bg-[#b08c4f]"></div>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-4 flex justify-center gap-4">
-          <FaGithub className="text-xl cursor-pointer" />
-          <FaLinkedin className="text-xl cursor-pointer" />
-          <FaInstagram className="text-xl cursor-pointer" />
-        </div>
+        <div className="grid md:grid-cols-2 gap-12 mt-24">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-semibold">Explore e Encante-se</h3>
+            <p className="text-lg text-gray-700">
+              Conheça a Cabelos Premium e entre em contato conosco pelos nossos canais de atendimento.
+            </p>
+            <p className="text-lg text-gray-700 mt-8">
+              Estamos aqui para transformar seu visual e oferecer a melhor experiência com cabelos naturais e exclusivos.
+            </p>
+          </div>
 
-        <div className="mt-6">
-          <h3 className="text-gray-400 font-semibold">LEGAL</h3>
-          <ul className="mt-2 space-y-1">
-            <li>
-              <Link href={`/terms-of-use`}>
-                Termos de uso
-              </Link>
-            </li>
-            <li>
-            <Link href={`/privacy-policy`}>
-              Termos de privacidade
-              </Link>
-              </li>
-            <li>CNPJ: 58.426.096/0001</li>
-          </ul>
+          <div className="space-y-8">
+            <div className="flex items-center gap-6">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full border-2 border-[#b08c4f]">
+                <FaInstagram className="text-2xl text-[#b08c4f]" />
+              </div>
+              <p className="text-xl">@cabelospremium</p>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full border-2 border-[#b08c4f]">
+                <FaPhone className="text-2xl text-[#b08c4f]" />
+              </div>
+              <p className="text-xl">(11) 3825-2050</p>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full border-2 border-[#b08c4f]">
+                <FaGlobe className="text-2xl text-[#b08c4f]" />
+              </div>
+              <p className="text-xl">cabelospremium.com.br</p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
