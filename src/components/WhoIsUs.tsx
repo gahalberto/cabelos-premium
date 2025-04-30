@@ -36,6 +36,10 @@ const WhoIsUs = () => {
         .candy-swiper {
           padding-bottom: 50px !important;
         }
+        
+        .launch-swiper {
+          padding-bottom: 50px !important;
+        }
       `}</style>
       
       {/* Seção Lançamento */}
@@ -48,58 +52,67 @@ const WhoIsUs = () => {
         <div className="max-w-6xl mx-auto space-y-24">
           {/* Primeiro Bloco */}
           <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2" data-aos="fade-right">
+            <div className="" data-aos="fade-right">
               <p className="text-xl text-gray-700 leading-relaxed">
-                A Cabelos Premium tem o prazer de apresentar uma inovação exclusiva para os profissionais da beleza: a nova técnica de Mega Hair com fitas de alta performance, desenvolvida para atender às necessidades de praticidade, conforto e qualidade que só os maiores salões exigem.
-              </p>
-            </div>
-            <div className="md:w-1/2" data-aos="fade-left">
-              <Image
-                src="/images/finura.jpg"
-                alt="Finura"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-xl"
-              />
-            </div>
-          </div>
-
-          {/* Segundo Bloco */}
-          <div className="flex flex-col-reverse md:flex-row items-center gap-12">
-            <div className="md:w-1/2" data-aos="fade-right">
-              <Image
-                src="/images/tecnica-maleavel.jpg"
-                alt="Técnica Maleável"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-xl"
-              />
-            </div>
-            <div className="md:w-1/2" data-aos="fade-left">
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Após meses de pesquisa e desenvolvimento, nosso produto foi criado com um único objetivo: oferecer aos profissionais da beleza uma solução eficiente e duradoura, sem abrir mão do conforto e da elegância. A necessidade de um produto que fosse fácil de aplicar, seguro e confortável para o cliente é o maior objetivo por trás dessa inovação.
+              A Cabelos Premium tem o prazer de apresentar uma inovação exclusiva para os profissionais da beleza: a nova técnica de Mega Hair com fitas de alta performance, desenvolvida para atender às necessidades de praticidade, conforto e qualidade que só os maiores salões exigem, pela primeira vez no Brasil confeccionada por uma marca especialista em Cabelos Brasileiros do Sul.
               </p>
             </div>
           </div>
 
-          {/* Terceiro Bloco */}
-          <div className="text-center" data-aos="fade-up">
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
-              Agora, você pode ter acesso e em mãos uma técnica de mega hair única, feita sob medida para quem busca excelência no serviço e resultados impecáveis. Uma verdadeira revolução no mercado de extensões capilares.
+          {/* Carrossel de Imagens */}
+          <div className="mt-12" data-aos="fade-up">
+            <h3 className="text-2xl font-bold text-amber-600 mb-6 text-center">
+              Conheça nossa linha de produtos
+            </h3>
+            <div className="max-w-4xl mx-auto">
+              <Swiper
+                slidesPerView={1}
+                spaceBetween={30}
+                pagination={{
+                  clickable: true,
+                }}
+                navigation={true}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                  },
+                  1024: {
+                    slidesPerView: 2,
+                  },
+                }}
+                modules={[Pagination, Navigation, Autoplay]}
+                className="launch-swiper"
+              >
+                {[1, 2, 3, 4, 5, 6].map((num) => (
+                  <SwiperSlide key={num}>
+                    <div className="p-2">
+                      <Image
+                        src={`/images/lancamentos/${num}.jpg`}
+                        alt={`Produto Premium ${num}`}
+                        width={400}
+                        height={300}
+                        className="rounded-lg shadow-xl mx-auto object-cover w-full h-[300px]"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </div>
+
+          {/* Texto após o carrossel */}
+          <div className="text-center max-w-4xl mx-auto" data-aos="fade-up">
+            <p className="text-xl text-gray-700 leading-relaxed">
+              Lançamento elaborado para transformar o seu salão e encantar os seus clientes. Prepare-se para um novo patamar de qualidade, conforto e praticidade com nossa exclusiva técnica de Mega Hair com fitas de Alta Performance. Criada especialmente para profissionais da beleza, ela combina facilidade de aplicação, segurança e resultados duradouros – tudo para deixar os cabelos de suas clientes deslumbrantes! 
+              Conheça mais sobre nossa trajetória de lançamento clicando na aba "Lançamento".
             </p>
-            <h2 className="text-3xl font-bold text-amber-600 mb-6">
-              Exclusivo para Salões e Profissionais da Beleza
-            </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-12">
-              Com a Cabelos Premium, você terá uma ferramenta poderosa em seu salão para lotar sua agenda e faturar números nunca vistos antes. Aplique a técnica de mega hair com facilidade e rapidez, sem perder tempo ou comprometer a qualidade do serviço. Sinta a diferença e ofereça uma experiência premium aos seus clientes.
-            </p>
-            <Image
-              src="/images/livros-caixa-cabelo.jpg"
-              alt="Livros e Caixa de Cabelo"
-              width={800}
-              height={400}
-              className="rounded-lg shadow-xl mx-auto"
-            />
           </div>
         </div>
       </section>
@@ -112,211 +125,148 @@ const WhoIsUs = () => {
           <Separator className="my-6 bg-amber-600 mx-auto w-16" />
         </header>
 
-        <div className="max-w-6xl mx-auto space-y-24">
+        <div className="max-w-6xl mx-auto space-y-12">
           {/* Introdução */}
           <div className="text-center" data-aos="fade-up">
             <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
-              Apresentamos a primeira coleção: Candy. Criada especialmente para nossas Sweet Darlings, mulheres exigentes e poderosas, mas muito doces.
+              Nossa primeira coleção traz cores que você vai amar: Candy. Todas cores feitas manualmente em Cabelos Brasileiros do Sul selecionados da Cabelos Premium, ficam ainda mais perfeitos quando juntamos eles a essa técnica de lançamento. Com 6 tonalidades exclusivas, essa linha foi pensada para mulheres poderosas, sofisticadas e elegantes, mas com aquele toque doce e encantador. Feitas com cabelos brasileiros do Sul, as fitas Mega Hair são fininhas, flexíveis e ideais para quem busca naturalidade, conforto e durabilidade.
             </p>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-12">
-              São 6 tonalidades exclusivas, desenvolvidas para atender aos variados gostos e estilos de mesclagens e tons de descoloração.
-            </p>
-            <div className="max-w-4xl mx-auto">
-              <Swiper
-                slidesPerView={1}
-                spaceBetween={30}
-                pagination={{
-                  clickable: true,
-                }}
-                navigation={true}
-                autoplay={{
-                  delay: 3500,
-                  disableOnInteraction: false,
-                }}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 1,
-                  },
-                  768: {
-                    slidesPerView: 2,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                  },
-                }}
-                modules={[Pagination, Navigation, Autoplay]}
-                className="candy-swiper"
-              >
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/toffee.jpg"
-                      alt="Toffee"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Toffee</h4>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/vanilla.jpg"
-                      alt="Vanilla"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Vanilla</h4>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/6-cores.jpg"
-                      alt="Caramel"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Caramel</h4>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/6-cores.jpg"
-                      alt="Chocolate"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Chocolate</h4>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/6-cores.jpg"
-                      alt="Honey"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Honey</h4>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="p-2">
-                    <Image
-                      src="/images/6-cores.jpg"
-                      alt="Blonde"
-                      width={400}
-                      height={300}
-                      className="rounded-lg shadow-xl mx-auto"
-                    />
-                    <h4 className="text-xl font-semibold text-amber-600 mt-4">Blonde</h4>
-                  </div>
-                </SwiperSlide>
-              </Swiper>
-            </div>
           </div>
 
-          {/* Diferencial */}
-          <div data-aos="fade-up" className="mb-12">
-            <h3 className="text-2xl font-bold text-center mb-8 text-amber-600">
-              A primeira marca que trabalha com fitas EXCLUSIVAMENTE COM CABELOS BRASILEIROS DO SUL
-            </h3>
-            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mb-8">
-              Cada fita mede 5cm. São finas, flexíveis e confortáveis, proporcionando um resultado impecável e natural. A técnica de mega hair mais avançada no mercado, garante um acabamento suave e invisível, totalmente leve e confortável, ideal para quem busca o melhor resultado em extensão capilar.
+          {/* Carrossel de Cores */}
+          <div className="max-w-4xl mx-auto" data-aos="fade-up">
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={30}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1024: {
+                  slidesPerView: 3,
+                },
+              }}
+              modules={[Pagination, Navigation, Autoplay]}
+              className="candy-swiper"
+            >
+              {[
+                { name: "Caramel", image: "caramel.jpg" },
+                { name: "Vanilla", image: "vanilla.jpg" },
+                { name: "Toffee", image: "toffee.jpg" },
+                { name: "Honey", image: "honey.jpg" },
+                { name: "Cookie", image: "cookie.jpg" },
+                { name: "Like a Virgin", image: "like a virgin.jpg" }
+              ].map((color) => (
+                <SwiperSlide key={color.name}>
+                  <div className="p-2">
+                    <Image
+                      src={`/images/candy/${color.image}`}
+                      alt={color.name}
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto object-cover w-full h-[300px]"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4 text-center">{color.name}</h4>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Texto Final */}
+          <div className="text-center max-w-3xl mx-auto" data-aos="fade-up">
+            <p className="text-xl text-gray-700 leading-relaxed mb-8">
+              De Caramel a Like a Virgin, cada cor traz uma transição suave, deixando os fios radiantes e elegantes. A escolha perfeita para qualquer estilo!
             </p>
-            <Image
-              src="/images/fita-fina.jpg"
-              alt="Fita Fina"
-              width={800}
-              height={400}
-              className="rounded-lg shadow-xl mx-auto"
-            />
-          </div>
-
-          {/* Cores */}
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-6" data-aos="fade-right">
-              <h3 className="text-2xl font-bold text-amber-600">Toffee</h3>
-              <p className="text-xl text-gray-700">Uma cor quente e sofisticada, com tons de caramelo e dourado.</p>
-              <Image
-                src="/images/toffee.jpg"
-                alt="Toffee"
-                width={500}
-                height={300}
-                className="rounded-lg shadow-xl"
-              />
-            </div>
-            <div className="space-y-6" data-aos="fade-left">
-              <h3 className="text-2xl font-bold text-amber-600">Vanilla</h3>
-              <p className="text-xl text-gray-700">Um tom suave e delicado, perfeito para iluminar os fios.</p>
-              <Image
-                src="/images/vanilla.jpg"
-                alt="Vanilla"
-                width={500}
-                height={300}
-                className="rounded-lg shadow-xl"
-              />
-            </div>
-          </div>
-
-          {/* Características */}
-          <div data-aos="fade-up" className="mb-12">
-            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mb-12">
-              Cada kit é ideal para criar efeitos naturais e discretos, sem comprometer a leveza e o conforto dos fios naturais. Por ser mais fina e flexível, a fita se adapta facilmente a qualquer tipo de cabelo, garantindo uma aplicação precisa e duradoura.
+            <p className="text-xl text-gray-700 leading-relaxed">
+              Saiba detalhes da nossa coleção de cores Candy clicando na aba "Coleção".
             </p>
-            <Image
-              src="/images/flexivel.jpg"
-              alt="Flexível"
-              width={800}
-              height={400}
-              className="rounded-lg shadow-xl mx-auto"
-            />
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Produtos */}
+      <section className="w-full bg-white py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+        <header className="text-center mb-16">
+          <h1 className="text-5xl font-raleway text-gray-800">Produtos</h1>
+          <h2 className="text-3xl text-amber-600 mt-4">Conheça nossos produtos exclusivos para Extensões Capilares</h2>
+          <Separator className="my-6 bg-amber-600 mx-auto w-16" />
+        </header>
+
+        <div className="max-w-6xl mx-auto space-y-12">
+          {/* Introdução */}
+          <div className="text-center" data-aos="fade-up">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
+              A linha Keter Cosméticos, com formulação italiana e base de caviar, oferece cuidados especializados para manter suas extensões sempre lindas e saudáveis. Cada produto foi desenvolvido para tratar e proteger, mantendo os cabelos mais macios, fortes e com aquele brilho que todo Mega Hair merece.
+            </p>
           </div>
 
-          {/* Benefícios */}
-          <div data-aos="fade-up" className="mb-12">
-            <h3 className="text-3xl font-bold text-center mb-12 text-amber-600">
-              Por que escolher o Mega Hair Candy?
-            </h3> 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="flex items-start gap-4">
-                <span className="text-amber-600 text-2xl">✅</span>
-                <div>
-                  <h4 className="text-xl font-semibold mb-2">Conforto e Leveza</h4>
-                  <p className="text-gray-600">As fitas são finas e flexíveis, proporcionando uma sensação de leveza durante o uso.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <span className="text-amber-600 text-2xl">✅</span>
-                <div>
-                  <h4 className="text-xl font-semibold mb-2">Durabilidade e Segurança</h4>
-                  <p className="text-gray-600">Feitas com cabelo 100% brasileiro do Sul, garantem resistência e longevidade.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <span className="text-amber-600 text-2xl">✅</span>
-                <div>
-                  <h4 className="text-xl font-semibold mb-2">Estilo e Versatilidade</h4>
-                  <p className="text-gray-600">Diversas tonalidades para atender os vários gostos de descoloração.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <span className="text-amber-600 text-2xl">✅</span>
-                <div>
-                  <h4 className="text-xl font-semibold mb-2">Qualidade Pro</h4>
-                  <p className="text-gray-600">Produto exclusivo para salões e profissionais da beleza, desenvolvido com os mais altos padrões do mercado.</p>
-                </div>
-              </div>
-            </div>
-            <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed mt-12">
-              O Mega Hair Candy é a escolha certa para quem busca oferecer aos seus clientes a melhor experiência em extensões capilares, com a garantia de resultados naturais e duradouros. Disponível apenas para profissionais de beleza, nossa coleção é a ferramenta perfeita para levar o seu salão a um novo patamar.
+          {/* Carrossel de Produtos */}
+          <div className="max-w-4xl mx-auto" data-aos="fade-up">
+            <Swiper
+              slidesPerView={1}
+              spaceBetween={30}
+              pagination={{
+                clickable: true,
+              }}
+              navigation={true}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1024: {
+                  slidesPerView: 3,
+                },
+              }}
+              modules={[Pagination, Navigation, Autoplay]}
+              className="products-swiper"
+            >
+              {[
+                { name: "Shampoo", image: "shampoo.jpg" },
+                { name: "Máscara", image: "mascara.jpg" },
+                { name: "Leave-in", image: "leavein.jpg" },
+                { name: "Óleo", image: "oleo.jpg" },
+                { name: "Removedor", image: "removedor.jpg" },
+                { name: "Removedor Refill", image: "removedor refill.jpg" }
+              ].map((product) => (
+                <SwiperSlide key={product.name}>
+                  <div className="p-2">
+                    <Image
+                      src={`/images/produtos/${product.image}`}
+                      alt={product.name}
+                      width={400}
+                      height={300}
+                      className="rounded-lg shadow-xl mx-auto object-cover w-full h-[300px]"
+                    />
+                    <h4 className="text-xl font-semibold text-amber-600 mt-4 text-center">{product.name}</h4>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Texto Final */}
+          <div className="text-center max-w-3xl mx-auto" data-aos="fade-up">
+            <p className="text-xl text-gray-700 leading-relaxed">
+              Conheça todos nossos produtos e seus benefícios clicando na aba "Produtos".
             </p>
           </div>
         </div>
@@ -328,6 +278,24 @@ const WhoIsUs = () => {
           <h2 className="text-4xl font-bold text-amber-600">
             Feita por profissionais, para profissionais
           </h2>
+        </div>
+      </section>
+
+      {/* Seção Dúvidas */}
+      <section className="w-full bg-amber-50 py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+        <div className="max-w-4xl mx-auto text-center" data-aos="fade-up">
+          <h2 className="text-4xl font-bold text-amber-600 mb-8">
+            DÚVIDAS?
+          </h2>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-6">
+            Fale Conosco – Aqui, o atendimento é Personalizado!
+          </h3>
+          <p className="text-xl text-gray-700 leading-relaxed mb-8">
+            Tem alguma dúvida ou quer saber mais sobre nossos produtos e técnicas? Converse diretamente com uma de nossas especialistas via WhatsApp, que você encontra na aba "CONTATO"! Elas estão prontas para ajudar você a escolher as melhores opções para seu salão e levar seu serviço de Mega Hair a um novo nível de excelência.
+          </p>
+          <p className="text-xl text-gray-700 leading-relaxed">
+            Seja bem-vindo à Cabelos Premium – onde a beleza é tratada com sofisticação e a qualidade é sempre garantida!
+          </p>
         </div>
       </section>
     </>
