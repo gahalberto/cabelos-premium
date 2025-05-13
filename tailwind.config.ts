@@ -28,6 +28,9 @@ const config: Config = {
         roboto: ['Roboto', 'sans-serif'],
         raleway: ['Raleway', 'sans-serif'],
         unna: ['var(--font-unna)', 'serif'],
+        brittany: ['Brittany', 'cursive'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        'le-jour': ['Le Jour Serif', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

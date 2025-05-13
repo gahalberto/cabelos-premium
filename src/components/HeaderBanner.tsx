@@ -1,31 +1,62 @@
+"use client";
+
 import { Button } from "./ui/button";
+import { useEffect, useRef, useState } from "react";
 
 const HeaderBanner = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const togglePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
-    <div className="relative h-screen w-full">
-      {/* Vídeo em background com opacidade */}
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Vídeo em background */}
       <video
+        ref={videoRef}
         className="absolute top-0 left-0 w-full h-full object-cover"
         autoPlay
         loop
         muted
+        playsInline
       >
-        <source src="/images/videoficial.mp4" type="video/mp4" />
+        <source src="/videos/intro.mp4" type="video/mp4" />
         Seu navegador não suporta o elemento de vídeo.
       </video>
 
-      {/* Fundo preto semi-transparente para o texto */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0"></div>
+      {/* Controle de reprodução */}
+      <div className="absolute bottom-8 right-8 z-20">
+        <button 
+          onClick={togglePlayPause}
+          className="bg-white bg-opacity-20 backdrop-blur-sm rounded-full p-3 hover:bg-opacity-30 transition-all duration-300 focus:outline-none"
+          aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
+        >
+          {isPlaying ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          )}
+        </button>
+      </div>
 
-      {/* Conteúdo do banner (texto, descrição e botão) */}
+      {/* Overlay para conteúdo, se necessário */}
       <div className="relative z-10 flex items-center justify-center h-full">
         <div className="flex flex-col items-center text-center max-w-2xl px-4">
-
-          {/* <p className="text-lg mt-4 text-gray-300">
-            Com o InMemorian, crie homenagens digitais para eternizar a memória dos seus entes queridos. Personalize uma página com fotos, biografias e recordações especiais que manterão viva a lembrança de quem sempre fará parte de sua história.
-          </p> */}
-          {/* Espaçamento entre o texto e o botão */}
-          {/* <Button className="w-70 mt-10 bg-blue-400">Comece Agora - Crie Sua Homenagem</Button> */}
+          {/* Se quiser adicionar algum conteúdo sobre o vídeo */}
         </div>
       </div>
     </div>
