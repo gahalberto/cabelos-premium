@@ -201,7 +201,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
       </section>
 
       {/* Seção Torne-se Expert */}
-      <section className="w-full bg-[#f0efdb] py-20 px-4 sm:px-10 md:px-20 lg:px-36">
+      <section className="w-full bg-[#f0efdb] py-36 px-4 sm:px-10 md:px-20 lg:px-36">
         <div className="max-w-6xl mx-auto">
           {/* Título Principal */}
           <div className="text-center mb-16" data-aos="fade-up">
@@ -216,38 +216,57 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
             <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-left">
               Quer se destacar na beleza, oferecer um serviço premium e aumentar seus ganhos? 
               Com a Cabelos Premium, você aprende do zero ao avançado as técnicas mais modernas e seguras 
-              de extensão capilar, e o melhor: <span className="font-bold text-[#d4a249]">o curso é 100% gratuito na compra do nosso kit de cabelos.</span>
+              de extensão capilar, e o melhor: <span className="font-bold text-black">o curso é 100% gratuito na compra do nosso kit de cabelos.</span>
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Conteúdo Esquerdo - O que você vai aprender */}
-            <div className="space-y-8" data-aos="fade-right">
-              <div>
-                <h3 className="text-2xl md:text-3xl font-brittany text-[#8a7d5c] mb-6">
-                  Você vai aprender:
-                </h3>
-                <ul className="space-y-4">
-                  {[
-                    "Aplicações naturais e seguras",
-                    "Técnicas de finalização profissional", 
-                    "Atendimento premium e fidelização de clientes",
-                    "Estratégias de vendas e posicionamento no mercado"
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-center text-[#333333] font-montserrat">
-                      <div className="w-2 h-2 bg-[#d4a249] rounded-full mr-4 flex-shrink-0"></div>
-                      <span className="text-base md:text-lg">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          {/* Título "Você vai aprender:" alinhado à esquerda com lista */}
+          <div className="mb-12" data-aos="fade-up">
+            <div className="max-w-2xl mx-auto">
+              <h3 className="text- mb-2 text-black font-montserrat ">
+                Você vai aprender:
+              </h3>
+              <ul className="space-y-2 font-montserrat">
+                {[
+                  "Aplicações naturais e seguras",
+                  "Técnicas de finalização profissional", 
+                  "Atendimento premium e fidelização de clientes",
+                  "Estratégias de vendas e posicionamento no mercado"
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center text-[#333333] font-montserrat">
+                    <div className="w-2 h-2 bg-black rounded-full mr-4 flex-shrink-0"></div>
+                    <span className="text-base font-bold md:text-lg">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Imagem do lado esquerdo */}
+            <div className="flex justify-center lg:justify-center order-2 lg:order-1" data-aos="fade-right">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-[#d4a249] to-[#f0efdb] rounded-3xl opacity-10 blur-xl"></div>
+                <div className="relative rounded-2xl p-6">
+                  <Image
+                    src="/images/expert.png"
+                    alt="Kit Cabelos Premium"
+                    width={500}
+                    height={500}
+                    className="object-contain w-[1200px] h-auto"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Conteúdo Direito - Benefícios */}
+            <div className="space-y-8 order-1 lg:order-2" data-aos="fade-left">
               {/* Benefícios */}
               <div className="bg-[#8a7d5c] rounded-2xl p-6 md:p-8">
-                <h4 className="text-xl md:text-2xl font-brittany text-[#f0efdb] mb-6">
+                <h4 className="text-xl md:text-5xl font-brittany text-[#f0efdb] mb-6">
                   Benefícios:
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
                   {[
                     "Curso gratuito com o kit",
                     "Suporte completo", 
@@ -256,28 +275,12 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
                     "Alta demanda e ótimo faturamento"
                   ].map((benefit, index) => (
                     <div key={index} className="flex items-center text-[#f0efdb] font-montserrat">
-                      <svg className="w-5 h-5 text-[#d4a249] mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-white mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       <span className="text-sm md:text-base">{benefit}</span>
                     </div>
                   ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Imagem Central do Kit */}
-            <div className="flex justify-center lg:justify-end" data-aos="fade-left">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#d4a249] to-[#f0efdb] rounded-3xl opacity-20 blur-xl"></div>
-                <div className="relative bg-white rounded-2xl p-6 shadow-2xl">
-                  <Image
-                    src="/images/kit.png"
-                    alt="Kit Cabelos Premium"
-                    width={400}
-                    height={400}
-                    className="object-contain w-full h-auto"
-                  />
                 </div>
               </div>
             </div>
@@ -335,7 +338,10 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
           </div>
 
           {/* Grid de produtos numerados */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-16" data-aos="fade-up">
+        </div>
+        <div className="bg-orange-100 bg-opacity-20 w-full py-16" data-aos="fade-up">
+          <div className="max-w-7xl mx-auto px-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {/* Produto 1 */}
             <div className="flex flex-col items-center">
               <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
@@ -417,13 +423,15 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
             </div>
           </div>
 
+          </div>
+          
           {/* Rodapé da seção */}
-          <div className="text-center" data-aos="fade-up">
+          <div className="text-center mt-8" data-aos="fade-up">
             <p className="font-montserrat text-[#333333] hover:text-[#d4a249] transition-colors cursor-pointer">
               Conheça detalhes sobre toda nossa linha de tratamento clicando aqui.
             </p>
           </div>
-        </div>
+                  </div>
       </section>
 
       {/* Seção de Contato */}
