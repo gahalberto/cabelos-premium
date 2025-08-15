@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "MemoriaProfiles" ALTER COLUMN "birthday" DROP NOT NULL,
-ALTER COLUMN "deathday" DROP NOT NULL,
-ALTER COLUMN "views" SET DEFAULT 0;

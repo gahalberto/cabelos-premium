@@ -26,13 +26,35 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Busca o usuário no banco de dados
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
+        const identifier = credentials.email; // Pode ser email, CPF ou CNPJ
+        
+        // Remove formatação de CPF/CNPJ para busca no banco
+        const cleanIdentifier = identifier.replace(/\D/g, "");
+        
+        let user = null;
+
+        // Primeiro, tenta buscar por email
+        if (identifier.includes("@")) {
+          user = await prisma.user.findUnique({
+            where: { email: identifier }
+          });
+        } else {
+          // Se não é email, busca por CPF ou CNPJ
+          if (cleanIdentifier.length === 11) {
+            // É um CPF
+            user = await prisma.user.findUnique({
+              where: { cpf: cleanIdentifier }
+            });
+          } else if (cleanIdentifier.length === 14) {
+            // É um CNPJ
+            user = await prisma.user.findUnique({
+              where: { cnpj: cleanIdentifier }
+            });
+          }
+        }
 
         // Verifica se a senha é válida
-        if (user && bcrypt.compareSync(credentials.password, user.password)) {
+        if (user && user.password && bcrypt.compareSync(credentials.password, user.password)) {
           console.log('Usuário autorizado:', user);
           return {
             id: user.id.toString(),

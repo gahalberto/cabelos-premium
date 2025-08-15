@@ -42,8 +42,8 @@ export function NavigationMenuDemo() {
       </div>
       
       {/* Menu principal */}
-      <div className="bg-[#e6e6e6] py-4">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
+      <div className="bg-[#f0efdb] py-4">
+        <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-between">
           {/* Links de navegação */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">

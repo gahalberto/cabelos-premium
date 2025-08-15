@@ -1,49 +1,74 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
-import jwt from 'jsonwebtoken';
-import { randomBytes } from "crypto";
-import { sendWelcomeEmail } from "@/app/services/emailService";
-import crypto from "crypto";
+import bcrypt from "bcryptjs";
 
-export const registerUser = async (email: string, name?: string) => {
-  // Criptografar a senha antes de salvar
-   function generatePassword(length = 12) {
-    return randomBytes(length).toString('base64').slice(0, length);
-  }
-  
-  const hashedPassword = generatePassword();
+interface RegisterUserData {
+  name: string;
+  lastName: string;
+  email: string;
+  document: string;
+  documentType: "CPF" | "CNPJ";
+  birthDate: Date;
+  gender: "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY";
+  userType: "CLIENTE" | "ESPECIALISTA";
+  zipCode: string;
+  phone: string;
+  password: string;
+}
 
-  const existingUser = await db.user.findUnique({
-    where: { email: email },
-  });
+export const registerUser = async (userData: RegisterUserData) => {
+  try {
+    // Verificar se o usuário já existe
+    const existingUserByEmail = await db.user.findUnique({
+      where: { email: userData.email },
+    });
 
-  if (existingUser) {
-    throw new Error("Este e-mail já está em uso.");
-  } else {
-    
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    if (existingUserByEmail) {
+      throw new Error("Este e-mail já está em uso.");
+    }
 
+    // Verificar se o documento já existe
+    const whereClause = userData.documentType === "CPF" 
+      ? { cpf: userData.document }
+      : { cnpj: userData.document };
+      
+    const existingUserByDocument = await db.user.findUnique({
+      where: whereClause,
+    });
+
+    if (existingUserByDocument) {
+      throw new Error(`Este ${userData.documentType} já está em uso.`);
+    }
+
+    // Criptografar a senha
+    const hashedPassword = await bcrypt.hash(userData.password, 12);
+
+    // Criar o usuário
+    const baseUserData = {
+      name: userData.name,
+      lastName: userData.lastName,
+      email: userData.email,
+      birthDate: userData.birthDate,
+      gender: userData.gender,
+      role: userData.userType,
+      zipCode: userData.zipCode,
+      phone: userData.phone,
+      password: hashedPassword,
+    };
+
+    // Adicionar CPF ou CNPJ baseado no tipo
+    const createUserData = userData.documentType === "CPF" 
+      ? { ...baseUserData, cpf: userData.document }
+      : { ...baseUserData, cnpj: userData.document };
 
     const user = await db.user.create({
-      data: {
-        name: name || 'John Doe',
-        email: email,
-        password: hashedPassword, // Armazena a senha criptografada
-        isVerified: false,
-        verificationToken: verificationToken
-      },
+      data: createUserData,
     });
 
-    // Gerar um token JWT de confirmação
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: "999h",
-    });
-
-    await sendWelcomeEmail(email, user.name || 'Novo Usuário', verificationToken);
-
-
-    // Retornar o token junto com a resposta
-    return { user, token };
+    return { success: true, user };
+  } catch (error) {
+    console.error("Erro ao registrar usuário:", error);
+    throw error;
   }
 };
