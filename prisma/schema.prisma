@@ -65,6 +65,7 @@ model User {
   reviews  Review[]
   wishlist WishlistItem[]
   cart     CartItem[]
+  shippingAddresses ShippingAddress[]
 
   @@unique([cpf])
   @@unique([cnpj])
@@ -231,4 +232,54 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum ExpertApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ShippingAddress {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  name        String   // Nome para entrega
+  phone       String   // Telefone para entrega
+  street      String   // Rua
+  number      String   // Número
+  complement  String?  // Complemento (opcional)
+  neighborhood String  // Bairro
+  city        String   // Cidade
+  state       String   // Estado
+  zipCode     String   // CEP
+  isDefault   Boolean  @default(false) // Endereço padrão
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Modelo para aplicações de especialistas
+model ExpertApplication {
+  id                    String   @id @default(cuid())
+  name                  String
+  lastName              String
+  email                 String   @unique
+  phone                 String
+  cnpj                  String   @unique
+  companyName           String
+  businessDescription   String
+  address               String
+  city                  String
+  state                 String
+  zipCode               String
+  website               String?
+  instagram             String?
+  experience            String
+  specialties           String[]
+  status                ExpertApplicationStatus @default(PENDING)
+  isApproved            Boolean  @default(false)
+  notes                 String?  // Notas da análise
+  reviewedAt            DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }

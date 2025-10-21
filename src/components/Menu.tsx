@@ -2,19 +2,12 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  HomeIcon,
   SearchIcon,
   ShoppingBagIcon,
   UserIcon,
   HeartIcon,
   MenuIcon,
 } from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import {
   Sheet,
@@ -23,29 +16,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Avatar } from "./ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
 import { signOut, useSession } from "next-auth/react";
 import { Input } from "./ui/input";
+import { useCart } from "@/contexts/CartContext";
 
 export function NavigationMenuDemo() {
   const { data } = useSession();
+  const { itemCount } = useCart();
   const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
     <div className="w-full z-50">
       {/* Barra superior com informações sobre os cabelos */}
       <div className="w-full bg-[#8a7d5c] py-2 text-center">
-        <p className="text-white font-montserrat text-[11.5px] flex items-center justify-center">
+        <p className="text-white font-montserrat text-[20px] flex items-center justify-center">
           <span className="mr-2">🇧🇷</span> A marca da sua extensão. Os legítimos cabelos brasileiros do sul. <span className="ml-2">🇧🇷</span>
         </p>
       </div>
       
       {/* Menu principal */}
-      <div className="bg-[#f0efdb] py-4">
-        <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-between">
+      <div className="bg-[#f0efdb] py-4 text-center">
+        <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-center">
           {/* Links de navegação */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center justify-center gap-16 w-full">
             <Link href="/" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
               HOME
             </Link>
@@ -74,16 +67,19 @@ export function NavigationMenuDemo() {
             </Link>
             
             {/* Carrinho */}
-            <Link href="/cart" className="text-black hover:text-[#b08c4f] transition-colors">
+            <Link href="/cart" className="text-black hover:text-[#b08c4f] transition-colors relative">
               <ShoppingBagIcon className="h-5 w-5 text-black" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  {itemCount > 99 ? '99+' : itemCount}
+                </span>
+              )}
             </Link>
             
             {/* Conta */}
             {data?.user ? (
               <div className="relative group">
-                <Avatar className="h-6 w-6 border border-[#8a7d5c] cursor-pointer">
-                  <AvatarImage src={data.user.image || undefined} />
-                </Avatar>
+                <UserIcon className="h-5 w-5 text-black cursor-pointer" />
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <div className="p-3 border-b border-gray-100">
                     <p className="font-medium text-sm">{data.user.name}</p>

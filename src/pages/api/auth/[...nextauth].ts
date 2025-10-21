@@ -59,7 +59,16 @@ export const authOptions: NextAuthOptions = {
           return {
             id: user.id.toString(),
             name: user.name,
+            lastName: user.lastName,
             email: user.email,
+            image: user.image,
+            phone: user.phone,
+            address: user.address,
+            city: user.city,
+            state: user.state,
+            zipCode: user.zipCode,
+            cpf: user.cpf,
+            birthDate: user.birthDate,
           };
         }
 
@@ -82,9 +91,18 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user = {
           ...session.user,
-          id: token.id as string, // Certifique-se de que o id seja retornado aqui
-          name: token.name,
-          email: token.email,
+          id: token.id as string,
+          name: token.name as string | null,
+          lastName: token.lastName as string | null,
+          email: token.email as string | null,
+          image: token.image as string | null,
+          phone: token.phone as string | null,
+          address: token.address as string | null,
+          city: token.city as string | null,
+          state: token.state as string | null,
+          zipCode: token.zipCode as string | null,
+          cpf: token.cpf as string | null,
+          birthDate: token.birthDate as Date | null,
         };
       }
       return session;
@@ -92,7 +110,17 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.lastName = user.lastName;
         token.email = user.email;
+        token.image = user.image;
+        token.phone = user.phone;
+        token.address = user.address;
+        token.city = user.city;
+        token.state = user.state;
+        token.zipCode = user.zipCode;
+        token.cpf = user.cpf;
+        token.birthDate = user.birthDate;
       }
       return token;
     },

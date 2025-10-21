@@ -39,7 +39,7 @@ const ContactSection = () => {
         {/* Imagem da equipe */}
         <div className="w-[90%] md:w-[70%] mx-auto mb-4">
           <Image
-            src="/images/equipe-cabelos-premium.jpg"
+            src="/images/novas-imagens/time.png"
             alt="Equipe Cabelos Premium"
             width={800}
             height={450}
@@ -53,7 +53,7 @@ const ContactSection = () => {
         </p>
         
         {/* Texto de rodapé */}
-        <p className="font-montserrat text-sm text-[#333333] text-center">
+        <p className="font-montserrat text-xl text-[#333333] text-center">
           Seja bem-vindo(a) à Cabelos Premium – A marca da sua extensão.
         </p>
       </div>

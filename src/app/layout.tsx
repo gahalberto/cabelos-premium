@@ -1,8 +1,11 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "./providers/auth";
+import { ThemeProvider } from "./providers/theme";
 import { Toaster } from "@/components/ui/toaster";
 import { NavigationMenuDemo } from "@/components/Menu";
+import { CartProvider } from "@/contexts/CartContext";
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -29,25 +32,23 @@ export const metadata = {
 
 export default function RootLayout({
   children,
-  hideFooter = false, // Valor padrão para hideFooter, será usado em implementação futura
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  hideFooter?: boolean; // Prop opcional
-}>) {
+}) {
   return (
-    <html lang="en" className={`dark ${unna.variable}`}>
+    <html lang="en" className={unna.variable}>
       <body className={inter.className} style={{ overflowX: "hidden" }}>
-        <AuthProvider>
-          <NavigationMenuDemo />
-          <div className="flex h-full flex-col">
-            <div className="flex-1">{children}</div>
-            {!hideFooter && (
-              <div className="hidden">
-                {/* Aqui será implementado o footer no futuro */}
+        <ThemeProvider>
+          <AuthProvider>
+            <CartProvider>
+              <NavigationMenuDemo />
+              <div className="flex h-full flex-col">
+                <div className="flex-1">{children}</div>
               </div>
-            )}
-          </div>
-        </AuthProvider>
+              <FloatingWhatsApp />
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>

@@ -9,7 +9,6 @@ import "swiper/css/navigation";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
-import HeaderBanner from "./HeaderBanner";
 import ContactSection from "./ContactSection";
 
 const WhoIsUs = () => {
@@ -47,34 +46,28 @@ const WhoIsUs = () => {
       {/* Seção Lançamento */}
       <section className="w-full bg-[#f0efdb] py-16">
         {/* Título Principal sozinho no topo */}
-        <div className="w-full flex justify-center mb-12 px-4">
-          <h1 className="text-[37.8px] md:text-4xl lg:text-5xl xl:text-6xl font-le-jour text-[#8a7d5c] tracking-wide leading-tight text-center">
+        <div className="w-full flex justify-center items-center mb-12 px-8 md:px-16 lg:px-24">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#8a7d5c] tracking-wide leading-tight text-center">
             LANÇAMENTO BY CABELOS PREMIUM
           </h1>
         </div>
         <div className="flex flex-col md:flex-row w-full max-w-none items-center justify-center">
           {/* Texto centralizado */}
-          <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center px-4 md:px-0">
+          <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center px-8 md:px-12 lg:px-16">
             <h2 className="text-xl md:text-2xl lg:text-3xl text-[#333333] mb-6">
               <span className="font-montserrat font-medium">Uma técnica exclusiva para </span>
               <span className="font-brittany italic text-2xl md:text-3xl lg:text-4xl">profissionais</span>
             </h2>
-            <p className="text-base md:text-lg text-[#333333] leading-relaxed font-montserrat max-w-xl">
+            <p className="text-base md:text-lg text-[#333333] leading-relaxed font-montserrat font-thin max-w-xl text-justify">
               A Cabelos Premium tem o prazer de apresentar uma inovação exclusiva para os profissionais da beleza: a nova técnica de Mega Hair com fitas de alta performance, desenvolvida para atender às necessidades de praticidade, conforto e qualidade que só os maiores salões exigem, <span className="font-bold">pela primeira vez no Brasil confeccionada por uma marca especialista em Cabelos Brasileiros do Sul.</span>
             </p>
           </div>
-          {/* Imagem colada na borda direita */}
-          <div className="relative w-full h-full flex justify-end items-stretch md:w-1/2 max-w-xl md:max-w-[450px] lg:max-w-[550px] xl:max-w-[600px]">
+          {/* Imagem */}
+          <div className="w-full md:w-1/2 flex justify-center items-center">
             <img 
-              src="/images/2/lancamento.png" 
+              src="/images/novas-imagens/cap1.png" 
               alt="Cabelos Premium Lançamento" 
-              className="h-full w-full md:h-auto object-cover md:object-contain object-right m-0 p-0"
-              style={{ maxWidth: '100%', marginRight: 0, paddingRight: 0 }}
-            />
-            <div className="absolute inset-0 pointer-events-none"
-                 style={{
-                   background: "linear-gradient(to right, rgba(240,239,219,1) 0%, rgba(240,239,219,0.7) 10%, rgba(240,239,219,0) 30%)"
-                 }}
+              className="w-3/4 md:w-2/3 h-auto object-cover"
             />
           </div>
         </div>
@@ -108,12 +101,19 @@ const WhoIsUs = () => {
                 modules={[Pagination, Navigation, Autoplay]}
                 className="launch-swiper"
               >
-                {[1, 2, 3, 4, 5, 6].map((num) => (
-                  <SwiperSlide key={num}>
+                {[
+                  "Cópia de acm_051224164.jpg",
+                  "Cópia de acm_051224171.jpg", 
+                  "Cópia de acm_051224236.jpg",
+                  "Cópia de acm_051224244.jpg",
+                  "Cópia de acm_051224247.jpg",
+                  "Cópia de acm_051224248.jpg"
+                ].map((imageName, index) => (
+                  <SwiperSlide key={index}>
                     <div className="p-2">
                       <Image
-                        src={`/images/lancamentos/${num}.jpg`}
-                        alt={`Produto Premium ${num}`}
+                        src={`/images/novas-imagens/carrosel1/${imageName}`}
+                        alt={`Produto Premium ${index + 1}`}
                         width={400}
                         height={300}
                         className="rounded-lg shadow-xl mx-auto object-cover w-full h-[300px]"
@@ -124,10 +124,11 @@ const WhoIsUs = () => {
               </Swiper>
             </div>
           </div>
-          <div className="font-montserrat text-center pt-10">Lançamento elaborado para transformar o seu salão e encantar os seus clientes. Prepare-se para um novo patamar de qualidade, conforto e praticidade com nossa exclusiva técnica de Mega Hair com fitas de Alta Performance.
-
-Criada especialmente para profissionais da beleza, ela combina facilidade de aplicação, segurança e resultados duradouros – tudo para deixar os cabelos de suas clientes deslumbrantes!
-</div>
+          <div className="font-montserrat text-center pt-10 px-8 md:px-12 font-thin lg:px-16">
+            Lançamento elaborado para transformar o seu salão e encantar os seus clientes. Prepare-se para um novo patamar de qualidade, conforto e praticidade com nossa exclusiva técnica de Mega Hair com fitas de Alta Performance.
+            <br/><br/>
+            Criada especialmente para profissionais da beleza, ela combina facilidade de aplicação, segurança e resultados duradouros – tudo para deixar os cabelos de suas clientes deslumbrantes!
+          </div>
         </div>
         <div className="font-bold font-montserrat text-center pt-10">Conheça detalhes sobre todo nosso lançamento clicando aqui.
         </div>
@@ -152,7 +153,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
               <span className="font-montserrat font-bold text-[25px]"> coleção de cores para nossas </span>
               <span className="font-brittany text-[45px]">darlings</span>
             </h2>
-            <div className="mt-8 text-[18px] text-[#e6e6e6] font-montserrat text-left max-w-4xl mx-auto">
+            <div className="mt-8 text-[18px] text-[#e6e6e6] font-montserrat text-left max-w-4xl mx-auto px-8 md:px-12 lg:px-16">
               Nossa primeira coleção traz cores que você vai amar: conheça Candy. <b>Todas cores feitas manualmente em Cabelos Brasileiros do Sul selecionados da Cabelos Premium</b>, ficam ainda mais perfeitos quando juntamos eles a essa técnica de lançamento. Com <b>6 tonalidades exclusivas</b>, essa linha foi pensada para mulheres poderosas, sofisticadas e elegantes, mas com aquele toque doce e encantador. Feitas com cabelos brasileiros do Sul, as fitas Mega Hair são <b>fininhas, flexíveis e ideais para quem busca naturalidade, conforto e durabilidade.</b>
               <br/><br/>
               <b>De Caramel a Like a Virgin</b>, cada cor traz uma transição suave, deixando os fios radiantes e elegantes.
@@ -172,21 +173,21 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
                 { name: "Like a Virgin", image: "Virgin.png" }
               ].map((color) => (
                 <div key={color.name} className="flex flex-col items-center">
-                  <div className="w-40 h-40  rounded-md flex items-center justify-center mb-3">
+                  <h4 className="text-base font-medium text-[#bca168] mb-3">{color.name}</h4>
+                  <div className="w-48 h-48 rounded-md flex items-center justify-center">
                     <Image
                       src={`/images/3/${color.image}`}
                       alt={color.name}
-                      width={200}
-                      height={130}
+                      width={250}
+                      height={180}
                       className="object-contain"
                     />
                   </div>
-                  <h4 className="text-base font-medium text-[#e6e6e6]">{color.name}</h4>
                 </div>
               ))}
               <div className="col-span-2 md:col-span-3 lg:col-span-6 flex justify-center items-center">
                 <div className="text-center max-w-2xl mx-auto">
-                  <h3 className="text-6xl font-brittany text-[#f0efdb] mb-4 pt-12 pb-8">
+                  <h3 className="text-6xl font-brittany font-thin text-[#f0efdb] mb-4 pt-12 pb-8">
                     Cores artesanalmente padronizadas
                   </h3>
                   <p className="text-base font-bold font-montserrat text-white">
@@ -213,7 +214,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
               <span className="font-montserrat font-semibold"> em </span>
               <span className="font-brittany italic text-5xl  text-black">sucesso</span>
             </h2>
-            <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-left">
+            <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-left px-8 md:px-12 lg:px-16">
               Quer se destacar na beleza, oferecer um serviço premium e aumentar seus ganhos? 
               Com a Cabelos Premium, você aprende do zero ao avançado as técnicas mais modernas e seguras 
               de extensão capilar, e o melhor: <span className="font-bold text-black">o curso é 100% gratuito na compra do nosso kit de cabelos.</span>
@@ -222,7 +223,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
 
           {/* Título "Você vai aprender:" alinhado à esquerda com lista */}
           <div className="mb-12" data-aos="fade-up">
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto px-8 md:px-12 lg:px-16">
               <h3 className="text- mb-2 text-black font-montserrat ">
                 Você vai aprender:
               </h3>
@@ -287,7 +288,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
           </div>
 
           {/* Call to Action */}
-          <div className="text-center mt-16" data-aos="fade-up">
+          <div className="text-center mt-16 px-8 md:px-12 lg:px-16" data-aos="fade-up">
             <p className="text-lg md:text-xl font-montserrat text-[#333333] mb-6">
             Seja você iniciante ou profissional da beleza, essa é sua chance de se tornar referência!
  Adquira seu kit, ganhe o curso completo e comece a faturar mais. <b>Clique e saiba mais.</b>
@@ -312,14 +313,14 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
           {/* Cabeçalho */}
           <div className="text-center mb-8" data-aos="fade-up">
             <h1 className="text-4xl md:text-5xl font-le-jour text-[#333333] mb-4">SHOP</h1>
-            <p className="text-lg md:text-xl font-montserrat text-[#333333] mb-12">
+            <p className="text-xl md:text-2xl  font-montserrat font-bold text-[#333333] mb-0">
               Conheça nossa linha de produtos exclusivos para Extensões Capilares
             </p>
           </div>
 
           {/* Seção Keter Cosméticos */}
           <div className="flex flex-col lg:flex-row items-center justify-between mb-16 gap-8">
-            <div className="w-full lg:w-1/2" data-aos="fade-right">
+            <div className="w-full lg:w-1/2 px-8 md:px-12 lg:px-16" data-aos="fade-right">
               <h2 className="font-brittany text-4xl md:text-5xl text-[#f0efdb] mb-6">Keter Cosmeticos</h2>
               <p className="font-montserrat text-[#333333] mb-4">
                 A linha Keter Cosméticos com <span className="font-bold ">formulação italiana e base de caviar</span>, oferece cuidados especializados para manter suas extensões sempre lindas e saudáveis. Cada produto foi desenvolvido para tratar e proteger, mantendo os cabelos mais macios, fortes e com aquele brilho que toda <span className="font-bold">Mega Hair merece</span>.
@@ -330,21 +331,23 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
               <Image
                 src="/images/produtos/produtos.png"
                 alt="Keter Cosméticos"
-                width={500}
-                height={400}
-                className="object-contain"
+                width={800}
+                height={650}
+                className="object-contain w-full max-w-2xl"
               />
             </div>
           </div>
 
           {/* Grid de produtos numerados */}
         </div>
-        <div className="bg-orange-100 bg-opacity-20 w-full py-16" data-aos="fade-up">
-          <div className="max-w-7xl mx-auto px-0">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="bg-orange-100 bg-opacity-20 w-screen py-16 px-4 sm:px-6 md:px-8 lg:px-12 -mx-6 md:-mx-24" data-aos="fade-up">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 relative">
+              {/* Linha do tempo horizontal - visível apenas em telas grandes */}
+              <div className="hidden lg:block absolute top-5 left-[10%] right-[10%] h-1 bg-[#a38a55] opacity-30 z-0"></div>
             {/* Produto 1 */}
             <div className="flex flex-col items-center">
-              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
+              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6 relative z-10 ring-4 ring-orange-100 ring-opacity-50">
                 <span className="text-white font-bold">1</span>
               </div>
               <h3 className="text-center font-montserrat font-medium mb-4">Removedor</h3>
@@ -360,7 +363,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
 
             {/* Produto 2 */}
             <div className="flex flex-col items-center">
-              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
+              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6 relative z-10 ring-4 ring-orange-100 ring-opacity-50">
                 <span className="text-white font-bold">2</span>
               </div>
               <h3 className="text-center font-montserrat font-medium mb-4">Óleo Hidratante</h3>
@@ -376,7 +379,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
 
             {/* Produto 3 */}
             <div className="flex flex-col items-center">
-              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
+              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6 relative z-10 ring-4 ring-orange-100 ring-opacity-50">
                 <span className="text-white font-bold">3</span>
               </div>
               <h3 className="text-center font-montserrat font-medium mb-4">Shampoo</h3>
@@ -392,7 +395,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
 
             {/* Produto 4 */}
             <div className="flex flex-col items-center">
-              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
+              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6 relative z-10 ring-4 ring-orange-100 ring-opacity-50">
                 <span className="text-white font-bold">4</span>
               </div>
               <h3 className="text-center font-montserrat font-medium mb-4">Máscara</h3>
@@ -408,7 +411,7 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
 
             {/* Produto 5 */}
             <div className="flex flex-col items-center">
-              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6">
+              <div className="bg-[#a38a55] w-10 h-10 rounded-full flex items-center justify-center mb-6 relative z-10 ring-4 ring-orange-100 ring-opacity-50">
                 <span className="text-white font-bold">5</span>
               </div>
               <h3 className="text-center font-montserrat font-medium mb-4">Leave-in</h3>
@@ -424,14 +427,14 @@ Criada especialmente para profissionais da beleza, ela combina facilidade de apl
           </div>
 
           </div>
+                  </div>
           
           {/* Rodapé da seção */}
-          <div className="text-center mt-8" data-aos="fade-up">
+          <div className="text-center mt-8 max-w-7xl mx-auto relative z-10" data-aos="fade-up">
             <p className="font-montserrat text-[#333333] hover:text-[#d4a249] transition-colors cursor-pointer">
               Conheça detalhes sobre toda nossa linha de tratamento clicando aqui.
             </p>
           </div>
-                  </div>
       </section>
 
       {/* Seção de Contato */}

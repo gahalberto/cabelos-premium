@@ -16,7 +16,7 @@ const LoginPage = () => {
       const session = await getSession();
       if (session) {
         // Se o usuário já estiver logado, redirecionar para a página inicial
-        router.push("/dashboard");
+        router.push("/");
       }
     }
     
@@ -89,7 +89,7 @@ const LoginPage = () => {
       }
       
       if (res?.ok) {
-        router.push("/dashboard");
+        router.push("/"); // Redireciona para a home após login
       }
     } catch (error) {
       setError("Erro ao fazer login. Tente novamente.");

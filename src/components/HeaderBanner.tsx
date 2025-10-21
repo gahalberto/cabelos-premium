@@ -29,7 +29,7 @@ const HeaderBanner = () => {
         muted
         playsInline
       >
-        <source src="/videos/intro.mp4" type="video/mp4" />
+    <source src="/videos/videointro.mp4" type="video/mp4" />
         Seu navegador não suporta o elemento de vídeo.
       </video>
 

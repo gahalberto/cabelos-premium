@@ -71,9 +71,12 @@ export default function ContactPage() {
           <Separator className="my-6 bg-[#b08c4f] mx-auto w-16" />
         </div>
 
-<div className="font-montserrat text-[14px]">
+<div className="font-montserrat text-[14px] text-justify">
   Nosso contato é feito via <b>WhatsApp</b>, e você pode escolher conversar diretamente com uma das nossas três vendedoras, especialistas em mega hair. Elas estão prontas para ajudá-lo a escolher as melhores opções para o seu salão, tirar dúvidas sobre nossa técnica, nossas cores, nossos valores e como se tornar um expert com nossos produtos.
+<p className="mb-12"><br />
 <b>Basta clicar no número da vendedora abaixo ou salvar o contato e iniciar a conversa.</b> Estamos aqui para apoiar o seu trabalho e garantir que você tenha sempre as melhores soluções para o seu salão.
+
+</p>
 
 </div>
 

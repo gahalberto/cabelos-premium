@@ -13,9 +13,6 @@ import { cpf, cnpj } from "cpf-cnpj-validator";
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(50, "Nome muito longo"),
   lastName: z.string().min(1, "Sobrenome é obrigatório").max(50, "Sobrenome muito longo"),
-  documentType: z.enum(["CPF", "CNPJ"], {
-    required_error: "Selecione o tipo de documento",
-  }),
   document: z.string().min(1, "Documento é obrigatório"),
   birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
   gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"], {
@@ -40,14 +37,15 @@ const schema = z.object({
   message: "As senhas não coincidem",
   path: ["confirmPassword"],
 }).refine((data) => {
-  if (data.documentType === "CPF") {
+  const cleanDocument = data.document.replace(/\D/g, "");
+  if (cleanDocument.length === 11) {
     return cpf.isValid(data.document);
-  } else if (data.documentType === "CNPJ") {
+  } else if (cleanDocument.length === 14) {
     return cnpj.isValid(data.document);
   }
   return false;
 }, {
-  message: "Documento inválido",
+  message: "Documento inválido (deve ser CPF com 11 dígitos ou CNPJ com 14 dígitos)",
   path: ["document"],
 });
 
@@ -64,30 +62,22 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  // Watch para monitorar mudanças no tipo de documento
-  const watchedDocumentType = watch("documentType");
-
   // Funções para formatação de campos
-  const formatCPF = (value: string) => {
+  const formatDocument = (value: string) => {
     const numericValue = value.replace(/\D/g, "");
     if (numericValue.length <= 11) {
+      // Formata como CPF
       return numericValue
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d{1,2})/, "$1-$2");
-    }
-    return value;
-  };
-
-  const formatCNPJ = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-    if (numericValue.length <= 14) {
+    } else if (numericValue.length <= 14) {
+      // Formata como CNPJ
       return numericValue
         .replace(/(\d{2})(\d)/, "$1.$2")
         .replace(/(\d{3})(\d)/, "$1.$2")
@@ -123,9 +113,7 @@ const RegisterPage = () => {
 
   // Handlers para formatação em tempo real
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = watchedDocumentType === "CPF" 
-      ? formatCPF(e.target.value) 
-      : formatCNPJ(e.target.value);
+    const formatted = formatDocument(e.target.value);
     setValue("document", formatted);
   };
 
@@ -139,23 +127,21 @@ const RegisterPage = () => {
     setValue("phone", formatted);
   };
 
-  const handleDocumentTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newType = e.target.value as "CPF" | "CNPJ";
-    setValue("documentType", newType);
-    setValue("document", ""); // Limpa o campo quando muda o tipo
-  };
-
   // Função de envio de formulário
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     setError(null); // Resetando erro antes do envio
     try {
+      // Detecta automaticamente se é CPF ou CNPJ baseado no número de dígitos
+      const cleanDocument = data.document.replace(/\D/g, "");
+      const documentType = cleanDocument.length === 11 ? "CPF" : "CNPJ";
+
       const response = await registerUser({
         name: data.name,
         lastName: data.lastName,
         email: data.email,
         document: data.document,
-        documentType: data.documentType,
+        documentType: documentType,
         birthDate: new Date(data.birthDate),
         gender: data.gender,
         userType: "CLIENTE", // Sempre CLIENTE por padrão
@@ -171,7 +157,7 @@ const RegisterPage = () => {
           email: data.email,
           password: data.password,
         });
-        router.push("/dashboard"); // Redireciona para o dashboard após o login
+        router.push("/"); // Redireciona para a home após o registro
       }
     } catch (err) {
       setError("Ocorreu um erro ao registrar. Por favor, tente novamente.");
@@ -231,31 +217,9 @@ const RegisterPage = () => {
             )}
           </div>
 
-          {/* Campo Tipo de Documento */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Tipo de Documento *</label>
-            <select
-              {...register("documentType")}
-              onChange={handleDocumentTypeChange}
-              className={`w-full p-3 mt-1 border ${
-                errors.documentType ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            >
-              <option value="CPF">CPF (Pessoa Física)</option>
-              <option value="CNPJ">CNPJ (Pessoa Jurídica)</option>
-            </select>
-            {errors.documentType && (
-              <span className="text-red-500 text-sm">
-                {errors.documentType.message}
-              </span>
-            )}
-          </div>
-
           {/* Campo Documento (CPF/CNPJ) */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium">
-              {watchedDocumentType === "CPF" ? "CPF *" : "CNPJ *"}
-            </label>
+            <label className="block text-gray-700 font-medium">CPF ou CNPJ *</label>
             <input
               type="text"
               {...register("document")}
@@ -263,8 +227,8 @@ const RegisterPage = () => {
               className={`w-full p-3 mt-1 border ${
                 errors.document ? "border-red-500" : "border-gray-300"
               } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder={watchedDocumentType === "CPF" ? "000.000.000-00" : "00.000.000/0000-00"}
-              maxLength={watchedDocumentType === "CPF" ? 14 : 18}
+              placeholder="Digite seu CPF ou CNPJ"
+              maxLength={18}
             />
             {errors.document && (
               <span className="text-red-500 text-sm">

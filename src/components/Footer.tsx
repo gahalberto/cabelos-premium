@@ -21,7 +21,7 @@ export default function Footer() {
             <p className="text-lg text-gray-700">
               Conheça a Cabelos Premium e entre em contato conosco pelos nossos canais de atendimento.
             </p>
-            <p className="text-lg text-gray-700 mt-8">
+            <p className="text-lg text-gray-700 mt-8 text">
               Estamos aqui para transformar seu visual e oferecer a melhor experiência com cabelos naturais e exclusivos.
             </p>
           </div>

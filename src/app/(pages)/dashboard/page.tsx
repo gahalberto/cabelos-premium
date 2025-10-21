@@ -1,293 +1,156 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { CardContent, Skeleton } from "@mui/material";
-import { getProfilesByUser } from "@/app/_actions/getProfilesByUser";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { MemoriaProfiles, ProfilePhotos } from "@prisma/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  PlusCircle,
-  Link2,
-  QrCode,
-  Edit,
-  Eye,
-  X,
-  Download,
-  Share2,
-  Copy,
-  LinkedinIcon,
-} from "lucide-react";
+import { ShoppingCart, Package, User, Settings } from "lucide-react";
 import Link from "next/link";
-import { QRCodeCanvas } from "qrcode.react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { FaFacebook, FaTwitter } from "react-icons/fa";
-
-type ProfileType = MemoriaProfiles & {
-  ProfilePhotos: ProfilePhotos[];
-};
 
 const DashboardPage = () => {
   const { data: session, status } = useSession();
-  const [profiles, setProfiles] = useState<ProfileType[]>([]);
-  const [qrUrl, setQrUrl] = useState<string | null>(null);
-  const qrRef = useRef<HTMLCanvasElement>(null); // Referência para o QR Code
-
-  useEffect(() => {
-    if (status === "authenticated" && session?.user.id) {
-      getProfilesByUser(session.user.id).then(setProfiles);
-    }
-  }, [status, session]);
 
   if (status === "loading") {
     return (
-      <div className="flex justify-center items-center h-screen space-y-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Acesso Negado
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Você precisa estar logado para acessar o dashboard.
+          </p>
+          <Link href="/login">
+            <Button>Fazer Login</Button>
+          </Link>
         </div>
       </div>
     );
   }
 
-  const downloadQRCode = () => {
-    if (qrRef.current) {
-      const canvas = qrRef.current;
-      const image = canvas.toDataURL("image/png"); // Converte para PNG
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "qrcode.png";
-      link.click();
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center p-6 bg-slate-800/50 shadow-xl">
-        <h1 className="text-2xl font-light mb-4 md:mb-0">
-          Olá{" "}
-          <span className="font-semibold text-blue-300">
-            {session?.user.name}
-          </span>
-          , bem-vindo ao seu memorial!
-        </h1>
-        <Button className="gap-2 bg-blue-600 hover:bg-blue-700 transition-colors">
-          <PlusCircle size={18} />
-          Criar Novo Perfil
-        </Button>
-      </header>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Bem-vindo, {session?.user.name}!
+          </h1>
+          <p className="text-gray-600">
+            Gerencie sua conta e acompanhe seus pedidos
+          </p>
+        </header>
 
-      <main className="container mx-auto px-4 py-8">
-        {profiles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {profiles.map((profile) => {
-                      const shareUrl = `https://inmemorian.com.br/${profile.slug}`;
-                      const shareText = `Veja esse memorial incrível: ${shareUrl}`;              
-              return (
-              <Card
-                key={profile.id}
-                className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all group"
-              >
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <Image
-                        className="w-20 h-20 rounded-full object-cover border-4 border-slate-700 group-hover:border-blue-500 transition-colors"
-                        src={
-                          profile.ProfilePhotos?.[0]?.imageUrl ||
-                          "/images/no-avatar.webp"
-                        }
-                        alt="Imagem do perfil"
-                        width={96}
-                        height={96}
-                      />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl font-bold text-blue-100">
-                        {profile.name}
-                      </CardTitle>
-                      <div className="text-sm text-slate-400 mt-1">
-                        <p>{profile.birthday?.toLocaleDateString()}</p>
-                        <p>{profile.deathday?.toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card de Pedidos */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Meus Pedidos</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">0</div>
+              <p className="text-xs text-muted-foreground">
+                Nenhum pedido realizado
+              </p>
+            </CardContent>
+          </Card>
 
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    <Link href={`/${profile.slug}`}>
-                      <Button
-                        variant="outline"
-                        className="gap-2 text-blue-100 border-slate-600 hover:bg-blue-900/20"
-                      >
-                        <Eye size={16} />
-                        Visualizar
-                      </Button>
-                    </Link>
-                    <Link href={`/dashboard/profile/${profile.id}`}>
-                      <Button
-                        variant="outline"
-                        className="gap-2 text-blue-100 border-slate-600 hover:bg-blue-900/20"
-                      >
-                        <Edit size={16} />
-                        Editar
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      className="gap-2 text-blue-100 border-slate-600 hover:bg-blue-900/20"
-                    >
-                      <Link2 size={16} />
-                      Link
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="gap-2 text-blue-100 border-slate-600 hover:bg-blue-900/20"
-                      onClick={() =>
-                        setQrUrl(`https://inmemorian.com.br/${profile.slug}`)
-                      }
-                    >
-                      <QrCode size={16} />
-                      QR Code
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="gap-2 text-blue-100 border-green-500 hover:bg-blue-900/20"
-                    >
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className="gap-2">
-                            <Share2 size={16} />
-                            Compartilhar
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="bg-white p-3 rounded-lg shadow-md flex flex-col space-y-2">
-                          <h3 className="text-gray-800 text-sm font-semibold mb-2">
-                            Compartilhar perfil
-                          </h3>
+          {/* Card de Carrinho */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Carrinho</CardTitle>
+              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">0</div>
+              <p className="text-xs text-muted-foreground">
+                Itens no carrinho
+              </p>
+            </CardContent>
+          </Card>
 
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-blue-600 hover:bg-blue-100"
-                            onClick={() =>
-                              window.open(
-                                `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <FaFacebook size={18} /> Facebook
-                          </Button>
+          {/* Card de Perfil */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Meu Perfil</CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <Link href="/account">
+                <Button variant="outline" size="sm">
+                  Editar Perfil
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
 
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-blue-400 hover:bg-blue-100"
-                            onClick={() =>
-                              window.open(
-                                `https://twitter.com/intent/tweet?text=${shareText}`,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <FaTwitter size={18} /> Twitter
-                          </Button>
+          {/* Card de Configurações */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Configurações</CardTitle>
+              <Settings className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <Link href="/account">
+                <Button variant="outline" size="sm">
+                  Configurar
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
 
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-blue-700 hover:bg-blue-100"
-                            onClick={() =>
-                              window.open(
-                                `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}`,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <LinkedinIcon size={18} /> LinkedIn
-                          </Button>
-
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-green-500 hover:bg-green-100"
-                            onClick={() =>
-                              window.open(
-                                `https://wa.me/?text=${shareText}`,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <Share2 size={18} /> WhatsApp
-                          </Button>
-
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 text-gray-700 hover:bg-gray-200"
-                            onClick={() => {
-                              navigator.clipboard.writeText(shareUrl);
-                              alert(
-                                "Link copiado para a área de transferência!"
-                              );
-                            }}
-                          >
-                            <Copy size={18} /> Copiar Link
-                          </Button>
-                        </PopoverContent>
-                      </Popover>
-                    </Button>
-                  </div>
+        {/* Seção de Ações Rápidas */}
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Ações Rápidas
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link href="/shop">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <ShoppingCart className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                  <h3 className="font-medium text-gray-900">Ver Produtos</h3>
+                  <p className="text-sm text-gray-600">
+                    Explore nossa coleção de cabelos
+                  </p>
                 </CardContent>
               </Card>
-)})}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <Image
-              src="/images/empty-state.svg"
-              alt="Nenhum perfil encontrado"
-              width={200}
-              height={200}
-              className="opacity-75"
-            />
-            <p className="text-xl text-slate-400">Nenhum memorial encontrado</p>
-            <p className="text-slate-500">
-              Comece criando seu primeiro perfil memorial
-            </p>
-          </div>
-        )}
-      </main>
+            </Link>
 
-      {/* Modal QR Code */}
-      {qrUrl && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center relative">
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-              onClick={() => setQrUrl(null)}
-            >
-              <X size={20} />
-            </button>
-            <h2 className="text-lg font-semibold mb-4">
-              QR Code para o perfil
-            </h2>
-            <QRCodeCanvas ref={qrRef} value={qrUrl} size={200} />
-            <p className="text-gray-600 mt-4">{qrUrl}</p>
-            <Button
-              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center gap-2"
-              onClick={downloadQRCode}
-            >
-              <Download size={16} />
-              Baixar QR Code
-            </Button>
+            <Link href="/account">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <User className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <h3 className="font-medium text-gray-900">Minha Conta</h3>
+                  <p className="text-sm text-gray-600">
+                    Gerencie suas informações
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/contato">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <Settings className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                  <h3 className="font-medium text-gray-900">Suporte</h3>
+                  <p className="text-sm text-gray-600">
+                    Entre em contato conosco
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
