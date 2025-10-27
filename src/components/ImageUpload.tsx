@@ -175,7 +175,7 @@ export function ImageUpload({
       const updatedImages = images.map(img => {
         if (!img.uploaded && img.file) {
           const uploadedImage = result.images.find((uploaded: any) => 
-            uploaded.originalName === img.file.name
+            uploaded.originalName === img.file?.name
           );
           if (uploadedImage) {
             return {

@@ -51,11 +51,18 @@ export async function createProduct(data: CreateProductData) {
       throw new Error("Categoria não encontrada");
     }
 
+    // Gerar SKU único baseado no nome e timestamp
+    const sku = `${data.name
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "")
+      .substring(0, 8)}-${Date.now().toString().slice(-6)}`;
+
     // Criar o produto
     const product = await db.product.create({
       data: {
         name: data.name,
         slug,
+        sku,
         description: data.description,
         price: data.price,
         salePrice: data.salePrice,

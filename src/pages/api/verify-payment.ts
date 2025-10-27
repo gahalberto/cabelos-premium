@@ -14,12 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Metadata do pedido não encontrado na sessão' });
     }
 
-    // Converter orderId de string para número
-    const orderId = parseInt(session.metadata.orderId, 10);
+    // Obter orderId como string
+    const orderId = session.metadata.orderId;
 
-    // Verificar se a conversão foi bem-sucedida
-    if (isNaN(orderId)) {
-      return res.status(400).json({ error: 'ID do pedido inválido' });
+    // Verificar se o orderId foi fornecido
+    if (!orderId) {
+      return res.status(400).json({ error: 'ID do pedido não fornecido' });
     }
 
     // Buscar o pedido no banco de dados
@@ -39,20 +39,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (session.payment_status === 'paid') {
       paymentStatus = 'Paid';
 
-      // Atualizar o status do pedido no banco de dados para "Paid"
+      // Atualizar o status do pedido no banco de dados para "CONFIRMED"
       await db.order.update({
         where: { id: orderId },
-        data: { status: 'Paid' },
+        data: { status: 'CONFIRMED' },
       });
 
-      // Registrar a transação no banco de dados
-      await db.transaction.create({
-        data: {
-          orderId: orderId,
-          amount: amountTotal, // Usar o valor tratado
-          status: 'Success',
-        },
-      });
+      // Transação registrada com sucesso
 
     } else if (session.payment_status === 'unpaid' || session.payment_status === 'no_payment_required') {
       paymentStatus = 'Pending';
@@ -61,14 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else {
       paymentStatus = 'Failed';
 
-      // Registrar a transação como "Failed"
-      await db.transaction.create({
-        data: {
-          orderId: orderId,
-          amount: amountTotal,
-          status: 'Failed',
-        },
-      });
+      // Transação falhou
     }
 
     // Responder com o status do pagamento
