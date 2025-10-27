@@ -1,0 +1,28 @@
+{
+  "name": "Cabelos Premium - Extensões e Alongamentos Naturais",
+  "short_name": "Cabelos Premium",
+  "description": "Os legítimos cabelos brasileiros do sul. Extensões e alongamentos naturais de alta qualidade.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8a7d5c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/logoouro.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logoouro.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["beauty", "shopping", "lifestyle"],
+  "lang": "pt-BR",
+  "dir": "ltr"
+}
+

@@ -1,8 +1,11 @@
-"use client";
+import { pageMetadata } from "@/config/metadata";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = pageMetadata.sobre;
 
 export default function SobrePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">
           Sobre a Cabelos Premium
@@ -46,7 +49,7 @@ export default function SobrePage() {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

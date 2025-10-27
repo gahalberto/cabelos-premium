@@ -1,0 +1,27 @@
+# Robots.txt para Cabelos Premium
+# Permitir todos os bots de busca
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account/
+Disallow: /_next/
+Disallow: /private/
+
+# Sitemap
+Sitemap: https://cabelospremium.com.br/sitemap.xml
+
+# Bots específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Frequência de rastreamento
+Crawl-delay: 1
+

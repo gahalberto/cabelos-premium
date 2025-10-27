@@ -1,4 +1,7 @@
-"use client";
+import { pageMetadata } from "@/config/metadata";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = pageMetadata.politicaPrivacidade;
 
 export default function PoliticaPrivacidadePage() {
   return (
