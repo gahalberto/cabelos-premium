@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { NavigationMenuDemo } from "@/components/Menu";
 import { CartProvider } from "@/contexts/CartContext";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { Footer } from "@/components/Footer";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -45,6 +46,7 @@ export default function RootLayout({
               <div className="flex h-full flex-col">
                 <div className="flex-1">{children}</div>
               </div>
+              <Footer />
               <FloatingWhatsApp />
             </CartProvider>
           </AuthProvider>

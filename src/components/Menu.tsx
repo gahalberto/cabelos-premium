@@ -19,6 +19,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { Input } from "./ui/input";
 import { useCart } from "@/contexts/CartContext";
+import { CartSheet } from "./CartSheet";
 
 export function NavigationMenuDemo() {
   const { data } = useSession();
@@ -35,9 +36,20 @@ export function NavigationMenuDemo() {
       </div>
       
       {/* Menu principal */}
-      <div className="bg-[#f0efdb] py-4 text-center">
-        <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-center">
-          {/* Links de navegação */}
+      <div className="bg-[#f0efdb] py-4">
+        <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-between">
+          {/* Logo - visível apenas no mobile */}
+          <Link href="/" className="md:hidden flex-shrink-0">
+            <Image
+              src="/images/logoouro.png"
+              alt="Cabelos Premium"
+              width={100}
+              height={30}
+              className="object-contain"
+            />
+          </Link>
+
+          {/* Links de navegação - Desktop */}
           <nav className="hidden md:flex items-center justify-center gap-16 w-full">
             <Link href="/" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
               HOME
@@ -59,26 +71,28 @@ export function NavigationMenuDemo() {
             </Link>
           </nav>
 
-          {/* Ícones de ação */}
-          <div className="flex items-center gap-6">
-            {/* Favoritos */}
-            <Link href="/wishlist" className="text-black hover:text-[#b08c4f] transition-colors">
+          {/* Ícones de ação - Desktop e Mobile */}
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* Favoritos - Oculto no mobile, visível no desktop */}
+            <Link href="/wishlist" className="hidden md:block text-black hover:text-[#b08c4f] transition-colors">
               <HeartIcon className="h-5 w-5 text-black" />
             </Link>
             
             {/* Carrinho */}
-            <Link href="/cart" className="text-black hover:text-[#b08c4f] transition-colors relative">
-              <ShoppingBagIcon className="h-5 w-5 text-black" />
-              {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                  {itemCount > 99 ? '99+' : itemCount}
-                </span>
-              )}
-            </Link>
+            <CartSheet>
+              <button className="text-black hover:text-[#b08c4f] transition-colors relative">
+                <ShoppingBagIcon className="h-5 w-5 text-black" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                    {itemCount > 99 ? '99+' : itemCount}
+                  </span>
+                )}
+              </button>
+            </CartSheet>
             
-            {/* Conta */}
+            {/* Conta - Desktop */}
             {data?.user ? (
-              <div className="relative group">
+              <div className="hidden md:block relative group">
                 <UserIcon className="h-5 w-5 text-black cursor-pointer" />
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <div className="p-3 border-b border-gray-100">
@@ -96,17 +110,15 @@ export function NavigationMenuDemo() {
                 </div>
               </div>
             ) : (
-              <Link href="/login" className="text-black hover:text-[#b08c4f] transition-colors">
+              <Link href="/login" className="hidden md:block text-black hover:text-[#b08c4f] transition-colors">
                 <UserIcon className="h-5 w-5 text-black" />
               </Link>
             )}
-          </div>
 
-          {/* Menu hambúrguer em dispositivos móveis */}
-          <div className="md:hidden">
+            {/* Menu hambúrguer - Mobile */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="text-black focus:outline-none">
+                <button className="md:hidden text-black focus:outline-none">
                   <MenuIcon className="h-6 w-6 text-black" />
                 </button>
               </SheetTrigger>
@@ -167,6 +179,57 @@ export function NavigationMenuDemo() {
                   >
                     CONTATO
                   </Link>
+
+                  {/* Links de conta no menu mobile */}
+                  <div className="border-t border-gray-300 mt-4 pt-4">
+                    {data?.user ? (
+                      <>
+                        <div className="p-3 bg-white rounded-md mb-2">
+                          <p className="font-medium text-sm text-gray-900">{data.user.name}</p>
+                          <p className="text-xs text-gray-500">{data.user.email}</p>
+                        </div>
+                        <Link
+                          href="/account"
+                          className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors block"
+                        >
+                          Minha Conta
+                        </Link>
+                        <Link
+                          href="/orders"
+                          className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors block"
+                        >
+                          Meus Pedidos
+                        </Link>
+                        <Link
+                          href="/wishlist"
+                          className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors block"
+                        >
+                          Lista de Desejos
+                        </Link>
+                        <button
+                          onClick={() => signOut()}
+                          className="w-full text-left p-3 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                        >
+                          Sair
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          href="/login"
+                          className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors block"
+                        >
+                          Entrar
+                        </Link>
+                        <Link
+                          href="/wishlist"
+                          className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors block"
+                        >
+                          Lista de Desejos
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
