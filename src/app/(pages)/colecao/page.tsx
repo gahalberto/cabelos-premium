@@ -218,17 +218,6 @@ export default function ColecaoPage() {
             </p>
           </div>
 
-          {/* Imagem final */}
-          <div className="flex justify-center mt-16" data-aos="fade-up">
-            <Image
-              src="/images/novas-imagens/pagina-colecao/imagem1.png"
-              alt="Coleção Candy"
-              width={800}
-              height={600}
-              className="rounded-lg shadow-lg"
-            />
-          </div>
-
           {/* Textos após a imagem */}
           <div className="max-w-4xl mx-auto mt-16 space-y-6" data-aos="fade-up">
             <p className="text-base text-white leading-relaxed font-montserrat font-thin text-center">

@@ -4,61 +4,58 @@ import { db } from "../_lib/prisma";
 import { revalidatePath } from "next/cache";
 
 interface ExpertApplicationData {
-  name: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  cnpj: string;
+  fullName: string;
   companyName: string;
-  businessDescription: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  website?: string;
-  instagram?: string;
-  experience: string;
-  specialties: string[];
+  phone: string;
+  email: string;
+  document: string;
+  socialMedia: string;
 }
 
 export async function submitExpertApplication(data: ExpertApplicationData) {
   try {
-    // Verificar se já existe uma aplicação com este CNPJ
-    const existingApplication = await db.expertApplication.findUnique({
-      where: { cnpj: data.cnpj }
+    // Verificar se já existe uma aplicação com este documento
+    const existingApplication = await db.expertApplication.findFirst({
+      where: { 
+        OR: [
+          { cnpj: data.document },
+          { email: data.email }
+        ]
+      }
     });
 
     if (existingApplication) {
-      throw new Error("Já existe uma aplicação com este CNPJ");
+      if (existingApplication.cnpj === data.document) {
+        throw new Error("Já existe uma aplicação com este CPF/CNPJ");
+      }
+      if (existingApplication.email === data.email) {
+        throw new Error("Já existe uma aplicação com este e-mail");
+      }
     }
 
-    // Verificar se já existe uma aplicação com este e-mail
-    const existingEmailApplication = await db.expertApplication.findUnique({
-      where: { email: data.email }
-    });
-
-    if (existingEmailApplication) {
-      throw new Error("Já existe uma aplicação com este e-mail");
-    }
+    // Separar o nome completo em nome e sobrenome
+    const nameParts = data.fullName.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || '';
 
     // Criar a aplicação
     const application = await db.expertApplication.create({
       data: {
-        name: data.name,
-        lastName: data.lastName,
+        name: firstName,
+        lastName: lastName,
         email: data.email,
         phone: data.phone,
-        cnpj: data.cnpj,
+        cnpj: data.document,
         companyName: data.companyName,
-        businessDescription: data.businessDescription,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode,
-        website: data.website || null,
-        instagram: data.instagram || null,
-        experience: data.experience,
-        specialties: data.specialties,
+        businessDescription: `Rede Social: ${data.socialMedia}`,
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        website: null,
+        instagram: data.socialMedia,
+        experience: '',
+        specialties: [],
         status: "PENDING", // PENDING, APPROVED, REJECTED
         isApproved: false
       }

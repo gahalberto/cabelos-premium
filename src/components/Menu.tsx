@@ -3,7 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import {
   SearchIcon,
-  ShoppingBagIcon,
+  ShoppingCartIcon,
   UserIcon,
   HeartIcon,
   MenuIcon,
@@ -27,16 +27,30 @@ export function NavigationMenuDemo() {
   const [searchOpen, setSearchOpen] = React.useState(false);
 
   return (
-    <div className="w-full z-50">
+    <div className="w-full fixed top-0 left-0 z-50">
       {/* Barra superior com informações sobre os cabelos */}
-      <div className="w-full bg-[#8a7d5c] py-2 text-center">
-        <p className="text-white font-montserrat text-[20px] flex items-center justify-center">
-          <span className="mr-2">🇧🇷</span> A marca da sua extensão. Os legítimos cabelos brasileiros do sul. <span className="ml-2">🇧🇷</span>
+      <div className="w-full bg-[#8a7d5c]/60 backdrop-blur-md py-2 text-center">
+        <p className="text-white font-montserrat text-[14px] font-light flex items-center justify-center">
+          <Image 
+            src="/images/bandeira.png" 
+            alt="Bandeira do Brasil" 
+            width={20} 
+            height={20} 
+            className="mr-2"
+          />
+          A marca da sua extensão. Os legítimos cabelos brasileiros do sul.
+          <Image 
+            src="/images/bandeira.png" 
+            alt="Bandeira do Brasil" 
+            width={20} 
+            height={20} 
+            className="ml-2"
+          />
         </p>
       </div>
       
       {/* Menu principal */}
-      <div className="bg-[#f0efdb] py-4">
+      <div className="bg-[#8a7d5c]/60 backdrop-blur-md py-4">
         <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-between">
           {/* Logo - visível apenas no mobile */}
           <Link href="/" className="md:hidden flex-shrink-0">
@@ -51,22 +65,22 @@ export function NavigationMenuDemo() {
 
           {/* Links de navegação - Desktop */}
           <nav className="hidden md:flex items-center justify-center gap-16 w-full">
-            <Link href="/" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               HOME
             </Link>
-            <Link href="/lancamento" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/lancamento" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               LANÇAMENTO
             </Link>
-            <Link href="/colecao" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/colecao" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               COLEÇÃO
             </Link>
-            <Link href="/torne-se-expert" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/torne-se-expert" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               TORNE-SE EXPERT
             </Link>
-            <Link href="/shop" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/shop" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               SHOP
             </Link>
-            <Link href="/contato" className="uppercase font-bold text-[11.5px] tracking-wide hover:text-[#8a7d5c]">
+            <Link href="/contato" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               CONTATO
             </Link>
           </nav>
@@ -74,14 +88,14 @@ export function NavigationMenuDemo() {
           {/* Ícones de ação - Desktop e Mobile */}
           <div className="flex items-center gap-4 md:gap-6">
             {/* Favoritos - Oculto no mobile, visível no desktop */}
-            <Link href="/wishlist" className="hidden md:block text-black hover:text-[#b08c4f] transition-colors">
-              <HeartIcon className="h-5 w-5 text-black" />
+            <Link href="/wishlist" className="hidden md:block text-white hover:text-[#f0efdb] transition-colors">
+              <HeartIcon className="h-5 w-5" />
             </Link>
             
             {/* Carrinho */}
             <CartSheet>
-              <button className="text-black hover:text-[#b08c4f] transition-colors relative">
-                <ShoppingBagIcon className="h-5 w-5 text-black" />
+              <button className="text-white hover:text-[#f0efdb] transition-colors relative">
+                <ShoppingCartIcon className="h-5 w-5" />
                 {itemCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                     {itemCount > 99 ? '99+' : itemCount}
@@ -93,7 +107,7 @@ export function NavigationMenuDemo() {
             {/* Conta - Desktop */}
             {data?.user ? (
               <div className="hidden md:block relative group">
-                <UserIcon className="h-5 w-5 text-black cursor-pointer" />
+                <UserIcon className="h-5 w-5 text-white cursor-pointer" />
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <div className="p-3 border-b border-gray-100">
                     <p className="font-medium text-sm">{data.user.name}</p>
@@ -110,16 +124,16 @@ export function NavigationMenuDemo() {
                 </div>
               </div>
             ) : (
-              <Link href="/login" className="hidden md:block text-black hover:text-[#b08c4f] transition-colors">
-                <UserIcon className="h-5 w-5 text-black" />
+              <Link href="/login" className="hidden md:block text-white hover:text-[#f0efdb] transition-colors">
+                <UserIcon className="h-5 w-5" />
               </Link>
             )}
 
             {/* Menu hambúrguer - Mobile */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="md:hidden text-black focus:outline-none">
-                  <MenuIcon className="h-6 w-6 text-black" />
+                <button className="md:hidden text-white focus:outline-none">
+                  <MenuIcon className="h-6 w-6" />
                 </button>
               </SheetTrigger>
 

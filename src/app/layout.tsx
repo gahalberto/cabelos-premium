@@ -101,7 +101,7 @@ export default function RootLayout({
           <AuthProvider>
             <CartProvider>
               <NavigationMenuDemo />
-              <div className="flex h-full flex-col">
+              <div className="flex h-full flex-col pt-[88px]">
                 <div className="flex-1">{children}</div>
               </div>
               <Footer />

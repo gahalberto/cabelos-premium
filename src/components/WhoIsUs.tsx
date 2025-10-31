@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Separator } from "./ui/separator";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -47,8 +46,10 @@ const WhoIsUs = () => {
       <section className="w-full bg-[#f0efdb] py-16">
         {/* Título Principal sozinho no topo */}
         <div className="w-full flex justify-center items-center mb-12 px-8 md:px-16 lg:px-24">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#8a7d5c] tracking-wide leading-tight text-center">
-            LANÇAMENTO BY CABELOS PREMIUM
+          <h1 className="text-2xl md:text-3xl lg:text-4xl text-[#8a7d5c] tracking-wide leading-tight text-center">
+            <span className="font-le-jour">LANÇAMENTO </span>
+            <span className="font-brittany-ultra-thin italic">by</span>
+            <span className="font-le-jour"> CABELOS PREMIUM</span>
           </h1>
         </div>
         <div className="flex flex-col md:flex-row w-full max-w-none items-center justify-center">
@@ -147,18 +148,17 @@ const WhoIsUs = () => {
         </div>
         <div className="relative z-10">
           <header className="text-center mb-16">
-            <h1 className="text-3xl md:text-4xl font-le-jour text-[#e6e6e6] pb-16">COLEÇÃO CANDY</h1>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#e6e6e6] pb-16">COLEÇÃO CANDY</h1>
             <h2 className="text-[#e6e6e6] mt-4 pb-16">
               <span className="font-brittany text-[45px]">Uma doce</span>
               <span className="font-montserrat font-bold text-[25px]"> coleção de cores para nossas </span>
               <span className="font-brittany text-[45px]">darlings</span>
             </h2>
             <div className="mt-8 text-[18px] text-[#e6e6e6] font-montserrat text-left max-w-4xl mx-auto px-8 md:px-12 lg:px-16">
-              Nossa primeira coleção traz cores que você vai amar: conheça Candy. <b>Todas cores feitas manualmente em Cabelos Brasileiros do Sul selecionados da Cabelos Premium</b>, ficam ainda mais perfeitos quando juntamos eles a essa técnica de lançamento. Com <b>6 tonalidades exclusivas</b>, essa linha foi pensada para mulheres poderosas, sofisticadas e elegantes, mas com aquele toque doce e encantador. Feitas com cabelos brasileiros do Sul, as fitas Mega Hair são <b>fininhas, flexíveis e ideais para quem busca naturalidade, conforto e durabilidade.</b>
+              Nossa primeira coleção traz cores que você vai amar: conheça a Coleção Candy. <b>Todas as cores são preparadas artesanalmente com os legítimos Cabelos do Sul,</b> ficam ainda mais perfeitos com a nossa técnica de lançamento. Com 6 tonalidades exclusivas, essa linha foi pensada para mulheres poderosas, sofisticadas e elegantes, mas com aquele toque doce e encantador. Feitas com cabelos brasileiros do Sul, as fitas Mega Hair são <b>super finas, flexíveis e ideais para quem busca naturalidade, conforto e durabilidade.</b>
               <br/><br/>
               <b>De Caramel a Like a Virgin</b>, cada cor traz uma transição suave, deixando os fios radiantes e elegantes.
             </div>
-            <Separator className="my-6 bg-amber-400 mx-auto w-32 h-1" />
           </header>
 
           <div className="max-w-6xl mx-auto">
@@ -205,16 +205,16 @@ const WhoIsUs = () => {
       <section className="w-full bg-[#f0efdb] py-36 px-4 sm:px-10 md:px-20 lg:px-36">
         <div className="max-w-6xl mx-auto">
           {/* Título Principal */}
-          <div className="text-center mb-16" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-le-jour text-[#8a7d5c] mb-6 tracking-wide">
+          <div className="text-center mb-24" data-aos="fade-up">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#8a7d5c] mb-8 tracking-wide">
               TORNE-SE EXPERT
             </h1>
             <h2 className="text-xl md:text-2xl lg:text-3xl text-[#333333] mb-8">
-              <span className="font-montserrat font-semibold">Com nossa técnica você transforma sua  paixão</span>
+              <span className="font-montserrat font-semibold">Com nossa técnica você transforma sua paixão</span>
               <span className="font-montserrat font-semibold"> em </span>
-              <span className="font-brittany italic text-5xl  text-black">sucesso</span>
+              <span className="font-brittany italic text-5xl text-black">sucesso</span>
             </h2>
-            <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-left px-8 md:px-12 lg:px-16">
+            <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-justify px-8 md:px-12 lg:px-16">
               Quer se destacar na beleza, oferecer um serviço premium e aumentar seus ganhos? 
               Com a Cabelos Premium, você aprende do zero ao avançado as técnicas mais modernas e seguras 
               de extensão capilar, e o melhor: <span className="font-bold text-black">o curso é 100% gratuito na compra do nosso kit de cabelos.</span>
@@ -250,11 +250,11 @@ const WhoIsUs = () => {
                 <div className="absolute -inset-4 bg-gradient-to-r from-[#d4a249] to-[#f0efdb] rounded-3xl opacity-10 blur-xl"></div>
                 <div className="relative rounded-2xl p-6">
                   <Image
-                    src="/images/expert.png"
+                    src="/images/beneficios-card/cabelos.jpeg"
                     alt="Kit Cabelos Premium"
-                    width={500}
-                    height={500}
-                    className="object-contain w-[1200px] h-auto"
+                    width={400}
+                    height={400}
+                    className="object-contain w-full max-w-md h-auto rounded-lg"
                   />
                 </div>
               </div>
@@ -265,11 +265,11 @@ const WhoIsUs = () => {
               {/* Benefícios */}
               <div className="bg-[#8a7d5c] rounded-2xl p-6 md:p-8">
                 <h4 className="text-xl md:text-5xl font-brittany text-[#f0efdb] mb-6">
-                  Benefícios:
+                  Benefícios
                 </h4>
                 <div className="space-y-1">
                   {[
-                    "Curso gratuito com o kit",
+                    "Curso gratuito na compra do kit",
                     "Suporte completo", 
                     "Instrutores especializados",
                     "Marca consolidada no Brasil",
@@ -312,7 +312,7 @@ const WhoIsUs = () => {
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Cabeçalho */}
           <div className="text-center mb-8" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl font-le-jour text-[#333333] mb-4">SHOP</h1>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#333333] mb-4">SHOP</h1>
             <p className="text-xl md:text-2xl  font-montserrat font-bold text-[#333333] mb-0">
               Conheça nossa linha de produtos exclusivos para Extensões Capilares
             </p>
@@ -323,7 +323,13 @@ const WhoIsUs = () => {
             <div className="w-full lg:w-1/2 px-8 md:px-12 lg:px-16" data-aos="fade-right">
               <h2 className="font-brittany text-4xl md:text-5xl text-[#f0efdb] mb-6">Keter Cosmeticos</h2>
               <p className="font-montserrat text-[#333333] mb-4">
-                A linha Keter Cosméticos com <span className="font-bold ">formulação italiana e base de caviar</span>, oferece cuidados especializados para manter suas extensões sempre lindas e saudáveis. Cada produto foi desenvolvido para tratar e proteger, mantendo os cabelos mais macios, fortes e com aquele brilho que toda <span className="font-bold">Mega Hair merece</span>.
+                Desenvolvida com <span className="font-bold">tecnologia italiana e base de extrato de caviar</span>, a <span className="font-bold">linha Keter Cosméticos</span> foi criada para oferecer um cuidado completo e sofisticado às suas <span className="font-bold">extensões</span> e todos os tipos de cabelos.
+              </p>
+              <p className="font-montserrat text-[#333333] mb-4">
+                Cada produto é formulado com ativos de alta performance que <span className="font-bold">nutrem, fortalecem e protegem os fios</span>, preservando a leveza e o toque sedoso característico dos cabelos naturais.
+              </p>
+              <p className="font-montserrat text-[#333333] mb-4">
+                O resultado é um cabelo <span className="font-bold">mais saudável, brilhante e cheio de vida</span>, com a durabilidade e o movimento que um <span className="font-bold">Mega Hair Premium</span> merece.
               </p>
             </div>
             
