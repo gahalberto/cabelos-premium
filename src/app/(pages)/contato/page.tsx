@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FaInstagram, FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
-import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
@@ -71,94 +70,36 @@ export default function ContactPage() {
           <Separator className="my-6 bg-[#b08c4f] mx-auto w-16" />
         </div>
 
-<div className="font-montserrat text-[14px] text-justify">
-  Nosso contato é feito via <b>WhatsApp</b>, e você pode escolher conversar diretamente com uma das nossas três vendedoras, especialistas em mega hair. Elas estão prontas para ajudá-lo a escolher as melhores opções para o seu salão, tirar dúvidas sobre nossa técnica, nossas cores, nossos valores e como se tornar um expert com nossos produtos.
-<p className="mb-12"><br />
-<b>Basta clicar no número da vendedora abaixo ou salvar o contato e iniciar a conversa.</b> Estamos aqui para apoiar o seu trabalho e garantir que você tenha sempre as melhores soluções para o seu salão.
-
-</p>
-
-</div>
-
-        {/* Equipe de Vendas */}
+        {/* Botões de Contato */}
         <div className="mt-16">
-          <h3 className="text-3xl font-le-jour text-primary text-center mb-12">Nossa Equipe de Vendas</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Edna Fonseca */}
-            <div className="text-center">
-              <div className="relative w-64 h-80 mx-auto mb-4 rounded-lg overflow-hidden">
-                <Image
-                  src="/images/contato/1.png"
-                  alt="Edna Fonseca"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h4 className="text-[21px] font-montserrat font-bold text-gray-800 mb-2">
-                Edna Fonseca
-              </h4>
-              <p className="text-sm text-gray-600 font-montserrat mb-4">
-                Especialista em varejo Brasil
-              </p>
-              <button
-                onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-                className="bg-[#8a7d5c] text-white px-6 py-3 rounded-lg font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex items-center gap-2 mx-auto"
-              >
-                <FaWhatsapp size={20} />
-                WhatsApp
-              </button>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {/* WhatsApp */}
+            <button
+              onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
+              className="bg-[#25D366] text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:bg-[#20BD5C] transition-colors flex flex-col items-center gap-3 shadow-lg"
+            >
+              <FaWhatsapp size={48} />
+              <span className="text-xl">WhatsApp</span>
+            </button>
 
-            {/* Polly Marques */}
-            <div className="text-center">
-              <div className="relative w-64 h-80 mx-auto mb-4 rounded-lg overflow-hidden">
-                <Image
-                  src="/images/contato/2.png"
-                  alt="Polly Marques"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h4 className="text-[21px] font-montserrat font-bold text-gray-800 mb-2">
-                Polly Marques
-              </h4>
-              <p className="text-sm text-gray-600 font-montserrat mb-4">
-                Especialista em atacado Brasil
-              </p>
-              <button
-                onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-                className="bg-[#8a7d5c] text-white px-6 py-3 rounded-lg font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex items-center gap-2 mx-auto"
-              >
-                <FaWhatsapp size={20} />
-                WhatsApp
-              </button>
-            </div>
+            {/* Instagram */}
+            <button
+              onClick={() => window.open('https://instagram.com/cabelospremium', '_blank')}
+              className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:opacity-90 transition-opacity flex flex-col items-center gap-3 shadow-lg"
+            >
+              <FaInstagram size={48} />
+              <span className="text-xl">Instagram</span>
+            </button>
 
-            {/* Ana Paula */}
-            <div className="text-center">
-              <div className="relative w-64 h-80 mx-auto mb-4 rounded-lg overflow-hidden">
-                <Image
-                  src="/images/contato/3.png"
-                  alt="Ana Paula"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h4 className="text-[21px] font-montserrat font-bold text-gray-800 mb-2">
-                Ana Paula
-              </h4>
-              <p className="text-sm text-gray-600 font-montserrat mb-4">
-                Especialista em atacado São Paulo
-              </p>
-              <button
-                onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-                className="bg-[#8a7d5c] text-white px-6 py-3 rounded-lg font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex items-center gap-2 mx-auto"
-              >
-                <FaWhatsapp size={20} />
-                WhatsApp
-              </button>
-            </div>
+            {/* Contato Fixo */}
+            <button
+              onClick={() => window.open('tel:+551138252050', '_blank')}
+              className="bg-[#8a7d5c] text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex flex-col items-center gap-3 shadow-lg"
+            >
+              <FaPhone size={48} />
+              <span className="text-xl">Contato Fixo</span>
+              <span className="text-lg">(11) 3825-2050</span>
+            </button>
           </div>
         </div>
       </div>
