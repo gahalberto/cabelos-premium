@@ -1,5 +1,6 @@
 "use server";
 
+import { unstable_noStore as noStore } from 'next/cache';
 import { db } from "../_lib/prisma";
 
 export interface ProductFilters {
@@ -23,6 +24,7 @@ export interface GetProductsOptions {
 }
 
 export async function getProducts(options: GetProductsOptions = {}) {
+  noStore();
   const {
     page = 1,
     limit = 12,
@@ -164,6 +166,7 @@ export async function getProducts(options: GetProductsOptions = {}) {
 
 // Buscar categorias ativas
 export async function getCategories() {
+  noStore();
   try {
     const categories = await db.category.findMany({
       where: { isActive: true },
@@ -189,6 +192,7 @@ export async function getCategories() {
 
 // Buscar filtros disponíveis
 export async function getAvailableFilters() {
+  noStore();
   try {
     const [textures, colors, lengths] = await Promise.all([
       db.product.findMany({
