@@ -3,10 +3,8 @@ import "./globals.css";
 import AuthProvider from "./providers/auth";
 import { ThemeProvider } from "./providers/theme";
 import { Toaster } from "@/components/ui/toaster";
-import { NavigationMenuDemo } from "@/components/Menu";
 import { CartProvider } from "@/contexts/CartContext";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { Footer } from "@/components/Footer";
+import { AppShell } from "@/components/AppShell";
 import { siteConfig } from "@/config/metadata";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -100,12 +98,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <CartProvider>
-              <NavigationMenuDemo />
-              <div className="flex h-full flex-col pt-[88px]">
-                <div className="flex-1">{children}</div>
-              </div>
-              <Footer />
-              <FloatingWhatsApp />
+              <AppShell>{children}</AppShell>
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
