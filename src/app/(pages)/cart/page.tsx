@@ -9,18 +9,18 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ShoppingCart, 
-  Trash2, 
-  Plus, 
-  Minus, 
+import {
+  ShoppingCart,
+  Trash2,
+  Plus,
+  Minus,
   ArrowLeft,
-  CreditCard,
   Truck,
   Package
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 
 export default function CartPage() {
   const { items, total, itemCount, loading, removeItem, updateQuantity, clearCartItems } = useCart();
@@ -30,7 +30,7 @@ export default function CartPage() {
 
   const handleQuantityChange = async (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    
+
     setUpdatingQuantities(prev => new Set(prev).add(cartItemId));
     try {
       await updateQuantity(cartItemId, newQuantity);
@@ -194,7 +194,7 @@ export default function CartPage() {
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
-                        
+
                         <div className="w-12 text-center">
                           {updatingQuantities.has(item.id) ? (
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
@@ -202,7 +202,7 @@ export default function CartPage() {
                             <span className="text-sm font-medium">{item.quantity}</span>
                           )}
                         </div>
-                        
+
                         <Button
                           variant="outline"
                           size="sm"
@@ -264,22 +264,7 @@ export default function CartPage() {
 
                 {/* Botões de Ação */}
                 <div className="space-y-3">
-                  <Button 
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    size="lg"
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Finalizar Compra
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    size="lg"
-                  >
-                    <Package className="h-4 w-4 mr-2" />
-                    Salvar para Depois
-                  </Button>
+                  <CheckoutButton className="w-full" />
                 </div>
 
                 {/* Informações Adicionais */}

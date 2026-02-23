@@ -12,16 +12,16 @@ import {
   SheetTrigger,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { 
-  ShoppingBagIcon, 
-  Trash2, 
-  Plus, 
+import {
+  ShoppingBagIcon,
+  Trash2,
+  Plus,
   Minus,
   ShoppingCart,
-  CreditCard
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CheckoutButton } from "@/components/checkout/CheckoutButton";
 
 interface CartSheetProps {
   children: React.ReactNode;
@@ -35,7 +35,7 @@ export function CartSheet({ children }: CartSheetProps) {
 
   const handleQuantityChange = async (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    
+
     setUpdatingQuantities(prev => new Set(prev).add(cartItemId));
     try {
       await updateQuantity(cartItemId, newQuantity);
@@ -154,7 +154,7 @@ export function CartSheet({ children }: CartSheetProps) {
                             >
                               <Minus className="h-3 w-3" />
                             </Button>
-                            
+
                             <div className="w-10 text-center border-x border-gray-300">
                               {updatingQuantities.has(item.id) ? (
                                 <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-[#8a7d5c] mx-auto"></div>
@@ -162,7 +162,7 @@ export function CartSheet({ children }: CartSheetProps) {
                                 <span className="text-sm font-medium">{item.quantity}</span>
                               )}
                             </div>
-                            
+
                             <Button
                               variant="ghost"
                               size="sm"
@@ -222,19 +222,13 @@ export function CartSheet({ children }: CartSheetProps) {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  <Link href="/checkout" onClick={() => setOpen(false)}>
-                    <Button 
-                      className="w-full bg-[#8a7d5c] hover:bg-[#6d6349]"
-                      size="lg"
-                    >
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Finalizar Compra
-                    </Button>
-                  </Link>
-                  
+                  <div onClick={() => setOpen(false)}>
+                    <CheckoutButton className="w-full" />
+                  </div>
+
                   <Link href="/cart" onClick={() => setOpen(false)}>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full border-gray-300 hover:bg-gray-50"
                       size="lg"
                     >

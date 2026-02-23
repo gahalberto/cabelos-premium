@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -150,18 +151,38 @@ async function main() {
 
   console.log('✅ Produtos criados:', products.length)
 
+  // Criar hash de senha padrão para testes (senha: 123456)
+  const bcrypt = require('bcryptjs');
+  const hashedDefaultPassword = await bcrypt.hash('123456', 10);
+
+  // Criar usuário de teste (Cliente normal)
+  const testUser = await prisma.user.upsert({
+    where: { email: 'teste@cabelospremium.com' },
+    update: { password: hashedDefaultPassword },
+    create: {
+      name: 'Usuário',
+      lastName: 'Teste',
+      email: 'teste@cabelospremium.com',
+      password: hashedDefaultPassword,
+      role: 'CLIENTE',
+    },
+  });
+
+  console.log('✅ Usuário de teste criado:', testUser.email, '(senha: 123456)');
+
   // Criar usuário admin
   const adminUser = await prisma.user.upsert({
     where: { email: 'admin@cabelospremium.com' },
-    update: {},
+    update: { password: hashedDefaultPassword },
     create: {
       name: 'Administrador',
       email: 'admin@cabelospremium.com',
+      password: hashedDefaultPassword,
       role: 'ADMIN',
     },
   })
 
-  console.log('✅ Usuário admin criado:', adminUser.email)
+  console.log('✅ Usuário admin criado:', adminUser.email, '(senha: 123456)');
 
   console.log('🎉 Seed concluído com sucesso!')
 }

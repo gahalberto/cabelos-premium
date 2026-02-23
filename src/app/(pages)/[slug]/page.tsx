@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, notFound } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/CartContext";
-import { 
-  Star, 
-  Heart, 
+import {
+  Star,
+  Heart,
   Plus,
   Minus,
   ShoppingCart,
@@ -23,10 +23,11 @@ import Link from "next/link";
 export default function ProductPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const router = useRouter();
   const { toast } = useToast();
   const { data: session } = useSession();
   const { addItem } = useCart();
-  
+
   const [product, setProduct] = useState<ProductDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -44,9 +45,10 @@ export default function ProductPage() {
     try {
       const productData = await getProductBySlug(slug);
       if (!productData) {
-        notFound();
+        router.replace("/not-found");
+        return;
       }
-      
+
       setProduct(productData);
     } catch (error) {
       console.error("Erro ao carregar produto:", error);
@@ -143,12 +145,12 @@ export default function ProductPage() {
   }
 
   if (!product) {
-    notFound();
+    return null;
   }
 
   const currentPrice = product.salePrice || product.price;
   const hasDiscount = product.salePrice && product.salePrice < product.price;
-  const discountPercentage = hasDiscount 
+  const discountPercentage = hasDiscount
     ? Math.round(((product.price - product.salePrice!) / product.price) * 100)
     : 0;
 
@@ -184,7 +186,7 @@ export default function ProductPage() {
                 className="object-cover"
                 priority
               />
-              
+
               {/* Badges */}
               {/* Badges removidos conforme solicitado */}
             </div>
@@ -196,11 +198,10 @@ export default function ProductPage() {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${
-                      selectedImage === index 
-                        ? 'border-blue-500' 
+                    className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${selectedImage === index
+                        ? 'border-blue-500'
                         : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <Image
                       src={image}

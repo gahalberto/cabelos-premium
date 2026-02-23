@@ -20,7 +20,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <>
       <NavigationMenuDemo />
-      <div className="flex h-full flex-col pt-[88px]">
+      <div className="flex h-full flex-col pt-[116px] md:pt-[120px]">
         <div className="flex-1">{children}</div>
       </div>
       <Footer />

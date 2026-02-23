@@ -10,9 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useUserProfile } from "@/hooks/useUserProfile";
-import { 
-  User, 
-  Save, 
+import {
+  User,
+  Save,
   Camera,
   Shield,
   Bell,
@@ -34,6 +34,18 @@ export default function AccountPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isPhotoLoading, setIsPhotoLoading] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showAddressWarning, setShowAddressWarning] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("error") === "no_address") {
+        setShowAddressWarning(true);
+        // Limpar a URL para não exibir o aviso em recarregamentos futuros
+        window.history.replaceState(null, "", window.location.pathname + window.location.hash);
+      }
+    }
+  }, []);
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -119,7 +131,7 @@ export default function AccountPage() {
       // Por enquanto, vamos apenas simular o upload
       // Em uma implementação real, você precisaria fazer o upload para um serviço como AWS S3, Cloudinary, etc.
       const imageUrl = URL.createObjectURL(file);
-      
+
       await updateUserAvatar(profile.id, imageUrl);
       await update(); // Atualizar sessão
       refreshProfile(); // Atualizar perfil
@@ -189,20 +201,39 @@ export default function AccountPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-800">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          {showAddressWarning && (
+            <div className="mb-8 bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-md shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <MapPin className="h-6 w-6 text-yellow-600" aria-hidden="true" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-base font-medium text-yellow-800">Endereço de entrega necessário</h3>
+                  <div className="mt-2 text-sm text-yellow-700">
+                    <p>
+                      Para finalizar sua compra, você precisa cadastrar um endereço de entrega.
+                      Por favor, adicione seu endereço na seção <a href="#shipping" className="font-semibold underline">Endereços de Entrega</a> antes de voltar ao carrinho.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2 text-gray-900">Minha Conta</h1>
             <p className="text-gray-600">Gerencie suas informações pessoais e configurações</p>
-            
+
             {profileError && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-700 text-sm">
                   Erro ao carregar perfil: {profileError}
                 </p>
-                <Button 
-                  onClick={refreshProfile} 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  onClick={refreshProfile}
+                  variant="outline"
+                  size="sm"
                   className="mt-2 text-red-700 border-red-300 hover:bg-red-100"
                 >
                   Tentar novamente
@@ -212,7 +243,7 @@ export default function AccountPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Sidebar */}
+            {/* Sidebar */}
             <div className="lg:col-span-1">
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader className="text-center">
@@ -280,7 +311,7 @@ export default function AccountPage() {
 
             {/* Conteúdo principal */}
             <div className="lg:col-span-2 space-y-6">
-                            {/* Seção de Perfil */}
+              {/* Seção de Perfil */}
               <Card id="profile" className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2 text-gray-900">
@@ -413,8 +444,8 @@ export default function AccountPage() {
                     </div>
 
                     <div className="flex justify-end pt-4">
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         disabled={isLoading}
                         className="bg-primary hover:bg-primary/80 text-white"
                       >
@@ -450,16 +481,16 @@ export default function AccountPage() {
                         <h4 className="font-medium text-gray-900">Senha</h4>
                         <p className="text-sm text-gray-600">Última alteração há 30 dias</p>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <Button
+                        variant="outline"
+                        size="sm"
                         className="border-gray-300 text-gray-700 hover:bg-gray-100"
                         onClick={() => setShowChangePasswordModal(true)}
                       >
                         Alterar
                       </Button>
                     </div>
-                    
+
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <div>
                         <h4 className="font-medium text-gray-900">Autenticação de dois fatores</h4>
@@ -490,7 +521,7 @@ export default function AccountPage() {
                       </div>
                       <input type="checkbox" className="w-4 h-4 text-blue-600" defaultChecked />
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="font-medium text-gray-900">Notificações de pedidos</h4>
