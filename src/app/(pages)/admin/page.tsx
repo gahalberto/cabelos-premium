@@ -10,11 +10,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Package, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Package,
   Image as ImageIcon,
   Building2
 } from "lucide-react";
@@ -22,6 +22,7 @@ import { getProducts, getCategories } from "@/app/_actions/get-products";
 import { createProduct as createProductAction } from "@/app/_actions/admin/create-product";
 import { updateProduct as updateProductAction } from "@/app/_actions/admin/update-product";
 import { deleteProduct as deleteProductAction } from "@/app/_actions/admin/delete-product";
+import { getOrdersMetrics } from "@/app/_actions/admin/get-orders-metrics";
 import { ImageUpload } from "@/components/ImageUpload";
 import { AdminLayout } from "@/components/AdminLayout";
 import { AdminStatsCards } from "@/components/AdminStatsCards";
@@ -63,6 +64,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [orderMetrics, setOrderMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -92,13 +94,17 @@ const AdminDashboard = () => {
 
   const loadData = useCallback(async () => {
     try {
-      const [productsData, categoriesData] = await Promise.all([
+      const [productsData, categoriesData, metricsData] = await Promise.all([
         getProducts({ limit: 100 }),
-        getCategories()
+        getCategories(),
+        getOrdersMetrics()
       ]);
-      
+
       setProducts(productsData.products);
       setCategories(categoriesData);
+      if (metricsData.success) {
+        setOrderMetrics(metricsData);
+      }
     } catch (error) {
       toast({
         title: "Erro ao carregar dados",
@@ -118,7 +124,7 @@ const AdminDashboard = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (editingProduct) {
         // Atualizar produto existente
@@ -135,7 +141,7 @@ const AdminDashboard = () => {
           description: "O produto foi criado com sucesso",
         });
       }
-      
+
       resetForm();
       loadData();
     } catch (error) {
@@ -155,7 +161,7 @@ const AdminDashboard = () => {
       stock: parseInt(data.stock),
       images: productImages.filter(img => img.uploaded).map(img => img.url || img.preview)
     };
-    
+
     await createProductAction(productData);
   };
 
@@ -167,7 +173,7 @@ const AdminDashboard = () => {
       stock: parseInt(data.stock),
       images: productImages.filter(img => img.uploaded).map(img => img.url || img.preview)
     };
-    
+
     await updateProductAction(id, productData);
   };
 
@@ -230,7 +236,7 @@ const AdminDashboard = () => {
       isFeatured: product.isFeatured,
       isNew: product.isNew
     });
-    
+
     // Carregar imagens existentes se houver
     if (product.images && product.images.length > 0) {
       const existingImages = product.images.map((url: string, index: number) => ({
@@ -243,7 +249,7 @@ const AdminDashboard = () => {
     } else {
       setProductImages([]);
     }
-    
+
     setShowAddForm(true);
   };
 
@@ -271,16 +277,16 @@ const AdminDashboard = () => {
   }
 
   return (
-    <AdminLayout 
-      title="Dashboard" 
+    <AdminLayout
+      title="Dashboard"
       description="Visão geral do painel administrativo"
     >
       {/* Cards de Estatísticas */}
-      <AdminStatsCards 
+      <AdminStatsCards
         products={products}
         categories={categories}
         expertApplications={[]}
-        orders={[]}
+        orderMetrics={orderMetrics}
       />
 
       {/* Ações Rápidas */}
@@ -296,7 +302,7 @@ const AdminDashboard = () => {
                 <p className="text-sm text-gray-500">Criar novo produto na loja</p>
               </div>
             </div>
-            <Button 
+            <Button
               className="w-full mt-4"
               onClick={() => setShowAddForm(true)}
             >
@@ -347,191 +353,191 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-        {/* Formulário de Produto */}
-        {showAddForm && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>
-                {editingProduct ? "Editar Produto" : "Novo Produto"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">Nome do Produto *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="category">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
-                      onValueChange={(value) => setFormData({...formData, category: value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione uma categoria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.slug}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="price">Preço *</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData({...formData, price: e.target.value})}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="salePrice">Preço de Oferta</Label>
-                    <Input
-                      id="salePrice"
-                      type="number"
-                      step="0.01"
-                      value={formData.salePrice}
-                      onChange={(e) => setFormData({...formData, salePrice: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="stock">Estoque *</Label>
-                    <Input
-                      id="stock"
-                      type="number"
-                      value={formData.stock}
-                      onChange={(e) => setFormData({...formData, stock: e.target.value})}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="length">Comprimento</Label>
-                    <Input
-                      id="length"
-                      value={formData.length}
-                      onChange={(e) => setFormData({...formData, length: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="texture">Textura</Label>
-                    <Input
-                      id="texture"
-                      value={formData.texture}
-                      onChange={(e) => setFormData({...formData, texture: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="color">Cor</Label>
-                    <Input
-                      id="color"
-                      value={formData.color}
-                      onChange={(e) => setFormData({...formData, color: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="weight">Peso</Label>
-                    <Input
-                      id="weight"
-                      value={formData.weight}
-                      onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="origin">Origem</Label>
-                    <Input
-                      id="origin"
-                      value={formData.origin}
-                      onChange={(e) => setFormData({...formData, origin: e.target.value})}
-                    />
-                  </div>
-                </div>
-
+      {/* Formulário de Produto */}
+      {showAddForm && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>
+              {editingProduct ? "Editar Produto" : "Novo Produto"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="description">Descrição</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    rows={3}
+                  <Label htmlFor="name">Nome do Produto *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
                   />
                 </div>
 
-                {/* Upload de Imagens */}
                 <div>
-                  <ImageUpload
-                    onImagesChange={setProductImages}
-                    maxImages={10}
+                  <Label htmlFor="category">Categoria *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.slug}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="price">Preço *</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    required
                   />
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isActive"
-                      checked={formData.isActive}
-                      onCheckedChange={(checked) => 
-                        setFormData({...formData, isActive: checked as boolean})
-                      }
-                    />
-                    <Label htmlFor="isActive">Produto Ativo</Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isFeatured"
-                      checked={formData.isFeatured}
-                      onCheckedChange={(checked) => 
-                        setFormData({...formData, isFeatured: checked as boolean})
-                      }
-                    />
-                    <Label htmlFor="isFeatured">Em Destaque</Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isNew"
-                      checked={formData.isNew}
-                      onCheckedChange={(checked) => 
-                        setFormData({...formData, isNew: checked as boolean})
-                      }
-                    />
-                    <Label htmlFor="isNew">Produto Novo</Label>
-                  </div>
+                <div>
+                  <Label htmlFor="salePrice">Preço de Oferta</Label>
+                  <Input
+                    id="salePrice"
+                    type="number"
+                    step="0.01"
+                    value={formData.salePrice}
+                    onChange={(e) => setFormData({ ...formData, salePrice: e.target.value })}
+                  />
                 </div>
 
-                <div className="flex gap-2">
-                  <Button type="submit">
-                    {editingProduct ? "Atualizar" : "Criar"} Produto
-                  </Button>
-                  <Button type="button" variant="outline" onClick={resetForm}>
-                    Cancelar
-                  </Button>
+                <div>
+                  <Label htmlFor="stock">Estoque *</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    required
+                  />
                 </div>
-              </form>
-            </CardContent>
-          </Card>
-        )}
+
+                <div>
+                  <Label htmlFor="length">Comprimento</Label>
+                  <Input
+                    id="length"
+                    value={formData.length}
+                    onChange={(e) => setFormData({ ...formData, length: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="texture">Textura</Label>
+                  <Input
+                    id="texture"
+                    value={formData.texture}
+                    onChange={(e) => setFormData({ ...formData, texture: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="color">Cor</Label>
+                  <Input
+                    id="color"
+                    value={formData.color}
+                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="weight">Peso</Label>
+                  <Input
+                    id="weight"
+                    value={formData.weight}
+                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="origin">Origem</Label>
+                  <Input
+                    id="origin"
+                    value={formData.origin}
+                    onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="description">Descrição</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={3}
+                />
+              </div>
+
+              {/* Upload de Imagens */}
+              <div>
+                <ImageUpload
+                  onImagesChange={setProductImages}
+                  maxImages={10}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isActive"
+                    checked={formData.isActive}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, isActive: checked as boolean })
+                    }
+                  />
+                  <Label htmlFor="isActive">Produto Ativo</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isFeatured"
+                    checked={formData.isFeatured}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, isFeatured: checked as boolean })
+                    }
+                  />
+                  <Label htmlFor="isFeatured">Em Destaque</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isNew"
+                    checked={formData.isNew}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, isNew: checked as boolean })
+                    }
+                  />
+                  <Label htmlFor="isNew">Produto Novo</Label>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button type="submit">
+                  {editingProduct ? "Atualizar" : "Criar"} Produto
+                </Button>
+                <Button type="button" variant="outline" onClick={resetForm}>
+                  Cancelar
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Lista de Produtos Recentes */}
       <Card>
@@ -573,7 +579,7 @@ const AdminDashboard = () => {
                         <ImageIcon className="h-8 w-8 text-gray-400" />
                       </div>
                     )}
-                    
+
                     <div>
                       <div className="font-medium text-gray-900">{product.name}</div>
                       <div className="text-sm text-gray-500">{product.category.name}</div>

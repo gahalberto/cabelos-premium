@@ -99,23 +99,22 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center">
-            <ShoppingCart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              Seu carrinho está vazio
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Adicione alguns produtos para começar suas compras
-            </p>
-            <Link href="/shop">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Continuar Comprando
-              </Button>
-            </Link>
+      <div className="min-h-[80vh] bg-gray-50 flex flex-col items-center justify-center">
+        <div className="text-center bg-white p-12 rounded-2xl shadow-sm border border-gray-100 max-w-md mx-auto">
+          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShoppingCart className="h-10 w-10 text-gray-400" />
           </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Seu carrinho está vazio
+          </h2>
+          <p className="text-gray-500 mb-8 px-4">
+            Parece que você ainda não adicionou nenhum produto ao seu carrinho de compras.
+          </p>
+          <Link href="/shop" className="w-full block">
+            <Button size="lg" className="w-full bg-[#8a7d5c] hover:bg-[#6d6349] text-white">
+              Ir para a loja
+            </Button>
+          </Link>
         </div>
       </div>
     );

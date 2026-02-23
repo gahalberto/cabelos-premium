@@ -103,17 +103,19 @@ export function CartSheet({ children }: CartSheetProps) {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a7d5c]"></div>
             </div>
           ) : items.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-gray-50 rounded-lg">
-              <ShoppingCart className="h-16 w-16 text-gray-400 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-gray-50 m-4 rounded-xl border border-dashed border-gray-300">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm">
+                <ShoppingCart className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
                 Seu carrinho está vazio
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Adicione alguns produtos para começar suas compras
+              <p className="text-sm text-gray-500 mb-6">
+                Parece que você ainda não adicionou nenhum produto ao seu carrinho de compras.
               </p>
-              <Link href="/shop" onClick={() => setOpen(false)}>
-                <Button className="bg-[#8a7d5c] hover:bg-[#6d6349]">
-                  Ver Produtos
+              <Link href="/shop" onClick={() => setOpen(false)} className="w-full block">
+                <Button className="w-full bg-[#8a7d5c] hover:bg-[#6d6349] text-white">
+                  Ir para a loja
                 </Button>
               </Link>
             </div>

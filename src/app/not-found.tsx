@@ -1,32 +1,36 @@
 import Link from "next/link";
-import { SearchIcon, HomeIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
     return (
-        <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-            <h1 className="text-9xl font-bold text-[#b08c4f] opacity-20 mb-4">404</h1>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Página não encontrada
-            </h2>
-            <p className="text-gray-600 max-w-md mb-8">
-                Desculpe, não conseguimos encontrar a página que você está procurando.
-                Ela pode ter sido movida ou não existe mais.
-            </p>
+        <div className="bg-gray-50 flex flex-col items-center justify-center px-4 py-24">
+            <div className="text-center bg-white p-12 rounded-2xl shadow-md border border-gray-200 max-w-lg mx-auto w-full">
+                <p className="text-8xl font-black text-[#8a7d5c] mb-4">404</p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild className="bg-[#b08c4f] hover:bg-[#8a6d3b] text-white gap-2">
-                    <Link href="/">
-                        <HomeIcon className="w-4 h-4" />
-                        Voltar ao Início
+                <h1 className="text-2xl font-bold text-gray-900 mb-3">
+                    😔 Sinto muito, página não encontrada
+                </h1>
+
+                <p className="text-gray-600 text-base mb-2">
+                    A página que você está tentando acessar não existe ou foi removida.
+                </p>
+                <p className="text-gray-500 text-sm mb-8">
+                    Verifique o endereço digitado ou use os botões abaixo para continuar navegando.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Link
+                        href="/"
+                        className="px-6 py-3 bg-[#8a7d5c] text-white font-semibold rounded-lg hover:bg-[#6d6349] transition-colors text-center"
+                    >
+                        🏠 Voltar ao Início
                     </Link>
-                </Button>
-                <Button asChild variant="outline" className="gap-2 border-[#b08c4f] text-[#b08c4f] hover:bg-[#f0efdb]">
-                    <Link href="/shop">
-                        <SearchIcon className="w-4 h-4" />
-                        Explorar Produtos
+                    <Link
+                        href="/shop"
+                        className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors text-center"
+                    >
+                        🛍️ Explorar a Loja
                     </Link>
-                </Button>
+                </div>
             </div>
         </div>
     );

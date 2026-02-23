@@ -18,13 +18,13 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <NavigationMenuDemo />
-      <div className="flex h-full flex-col pt-[116px] md:pt-[120px]">
-        <div className="flex-1">{children}</div>
-      </div>
+      <main className="flex-1 pt-[116px] md:pt-[120px]">
+        {children}
+      </main>
       <Footer />
       <FloatingWhatsApp />
-    </>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, notFound } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +45,7 @@ export default function ProductPage() {
     try {
       const productData = await getProductBySlug(slug);
       if (!productData) {
-        router.replace("/not-found");
+        notFound();
         return;
       }
 
@@ -199,8 +199,8 @@ export default function ProductPage() {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${selectedImage === index
-                        ? 'border-blue-500'
-                        : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-500'
+                      : 'border-gray-200 hover:border-gray-300'
                       }`}
                   >
                     <Image

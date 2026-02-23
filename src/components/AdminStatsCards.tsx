@@ -1,10 +1,10 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Package, 
-  Eye, 
-  Star, 
+import {
+  Package,
+  Eye,
+  Star,
   TrendingUp,
   DollarSign,
   Users
@@ -14,30 +14,63 @@ interface AdminStatsCardsProps {
   products: any[];
   categories: any[];
   expertApplications?: any[];
-  orders?: any[];
+  orderMetrics?: {
+    totalRevenue: number;
+    averageTicket: number;
+    pendingOrdersCount: number;
+    activeOrdersCount: number;
+  } | null;
 }
 
-export function AdminStatsCards({ 
-  products, 
-  categories, 
-  expertApplications = [], 
-  orders = [] 
+export function AdminStatsCards({
+  products,
+  categories,
+  expertApplications = [],
+  orderMetrics
 }: AdminStatsCardsProps) {
   const activeProducts = products.filter(p => p.isActive).length;
-  const featuredProducts = products.filter(p => p.isFeatured).length;
   const newProducts = products.filter(p => p.isNew).length;
-  
-  // Calcular receita total (exemplo)
-  const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0);
 
   const stats = [
+    {
+      title: "Receita Total",
+      value: `R$ ${(orderMetrics?.totalRevenue || 0).toFixed(2)}`,
+      description: "Faturamento total (Pedidos Pagos)",
+      icon: DollarSign,
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-100"
+    },
+    {
+      title: "Ticket Médio",
+      value: `R$ ${(orderMetrics?.averageTicket || 0).toFixed(2)}`,
+      description: "Valor médio por pedido pago",
+      icon: TrendingUp,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100"
+    },
+    {
+      title: "Pedidos Pendentes",
+      value: orderMetrics?.pendingOrdersCount || 0,
+      description: "Aguardando pagamento",
+      icon: Package,
+      color: "text-amber-600",
+      bgColor: "bg-amber-100"
+    },
+    {
+      title: "Pedidos Ativos",
+      value: orderMetrics?.activeOrdersCount || 0,
+      description: "Confirmados e em processamento",
+      icon: Package,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100"
+    },
     {
       title: "Total de Produtos",
       value: products.length,
       description: "Produtos cadastrados",
       icon: Package,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100"
+      color: "text-purple-600",
+      bgColor: "bg-purple-100"
     },
     {
       title: "Produtos Ativos",
@@ -46,38 +79,6 @@ export function AdminStatsCards({
       icon: Eye,
       color: "text-green-600",
       bgColor: "bg-green-100"
-    },
-    {
-      title: "Em Destaque",
-      value: featuredProducts,
-      description: "Produtos em destaque",
-      icon: Star,
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-100"
-    },
-    {
-      title: "Categorias",
-      value: categories.length,
-      description: "Categorias ativas",
-      icon: Package,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100"
-    },
-    {
-      title: "Aplicações Expert",
-      value: expertApplications.length,
-      description: "Candidatos expert",
-      icon: Users,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-100"
-    },
-    {
-      title: "Receita Total",
-      value: `R$ ${totalRevenue.toFixed(2)}`,
-      description: "Faturamento total",
-      icon: DollarSign,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-100"
     }
   ];
 
