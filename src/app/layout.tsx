@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "./providers/auth";
 import { ThemeProvider } from "./providers/theme";
@@ -14,7 +15,7 @@ import { Unna } from 'next/font/google';
 import type { Metadata } from 'next';
 
 const inter = Inter({ subsets: ["latin"] });
-const unna = Unna({ 
+const unna = Unna({
   weight: ['400', '700'],
   subsets: ["latin"],
   variable: '--font-unna',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.author }],
   creator: siteConfig.author,
   publisher: siteConfig.author,
-  
+
   robots: {
     index: true,
     follow: true,
@@ -94,6 +95,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={unna.variable}>
+      <head>
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-G6DFGJTLGB"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-G6DFGJTLGB');
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className} style={{ overflowX: "hidden" }}>
         <ThemeProvider>
           <AuthProvider>
