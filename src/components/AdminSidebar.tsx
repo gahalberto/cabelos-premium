@@ -13,7 +13,8 @@ import {
   ShoppingCart,
   FileText,
   Menu,
-  X
+  X,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -47,6 +48,11 @@ const menuItems = [
     title: "Usuários",
     href: "/admin/users",
     icon: Users,
+  },
+  {
+    title: "Contatos",
+    href: "/admin/contacts",
+    icon: MessageSquare,
   },
   {
     title: "Configurações",

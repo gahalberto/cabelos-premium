@@ -5,10 +5,8 @@ import { db } from "@/app/_lib/prisma";
 // Esquema de validação com Zod
 const contactSchema = z.object({
   name: z.string().min(3),
-  email: z.string().email(),
-  phone: z.string().min(10).optional(),
-  subject: z.string().min(3),
-  message: z.string().min(10),
+  phone: z.string().min(10),
+  content: z.string().min(5),
 });
 
 export async function POST(request: Request) {
@@ -23,10 +21,8 @@ export async function POST(request: Request) {
     const contact = await db.contact.create({
       data: {
         name: validatedData.name,
-        email: validatedData.email,
-        phone: validatedData.phone || null,
-        subject: validatedData.subject,
-        message: validatedData.message,
+        phone: validatedData.phone,
+        content: validatedData.content,
       },
     });
     
@@ -74,4 +70,4 @@ export async function GET() {
       message: "Erro ao buscar contatos" 
     }, { status: 500 });
   }
-} 
+}

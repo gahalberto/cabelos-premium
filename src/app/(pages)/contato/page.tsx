@@ -4,24 +4,22 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { FaInstagram, FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+import { FaInstagram, FaPhone, FaWhatsapp } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
 // Esquema de validação com Zod
 const contactSchema = z.object({
   name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
-  email: z.string().email({ message: "Email inválido" }),
-  phone: z.string().min(10, { message: "Telefone deve ter pelo menos 10 dígitos" }).optional(),
-  subject: z.string().min(3, { message: "Assunto deve ter pelo menos 3 caracteres" }),
-  message: z.string().min(10, { message: "Mensagem deve ter pelo menos 10 caracteres" }),
+  phone: z.string().min(10, { message: "Telefone deve ter pelo menos 10 dígitos" }),
+  content: z.string().min(5, { message: "Mensagem deve ter pelo menos 5 caracteres" }),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -33,19 +31,15 @@ export default function ContactPage() {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
-        throw new Error("Falha ao enviar mensagem");
-      }
+      if (!response.ok) throw new Error("Falha ao enviar mensagem");
 
       toast.success("Mensagem enviada com sucesso! Entraremos em contato em breve.");
       reset();
@@ -70,39 +64,117 @@ export default function ContactPage() {
           <Separator className="my-6 bg-[#b08c4f] mx-auto w-16" />
         </div>
 
-        {/* Botões de Contato */}
-        <div className="mt-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Formulário de Contato */}
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">Envie uma mensagem</h3>
+            <p className="text-gray-500 text-sm mb-6">Preencha o formulário abaixo e retornaremos em breve.</p>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              {/* Nome */}
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Seu nome completo"
+                  {...register("name")}
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
+                />
+                {errors.name && (
+                  <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Telefone */}
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Telefone <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="(11) 99999-9999"
+                  {...register("phone")}
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>
+                )}
+              </div>
+
+              {/* Conteúdo */}
+              <div>
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+                  Mensagem <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="content"
+                  rows={5}
+                  placeholder="Escreva sua mensagem aqui..."
+                  {...register("content")}
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition resize-none"
+                />
+                {errors.content && (
+                  <p className="mt-1 text-xs text-red-500">{errors.content.message}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#b08c4f] text-white py-3 px-6 rounded-lg font-montserrat font-medium hover:bg-[#9a7a40] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Enviando..." : "Enviar Mensagem"}
+              </button>
+            </form>
+          </div>
+
+          {/* Canais de Contato */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-semibold text-gray-900">Outros canais</h3>
+
             {/* WhatsApp */}
             <button
-              onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
-              className="bg-[#25D366] text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:bg-[#20BD5C] transition-colors flex flex-col items-center gap-3 shadow-lg"
+              onClick={() => window.open("https://wa.me/5511999999999", "_blank")}
+              className="w-full bg-[#25D366] text-white px-8 py-5 rounded-xl font-montserrat font-medium hover:bg-[#20BD5C] transition-colors flex items-center gap-4 shadow-md"
             >
-              <FaWhatsapp size={48} />
-              <span className="text-xl">WhatsApp</span>
+              <FaWhatsapp size={36} />
+              <div className="text-left">
+                <p className="text-lg font-semibold">WhatsApp</p>
+                <p className="text-sm opacity-90">(11) 99999-9999</p>
+              </div>
             </button>
 
             {/* Instagram */}
             <button
-              onClick={() => window.open('https://instagram.com/cabelospremium', '_blank')}
-              className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:opacity-90 transition-opacity flex flex-col items-center gap-3 shadow-lg"
+              onClick={() => window.open("https://instagram.com/cabelospremium", "_blank")}
+              className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-8 py-5 rounded-xl font-montserrat font-medium hover:opacity-90 transition-opacity flex items-center gap-4 shadow-md"
             >
-              <FaInstagram size={48} />
-              <span className="text-xl">Instagram</span>
+              <FaInstagram size={36} />
+              <div className="text-left">
+                <p className="text-lg font-semibold">Instagram</p>
+                <p className="text-sm opacity-90">@cabelospremium</p>
+              </div>
             </button>
 
             {/* Contato Fixo */}
             <button
-              onClick={() => window.open('tel:+551138252050', '_blank')}
-              className="bg-[#8a7d5c] text-white px-8 py-6 rounded-lg font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex flex-col items-center gap-3 shadow-lg"
+              onClick={() => window.open("tel:+551138252050", "_blank")}
+              className="w-full bg-[#8a7d5c] text-white px-8 py-5 rounded-xl font-montserrat font-medium hover:bg-[#7a6d4c] transition-colors flex items-center gap-4 shadow-md"
             >
-              <FaPhone size={48} />
-              <span className="text-xl">Contato Fixo</span>
-              <span className="text-lg">(11) 3825-2050</span>
+              <FaPhone size={36} />
+              <div className="text-left">
+                <p className="text-lg font-semibold">Telefone Fixo</p>
+                <p className="text-sm opacity-90">(11) 3825-2050</p>
+              </div>
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}
+ 
