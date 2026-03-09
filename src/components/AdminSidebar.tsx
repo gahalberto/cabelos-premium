@@ -56,7 +56,7 @@ const menuItems = [
   },
   {
     title: "Configurações",
-    href: "/admin/settings",
+    href: "/admin/configuracao",
     icon: Settings,
   },
 ];

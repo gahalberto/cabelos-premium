@@ -284,6 +284,13 @@ model ExpertApplication {
   updatedAt             DateTime @updatedAt
 }
 
+// Configurações globais da loja (singleton – sempre id = "default")
+model StoreConfig {
+  id                     String   @id @default("default")
+  freeShippingThreshold  Float    @default(0)   // 0 = desativado
+  updatedAt              DateTime @updatedAt
+}
+
 // Modelo para contatos do formulário
 model Contact {
   id        String   @id @default(cuid())
