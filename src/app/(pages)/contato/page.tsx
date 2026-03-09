@@ -138,7 +138,7 @@ export default function ContactPage() {
 
             {/* WhatsApp */}
             <button
-              onClick={() => window.open("https://wa.me/5511999999999", "_blank")}
+              onClick={() => window.open("https://wa.me/5511912290102?text=" + encodeURIComponent("Oi, eu vim do site cabelospremium e preciso de ajuda."), "_blank")}
               className="w-full bg-[#25D366] text-white px-8 py-5 rounded-xl font-montserrat font-medium hover:bg-[#20BD5C] transition-colors flex items-center gap-4 shadow-md"
             >
               <FaWhatsapp size={36} />

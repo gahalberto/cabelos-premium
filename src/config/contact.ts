@@ -1,8 +1,8 @@
 // Configurações de contato para o botão flutuante do WhatsApp
 export const contactConfig = {
   whatsapp: {
-    phoneNumber: "5511999999999", // Substitua pelo número real (formato: 55 + DDD + número)
-    message: "Olá! Gostaria de saber mais sobre os produtos de cabelos premium.",
+    phoneNumber: "5511912290102",
+    message: "Oi, eu vim do site cabelospremium e preciso de ajuda.",
     businessHours: "Seg-Sex 8h às 18h",
     responseTime: "Resposta em até 2 horas"
   },
