@@ -72,6 +72,16 @@ const WhoIsUs = () => {
           </div>
         </div>
 
+        <div className="w-full flex justify-center">
+          <Image
+            src="/images/v3/hero1.png"
+            alt="Hero"
+            width={1200}
+            height={600}
+            className="w-full object-cover"
+          />
+        </div>
+
         <div className="max-w-6xl mx-auto pt-10">
           <div data-aos="fade-up">
 
@@ -134,168 +144,81 @@ const WhoIsUs = () => {
         </div>
       </section>
 
-      {/* Seção Coleção Candy */}
-      <section className="w-full bg-[#8a7d5c] py-20 pt-16 px-4 sm:px-10 md:px-20 lg:px-36 relative ">
-        <div className="absolute right-0 top-0 z-0" style={{height: '520px', width: '33%'}}>
+      {/* Seção Quem Somos */}
+      <section className="w-full bg-[#f0efdb] py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center" data-aos="fade-up">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-le-jour text-[#8a7d5c] mb-10 tracking-wide">
+            QUEM SOMOS?
+          </h1>
+          <p className="text-[21px] text-[#333333] mb-10">
+            <span className="font-montserrat font-semibold">Nossa história é feita de </span>
+            <span className="font-brittany text-4xl md:text-5xl italic font-normal">qualidade e confiança.</span>
+          </p>
+          <p className="text-base md:text-lg text-[#333333] font-montserrat font-thin leading-relaxed max-w-2xl mx-auto">
+            A Cabelos Premium nasceu com o propósito de oferecer ao mercado fios brasileiros autênticos, com procedência garantida e padrão superior.
+          </p>
+        </div>
+        <div className="w-screen relative left-1/2 -translate-x-1/2 mt-12">
           <Image
-            src="/images/2/imagem-candy.png"
-            alt="Background Candy"
-            width={600}
-            height={220}
-            className="object-contain object-right object-top opacity-90 w-full h-full"
+            src="/images/v3/hero2.png"
+            alt="Quem Somos"
+            width={1200}
+            height={600}
+            className="w-full object-cover"
           />
         </div>
-        <div className="relative z-10">
-          <header className="text-center mb-16">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#e6e6e6] pb-16">COLEÇÃO CANDY</h1>
-            <h2 className="text-[#e6e6e6] mt-4 pb-16">
-              <span className="font-brittany text-[45px]">Uma doce</span>
-              <span className="font-montserrat font-bold text-[25px]"> coleção de cores para nossas </span>
-              <span className="font-brittany text-[45px]">darlings</span>
-            </h2>
-            <div className="mt-8 text-[18px] text-[#e6e6e6] font-montserrat text-left max-w-4xl mx-auto px-8 md:px-12 lg:px-16">
-              Nossa primeira coleção traz cores que você vai amar: conheça a Coleção Candy. <b>Todas as cores são preparadas artesanalmente com os legítimos Cabelos do Sul,</b> ficam ainda mais perfeitos com a nossa técnica de lançamento. Com 6 tonalidades exclusivas, essa linha foi pensada para mulheres poderosas, sofisticadas e elegantes, mas com aquele toque doce e encantador. Feitas com cabelos brasileiros do Sul, as fitas Mega Hair são <b>super finas, flexíveis e ideais para quem busca naturalidade, conforto e durabilidade.</b>
-              <br/><br/>
-              <b>De Caramel a Like a Virgin</b>, cada cor traz uma transição suave, deixando os fios radiantes e elegantes.
-            </div>
-          </header>
-
-          <div className="max-w-6xl mx-auto">
-            {/* Grid de cores */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16" data-aos="fade-up">
-              {[
-                { name: "Caramel", image: "Caramel.png" },
-                { name: "Vanilla", image: "Vanilla.png" },
-                { name: "Toffee", image: "Toffee.png" },
-                { name: "Honey", image: "Honey.png" },
-                { name: "Cookie", image: "Cookie.png" },
-                { name: "Like a Virgin", image: "Virgin.png" }
-              ].map((color) => (
-                <div key={color.name} className="flex flex-col items-center">
-                  <h4 className="text-base font-medium text-[#bca168] mb-3">{color.name}</h4>
-                  <div className="w-48 h-48 rounded-md flex items-center justify-center">
-                    <Image
-                      src={`/images/3/${color.image}`}
-                      alt={color.name}
-                      width={250}
-                      height={180}
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="col-span-2 md:col-span-3 lg:col-span-6 flex justify-center items-center">
-                <div className="text-center max-w-2xl mx-auto">
-                  <h3 className="text-6xl font-brittany font-thin text-[#f0efdb] mb-4 pt-12 pb-8">
-                    Cores artesanalmente padronizadas
-                  </h3>
-                  <p className="text-base font-bold font-montserrat text-white">
-                    Descubra mais sobre as cores da nossa doce coleção clicando aqui.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </div>
+        <div className="max-w-5xl mx-auto text-center px-4 pt-12 pb-4" data-aos="fade-up">
+          <p className="text-base md:text-lg text-[#333333] font-montserrat font-thin leading-relaxed">
+            Especializados em cabelos do Sul do Brasil, selecionamos cada mecha com cuidado, priorizando textura uniforme, cutículas alinhadas e durabilidade excepcional. Nosso compromisso vai além da venda: buscamos criar relações de confiança com profissionais e clientes finais, oferecendo atendimento personalizado e suporte completo.
+            <br />
+            Acreditamos que cabelo é identidade, autoestima e poder. <span className="font-semibold">E é por isso que entregamos apenas o melhor.</span>
+          </p>
         </div>
       </section>
 
-      {/* Seção Torne-se Expert */}
-      <section className="w-full bg-[#f0efdb] py-36 px-4 sm:px-10 md:px-20 lg:px-36">
-        <div className="max-w-6xl mx-auto">
-          {/* Título Principal */}
-          <div className="text-center mb-24" data-aos="fade-up">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-le-jour text-[#8a7d5c] mb-8 tracking-wide">
-              TORNE-SE EXPERT
-            </h1>
-            <h2 className="text-xl md:text-2xl lg:text-3xl text-[#333333] mb-8">
-              <span className="font-montserrat font-semibold">Com nossa técnica você transforma sua paixão</span>
-              <span className="font-montserrat font-semibold"> em </span>
-              <span className="font-brittany italic text-5xl text-black">sucesso</span>
+      {/* Seção Nossas Laces */}
+      <section className="w-full bg-[#8a7d5c] py-20 pt-16 px-4 sm:px-10 md:px-20 lg:px-36 relative ">
+        <div className="relative z-10">
+          <header className="text-center">
+            <h1 className="font-le-jour text-[37.8px] text-[#e6e6e6] pb-16">NOSSAS LACES</h1>
+            <h2 className="text-[#e6e6e6] mt-4 pb-16">
+              <span className="font-montserrat text-[21px] font-bold">Vários modelos de full laces para nossas </span>
+              <span className="font-brittany text-[31.5px]">darlings</span>
             </h2>
-            <p className="text-base md:text-lg text-[#333333] font-montserrat max-w-3xl mx-auto leading-relaxed text-justify px-8 md:px-12 lg:px-16">
-              Quer se destacar na beleza, oferecer um serviço premium e aumentar seus ganhos? 
-              Com a Cabelos Premium, você aprende do zero ao avançado as técnicas mais modernas e seguras 
-              de extensão capilar, e o melhor: <span className="font-bold text-black">o curso é 100% gratuito na compra do nosso kit de cabelos.</span>
-            </p>
-          </div>
+          </header>
 
-          {/* Título "Você vai aprender:" alinhado à esquerda com lista */}
-          <div className="mb-12" data-aos="fade-up">
-            <div className="max-w-2xl mx-auto px-8 md:px-12 lg:px-16">
-              <h3 className="text- mb-2 text-black font-montserrat ">
-                Você vai aprender:
-              </h3>
-              <ul className="space-y-2 font-montserrat">
-                {[
-                  "Aplicações naturais e seguras",
-                  "Técnicas de finalização profissional", 
-                  "Atendimento premium e fidelização de clientes",
-                  "Estratégias de vendas e posicionamento no mercado"
-                ].map((item, index) => (
-                  <li key={index} className="flex items-center text-[#333333] font-montserrat">
-                    <div className="w-2 h-2 bg-black rounded-full mr-4 flex-shrink-0"></div>
-                    <span className="text-base font-bold md:text-lg">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Imagem do lado esquerdo */}
-            <div className="flex justify-center lg:justify-center order-2 lg:order-1" data-aos="fade-right">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-[#d4a249] to-[#f0efdb] rounded-3xl opacity-10 blur-xl"></div>
-                <div className="relative rounded-2xl p-6">
+          <div className="max-w-6xl mx-auto" data-aos="fade-up">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+              {[
+                "1.png",
+                "2.png",
+                "3.png",
+                "4.png",
+                "5.png",
+                "6.png",
+                "7.png",
+                "8.png",
+              ].map((imageName, index) => (
+                <div key={index} className="overflow-hidden rounded-[18px] bg-white/10">
                   <Image
-                    src="/images/beneficios-card/cabelos.jpeg"
-                    alt="Kit Cabelos Premium"
-                    width={400}
-                    height={400}
-                    className="object-contain w-full max-w-md h-auto rounded-lg"
+                    src={`/images/laces/${imageName}`}
+                    alt={`Lace ${index + 1}`}
+                    width={320}
+                    height={420}
+                    className="w-full h-auto object-cover rounded-[18px]"
                   />
                 </div>
-              </div>
+              ))}
             </div>
 
-            {/* Conteúdo Direito - Benefícios */}
-            <div className="space-y-8 order-1 lg:order-2" data-aos="fade-left">
-              {/* Benefícios */}
-              <div className="bg-[#8a7d5c] rounded-2xl p-6 md:p-8">
-                <h4 className="text-xl md:text-5xl font-brittany text-[#f0efdb] mb-6">
-                  Benefícios
-                </h4>
-                <div className="space-y-1">
-                  {[
-                    "Curso gratuito na compra do kit",
-                    "Suporte completo", 
-                    "Instrutores especializados",
-                    "Marca consolidada no Brasil",
-                    "Alta demanda e ótimo faturamento"
-                  ].map((benefit, index) => (
-                    <div key={index} className="flex items-center text-[#f0efdb] font-montserrat">
-                      <svg className="w-5 h-5 text-white mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm md:text-base">{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center mt-16 px-8 md:px-12 lg:px-16" data-aos="fade-up">
-            <p className="text-lg md:text-xl font-montserrat text-[#333333] mb-6">
-            Seja você iniciante ou profissional da beleza, essa é sua chance de se tornar referência!
- Adquira seu kit, ganhe o curso completo e comece a faturar mais. <b>Clique e saiba mais.</b>
-
-              <br className="hidden md:block" />
+            <p className="font-brittany text-[39.5px] text-[#f0efdb] text-center pt-12">
+              Cores artesanalmente personalizadas
             </p>
-            <div className="text-sm inline-block bg-[#8a7d5c] text-white px-8 py-4 rounded-lg font-montserrat uppercase  hover:bg-[#b8923e] transition-colors cursor-pointer shadow-lg">
-              Saiba mais
+
+            <div className="flex justify-center pt-8">
+              <button className="rounded-xl bg-[#f0efdb] px-6 py-2 font-montserrat text-[24.1px] text-black">
+                SAIBA MAIS
+              </button>
             </div>
           </div>
         </div>
