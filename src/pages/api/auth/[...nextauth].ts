@@ -69,6 +69,7 @@ export const authOptions: NextAuthOptions = {
             zipCode: user.zipCode,
             cpf: user.cpf,
             birthDate: user.birthDate,
+            role: user.role,
           };
         }
 
@@ -103,6 +104,7 @@ export const authOptions: NextAuthOptions = {
           zipCode: token.zipCode as string | null,
           cpf: token.cpf as string | null,
           birthDate: token.birthDate as Date | null,
+          role: token.role as string | null,
         };
       }
       return session;
@@ -121,6 +123,7 @@ export const authOptions: NextAuthOptions = {
         token.zipCode = user.zipCode;
         token.cpf = user.cpf;
         token.birthDate = user.birthDate;
+        token.role = user.role;
       }
       return token;
     },

@@ -2,6 +2,7 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "./log-activity";
 
 export interface UpdateCategoryData {
   name: string;
@@ -46,6 +47,7 @@ export async function updateCategoryAction(id: string, data: UpdateCategoryData)
 
     revalidatePath("/admin/categories");
     revalidatePath("/admin");
+    await logActivity({ action: "Editou", entity: "Categoria", entityId: category.id, entityName: category.name });
 
     return {
       success: true,

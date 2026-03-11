@@ -15,6 +15,7 @@ declare module 'next-auth' {
       zipCode?: string | null;
       cpf?: string | null;
       birthDate?: Date | null;
+      role?: string | null;
     };
   }
 
@@ -31,5 +32,6 @@ declare module 'next-auth' {
     zipCode?: string | null;
     cpf?: string | null;
     birthDate?: Date | null;
+    role?: string | null;
   }
 }

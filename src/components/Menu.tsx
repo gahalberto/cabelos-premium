@@ -115,8 +115,13 @@ export function NavigationMenuDemo() {
                   </div>
                   <Link href="/account" className="block px-4 py-2 text-sm hover:bg-gray-50">Minha Conta</Link>
                   <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">Meus Pedidos</Link>
-                  <button 
-                    onClick={() => signOut()} 
+                  {data.user.role === "ADMIN" && (
+                    <Link href="/admin" className="block px-4 py-2 text-sm font-medium text-amber-700 hover:bg-amber-50">
+                      Painel Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
                     className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
                   >
                     Sair
@@ -220,8 +225,16 @@ export function NavigationMenuDemo() {
                         >
                           Lista de Desejos
                         </Link>
+                        {data.user.role === "ADMIN" && (
+                          <Link
+                            href="/admin"
+                            className="p-3 font-medium text-amber-700 hover:bg-amber-50 rounded-md transition-colors block"
+                          >
+                            Painel Admin
+                          </Link>
+                        )}
                         <button
-                          onClick={() => signOut()}
+                          onClick={() => signOut({ callbackUrl: "/" })}
                           className="w-full text-left p-3 text-red-500 hover:bg-red-50 rounded-md transition-colors"
                         >
                           Sair

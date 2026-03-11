@@ -34,7 +34,7 @@ export default function OfflinePage() {
       {/* Descrição */}
       <p className="max-w-md text-gray-500 leading-relaxed">
         Este site está temporariamente fora do ar. Se você é o responsável por
-        este domínio, entre em contato com o suporte para regularizar o acesso.
+        este domínio, entre em contato com o suporte.
       </p>
 
       {/* Divider */}

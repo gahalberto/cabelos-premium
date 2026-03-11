@@ -17,8 +17,10 @@ import {
   CheckCircle,
   AlertCircle
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { getProductBySlug, type ProductDetails } from "@/app/_actions/get-product-by-slug";
 import Link from "next/link";
+import { contactConfig } from "@/config/contact";
 
 export default function ProductPage() {
   const params = useParams();
@@ -245,40 +247,48 @@ export default function ProductPage() {
             )}
 
             {/* Preços */}
-            <div className="space-y-2">
-              {hasDiscount && (
-                <p className="text-lg text-gray-500 line-through">
-                  {formatPrice(product.price)}
+            {product.priceOnRequest ? (
+              <div className="flex items-center gap-3 py-2">
+                <span className="text-2xl font-bold text-amber-700">Preço sob consulta</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {hasDiscount && (
+                  <p className="text-lg text-gray-500 line-through">
+                    {formatPrice(product.price)}
+                  </p>
+                )}
+                <p className="text-3xl font-bold text-gray-900">
+                  {formatPrice(currentPrice)}
                 </p>
-              )}
-              <p className="text-3xl font-bold text-gray-900">
-                {formatPrice(currentPrice)}
-              </p>
-              {hasDiscount && (
-                <p className="text-sm text-green-600 font-medium">
-                  Economia de {formatPrice(product.price - product.salePrice!)} ({discountPercentage}% de desconto)
-                </p>
-              )}
-            </div>
+                {hasDiscount && (
+                  <p className="text-sm text-green-600 font-medium">
+                    Economia de {formatPrice(product.price - product.salePrice!)} ({discountPercentage}% de desconto)
+                  </p>
+                )}
+              </div>
+            )}
 
-            {/* Estoque */}
-            <div className="flex items-center gap-2">
-              {product.stock > 0 ? (
-                <>
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-green-600 font-medium">
-                    Em estoque ({product.stock} unidades)
-                  </span>
-                </>
-              ) : (
-                <>
-                  <AlertCircle className="h-5 w-5 text-red-500" />
-                  <span className="text-red-600 font-medium">
-                    Fora de estoque
-                  </span>
-                </>
-              )}
-            </div>
+            {/* Estoque — apenas quando tem preço fixo */}
+            {!product.priceOnRequest && (
+              <div className="flex items-center gap-2">
+                {product.stock > 0 ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-green-600 font-medium">
+                      Em estoque ({product.stock} unidades)
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle className="h-5 w-5 text-red-500" />
+                    <span className="text-red-600 font-medium">
+                      Fora de estoque
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Características */}
             <div className="grid grid-cols-2 gap-4">
@@ -326,67 +336,84 @@ export default function ProductPage() {
 
             {/* Ações */}
             <div className="space-y-4">
-              {/* Quantidade */}
-              {product.stock > 0 && (
-                <div className="flex items-center gap-4">
-                  <span className="font-medium text-gray-700">Quantidade:</span>
-                  <div className="flex items-center border border-gray-300 rounded-lg">
+              {product.priceOnRequest ? (
+                /* Sob Consulta — botão WhatsApp */
+                <Button
+                  onClick={() => window.open(
+                    `https://wa.me/${contactConfig.whatsapp.phoneNumber}?text=${encodeURIComponent(`Olá! Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`)}`,
+                    "_blank"
+                  )}
+                  className="w-full bg-[#25D366] hover:bg-[#20BD5C] text-white py-3 text-base font-semibold"
+                  size="lg"
+                >
+                  <FaWhatsapp className="h-5 w-5 mr-2" />
+                  Sob Consulta — Falar no WhatsApp
+                </Button>
+              ) : (
+                <>
+                  {/* Quantidade */}
+                  {product.stock > 0 && (
+                    <div className="flex items-center gap-4">
+                      <span className="font-medium text-gray-700">Quantidade:</span>
+                      <div className="flex items-center border border-gray-300 rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleQuantityChange(quantity - 1)}
+                          disabled={quantity <= 1}
+                          className="h-10 w-10 p-0 hover:bg-gray-100"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="px-4 py-2 min-w-[3rem] text-center font-medium">
+                          {quantity}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleQuantityChange(quantity + 1)}
+                          disabled={quantity >= product.stock}
+                          className="h-10 w-10 p-0 hover:bg-gray-100"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Botões de Ação */}
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleQuantityChange(quantity - 1)}
-                      disabled={quantity <= 1}
-                      className="h-10 w-10 p-0 hover:bg-gray-100"
+                      onClick={handleAddToCart}
+                      disabled={product.stock === 0 || isAddingToCart}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3"
+                      size="lg"
                     >
-                      <Minus className="h-4 w-4" />
+                      {isAddingToCart ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Adicionando...
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="h-5 w-5 mr-2" />
+                          Adicionar ao Carrinho
+                        </>
+                      )}
                     </Button>
-                    <span className="px-4 py-2 min-w-[3rem] text-center font-medium">
-                      {quantity}
-                    </span>
+
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleQuantityChange(quantity + 1)}
-                      disabled={quantity >= product.stock}
-                      className="h-10 w-10 p-0 hover:bg-gray-100"
+                      variant="outline"
+                      onClick={() => setIsInWishlist(!isInWishlist)}
+                      className="px-6 py-3"
+                      size="lg"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Heart className={`h-5 w-5 mr-2 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+                      Favorito
                     </Button>
                   </div>
-                </div>
+                </>
               )}
-
-              {/* Botões de Ação */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0 || isAddingToCart}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3"
-                  size="lg"
-                >
-                  {isAddingToCart ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Adicionando...
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Adicionar ao Carrinho
-                    </>
-                  )}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() => setIsInWishlist(!isInWishlist)}
-                  className="px-6 py-3"
-                  size="lg"
-                >
-                  <Heart className={`h-5 w-5 mr-2 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
-                  Favorito
-                </Button>
-              </div>
             </div>
           </div>
         </div>

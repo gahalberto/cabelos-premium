@@ -7,15 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import { 
-  ShoppingCart, 
-  Heart, 
-  Star, 
+import {
+  ShoppingCart,
+  Heart,
+  Star,
   Plus,
   Minus
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/contexts/CartContext";
 import Link from "next/link";
+import { contactConfig } from "@/config/contact";
 
 interface ProductCardProps {
   product: {
@@ -27,6 +29,7 @@ interface ProductCardProps {
     salePrice?: number | null;
     images: string[];
     stock: number;
+    priceOnRequest?: boolean;
     isFeatured: boolean;
     isNew: boolean;
     length?: string | null;
@@ -172,7 +175,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Rating */}
-        {product.averageRating && product.reviewCount && (
+        {(product.averageRating ?? 0) > 0 && (product.reviewCount ?? 0) > 0 && (
           <div className="flex items-center gap-1 mb-3">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
@@ -194,7 +197,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Preços */}
         <div className="mb-3">
-          {hasDiscount ? (
+          {product.priceOnRequest ? (
+            <span className="text-sm font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded">
+              Preço sob consulta
+            </span>
+          ) : hasDiscount ? (
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-red-600">
                 {formatPrice(currentPrice)}
@@ -210,68 +217,74 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Estoque */}
-        <div className="mb-3">
-          {product.stock > 0 ? (
-            <span className="text-sm text-green-600 font-medium">
-              Em estoque ({product.stock} unidades)
-            </span>
-          ) : (
-            <span className="text-sm text-red-600 font-medium">
-              Fora de estoque
-            </span>
-          )}
-        </div>
+        {!product.priceOnRequest && (
+          <>
+            {/* Controles de quantidade */}
+            {product.stock > 0 && (
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-sm text-gray-600">Qtd:</span>
+                <div className="flex items-center border border-gray-300 rounded">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleQuantityChange(quantity - 1)}
+                    disabled={quantity <= 1}
+                    className="h-8 w-8 p-0 hover:bg-gray-100"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="px-2 py-1 min-w-[2rem] text-center text-sm">
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleQuantityChange(quantity + 1)}
+                    disabled={quantity >= product.stock}
+                    className="h-8 w-8 p-0 hover:bg-gray-100"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
 
-        {/* Controles de quantidade */}
-        {product.stock > 0 && (
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm text-gray-600">Qtd:</span>
-            <div className="flex items-center border border-gray-300 rounded">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleQuantityChange(quantity - 1)}
-                disabled={quantity <= 1}
-                className="h-8 w-8 p-0 hover:bg-gray-100"
-              >
-                <Minus className="h-3 w-3" />
-              </Button>
-              <span className="px-2 py-1 min-w-[2rem] text-center text-sm">
-                {quantity}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleQuantityChange(quantity + 1)}
-                disabled={quantity >= product.stock}
-                className="h-8 w-8 p-0 hover:bg-gray-100"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
+            {/* Botão de adicionar ao carrinho */}
+            <Button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0 || isAddingToCart}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              size="sm"
+            >
+              {isAddingToCart ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Adicionando...
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Adicionar ao Carrinho
+                </>
+              )}
+            </Button>
+          </>
         )}
 
-        {/* Botão de adicionar ao carrinho */}
-        <Button
-          onClick={handleAddToCart}
-          disabled={product.stock === 0 || isAddingToCart}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          size="sm"
-        >
-          {isAddingToCart ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Adicionando...
-            </>
-          ) : (
-            <>
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              Adicionar ao Carrinho
-            </>
-          )}
-        </Button>
+        {/* Botão Sob Consulta */}
+        {product.priceOnRequest && (
+          <Button
+            onClick={() => window.open(
+              `https://wa.me/${contactConfig.whatsapp.phoneNumber}?text=${encodeURIComponent(`Olá! Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`)}`,
+              "_blank"
+            )}
+            className="w-full bg-[#25D366] hover:bg-[#20BD5C] text-white"
+            size="sm"
+          >
+            <FaWhatsapp className="h-4 w-4 mr-2" />
+            Sob Consulta
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

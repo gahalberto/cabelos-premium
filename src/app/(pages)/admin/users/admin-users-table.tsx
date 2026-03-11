@@ -84,6 +84,7 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
             CLIENTE: { class: "bg-gray-100 text-gray-800", label: "Cliente" },
             ESPECIALISTA: { class: "bg-purple-100 text-purple-800", label: "Especialista" },
             ADMIN: { class: "bg-indigo-100 text-indigo-800", label: "Admin" },
+            VENDEDOR: { class: "bg-orange-100 text-orange-800", label: "Vendedor" },
         };
         const b = badges[role];
         return <span className={`px-2 py-1 text-xs font-semibold rounded-full ${b.class}`}>{b.label}</span>;
@@ -137,6 +138,7 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
                                     <SelectItem value="CLIENTE">Cliente</SelectItem>
                                     <SelectItem value="ESPECIALISTA">Especialista</SelectItem>
                                     <SelectItem value="ADMIN">Admin</SelectItem>
+                                    <SelectItem value="VENDEDOR">Vendedor</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

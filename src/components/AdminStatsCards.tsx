@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Package,
   Eye,
-  Star,
   TrendingUp,
   DollarSign,
-  Users
+  MessageSquare
 } from "lucide-react";
 
 interface AdminStatsCardsProps {
@@ -20,13 +19,15 @@ interface AdminStatsCardsProps {
     pendingOrdersCount: number;
     activeOrdersCount: number;
   } | null;
+  unreadContacts?: number;
 }
 
 export function AdminStatsCards({
   products,
   categories,
   expertApplications = [],
-  orderMetrics
+  orderMetrics,
+  unreadContacts = 0
 }: AdminStatsCardsProps) {
   const activeProducts = products.filter(p => p.isActive).length;
   const newProducts = products.filter(p => p.isNew).length;
@@ -79,6 +80,14 @@ export function AdminStatsCards({
       icon: Eye,
       color: "text-green-600",
       bgColor: "bg-green-100"
+    },
+    {
+      title: "Mensagens Não Lidas",
+      value: unreadContacts,
+      description: "Contatos aguardando resposta",
+      icon: MessageSquare,
+      color: unreadContacts > 0 ? "text-red-600" : "text-gray-400",
+      bgColor: unreadContacts > 0 ? "bg-red-100" : "bg-gray-100"
     }
   ];
 

@@ -39,6 +39,7 @@ interface Category {
 
 const CategoriesPage = () => {
   const { data: session, status } = useSession();
+  const isVendedor = (session?.user as any)?.role === "VENDEDOR";
   const { toast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -426,13 +427,15 @@ const CategoriesPage = () => {
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => deleteCategory(category.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            {!isVendedor && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => deleteCategory(category.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                         </td>
                       </tr>

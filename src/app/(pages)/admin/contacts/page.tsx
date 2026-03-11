@@ -32,7 +32,9 @@ export default async function AdminContactsPage() {
   const formattedContacts = contacts.map((c) => ({
     id: c.id,
     name: c.name,
+    email: c.email,
     phone: c.phone,
+    subject: c.subject,
     content: c.content,
     read: c.read,
     createdAt: c.createdAt,

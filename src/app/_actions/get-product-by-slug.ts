@@ -11,6 +11,7 @@ export interface ProductDetails {
   salePrice?: number | null;
   sku: string;
   stock: number;
+  priceOnRequest: boolean;
   isActive: boolean;
   isFeatured: boolean;
   isNew: boolean;
@@ -48,6 +49,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetails | n
         salePrice: true,
         sku: true,
         stock: true,
+        priceOnRequest: true,
         isActive: true,
         isFeatured: true,
         isNew: true,
@@ -125,6 +127,7 @@ export async function getRelatedProducts(
           salePrice: true,
           sku: true,
           stock: true,
+          priceOnRequest: true,
           isActive: true,
           isFeatured: true,
           isNew: true,

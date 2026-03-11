@@ -23,6 +23,7 @@ import { createProduct as createProductAction } from "@/app/_actions/admin/creat
 import { updateProduct as updateProductAction } from "@/app/_actions/admin/update-product";
 import { deleteProduct as deleteProductAction } from "@/app/_actions/admin/delete-product";
 import { getOrdersMetrics } from "@/app/_actions/admin/get-orders-metrics";
+import { getContactsMetrics } from "@/app/_actions/admin/get-contacts-metrics";
 import { ImageUpload } from "@/components/ImageUpload";
 import { AdminLayout } from "@/components/AdminLayout";
 import { AdminStatsCards } from "@/components/AdminStatsCards";
@@ -65,6 +66,7 @@ const AdminDashboard = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [orderMetrics, setOrderMetrics] = useState<any>(null);
+  const [unreadContacts, setUnreadContacts] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -94,16 +96,20 @@ const AdminDashboard = () => {
 
   const loadData = useCallback(async () => {
     try {
-      const [productsData, categoriesData, metricsData] = await Promise.all([
+      const [productsData, categoriesData, metricsData, contactsData] = await Promise.all([
         getProducts({ limit: 100 }),
         getCategories(),
-        getOrdersMetrics()
+        getOrdersMetrics(),
+        getContactsMetrics()
       ]);
 
       setProducts(productsData.products);
       setCategories(categoriesData);
       if (metricsData.success) {
         setOrderMetrics(metricsData);
+      }
+      if (contactsData.success) {
+        setUnreadContacts(contactsData.unreadCount);
       }
     } catch (error) {
       toast({
@@ -287,6 +293,7 @@ const AdminDashboard = () => {
         categories={categories}
         expertApplications={[]}
         orderMetrics={orderMetrics}
+        unreadContacts={unreadContacts}
       />
 
       {/* Ações Rápidas */}

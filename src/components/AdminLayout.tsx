@@ -15,45 +15,36 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setSidebarOpen(true)}
-          className="bg-white shadow-md"
-        >
-          <Menu className="h-4 w-4" />
-        </Button>
-      </div>
+    <div className="h-screen flex overflow-hidden bg-gray-50">
+      {/* Sidebar */}
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+      />
 
-      <div className="flex">
-        {/* Sidebar */}
-        <AdminSidebar 
-          isOpen={sidebarOpen} 
-          onToggle={() => setSidebarOpen(!sidebarOpen)} 
-        />
-
-        {/* Main content */}
-        <div className="flex-1 lg:ml-0">
-          <main className="p-6 lg:p-8">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {title}
-              </h1>
-              {description && (
-                <p className="text-gray-600">
-                  {description}
-                </p>
-              )}
-            </div>
-
-            {/* Content */}
-            {children}
-          </main>
+      {/* Área principal com scroll independente */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Topbar mobile */}
+        <div className="lg:hidden flex items-center h-14 px-4 bg-white border-b border-gray-200 flex-shrink-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen(true)}
+            className="mr-3"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <span className="font-semibold text-gray-800">Admin</span>
         </div>
+
+        {/* Conteúdo com scroll */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">{title}</h1>
+            {description && <p className="text-gray-500">{description}</p>}
+          </div>
+          {children}
+        </main>
       </div>
     </div>
   );

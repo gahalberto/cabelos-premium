@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,8 +56,15 @@ interface ExpertApplication {
 }
 
 export default function ExpertApplicationsPage() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (status === "authenticated" && (session?.user as any)?.role === "VENDEDOR") {
+      router.replace("/admin");
+    }
+  }, [status, session, router]);
   const [applications, setApplications] = useState<ExpertApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedApplication, setSelectedApplication] = useState<ExpertApplication | null>(null);

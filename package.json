@@ -8,7 +8,9 @@
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:run": "node run-migration.js"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

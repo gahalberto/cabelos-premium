@@ -44,23 +44,22 @@ const WhoIsUs = () => {
             
       {/* Seção Lançamento */}
       <section className="w-full bg-[#f0efdb] py-16">
-        {/* Título Principal sozinho no topo */}
-        <div className="w-full flex justify-center items-center mb-12 px-8 md:px-16 lg:px-24">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl text-[#8a7d5c] tracking-wide leading-tight text-center">
-            <span className="font-le-jour">LANÇAMENTO </span>
-            <span className="font-brittany-ultra-thin italic">by</span>
-            <span className="font-le-jour"> CABELOS PREMIUM</span>
-          </h1>
-        </div>
-        <div className="flex flex-col md:flex-row w-full max-w-none items-center justify-center">
-          {/* Texto centralizado */}
-          <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center px-8 md:px-12 lg:px-16">
-            <h2 className="text-xl md:text-2xl lg:text-3xl text-[#333333] mb-6">
-              <span className="font-montserrat font-medium">Uma técnica exclusiva para </span>
-              <span className="font-brittany italic text-2xl md:text-3xl lg:text-4xl">profissionais</span>
-            </h2>
-            <p className="text-base md:text-lg text-[#333333] leading-relaxed font-montserrat font-thin max-w-xl text-justify">
-              A Cabelos Premium tem o prazer de apresentar uma inovação exclusiva para os profissionais da beleza: a nova técnica de Mega Hair com fitas de alta performance, desenvolvida para atender às necessidades de praticidade, conforto e qualidade que só os maiores salões exigem, <span className="font-bold">pela primeira vez no Brasil confeccionada por uma marca especialista em Cabelos Brasileiros do Sul.</span>
+        <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto items-center justify-center px-8">
+          {/* Texto */}
+          <div className="w-full md:w-1/2 flex flex-col items-start justify-center px-4 md:px-8 lg:px-12">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-le-jour text-[#8a7d5c] mb-6 tracking-wide whitespace-nowrap">
+              CABELOS PREMIUM
+            </h1>
+            <div className="mb-6">
+              <p className="text-xl md:text-2xl text-[#333333] font-montserrat font-bold leading-snug">
+                Há mais de 1 década sendo especialista em{" "}
+                <span className="font-brittany text-3xl md:text-4xl italic font-normal">
+                  Brasileiros do Sul
+                </span>
+              </p>
+            </div>
+            <p className="text-base md:text-lg text-[#333333] leading-relaxed font-montserrat font-thin max-w-xl">
+              Beleza começa pela qualidade. Na Cabelos Premium, oferecemos cabelos 100% brasileiros, selecionados diretamente da região Sul do país, reconhecida pela textura macia, brilho natural e alta durabilidade dos fios.
             </p>
           </div>
           {/* Imagem */}

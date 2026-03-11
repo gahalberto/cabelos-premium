@@ -8,14 +8,18 @@ import { FaInstagram, FaPhone, FaWhatsapp } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
-// Esquema de validação com Zod
 const contactSchema = z.object({
   name: z.string().min(3, { message: "Nome deve ter pelo menos 3 caracteres" }),
+  email: z.string().email({ message: "E-mail inválido" }).optional().or(z.literal("")),
   phone: z.string().min(10, { message: "Telefone deve ter pelo menos 10 dígitos" }),
+  subject: z.string().optional(),
   content: z.string().min(5, { message: "Mensagem deve ter pelo menos 5 caracteres" }),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
+
+const WHATSAPP_NUMBER = "5511912290102";
+const WHATSAPP_MESSAGE = "Oi eu vim pelo site www.cabelospremium.com.br";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +35,6 @@ export default function ContactPage() {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -44,7 +47,6 @@ export default function ContactPage() {
       toast.success("Mensagem enviada com sucesso! Entraremos em contato em breve.");
       reset();
     } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
       toast.error("Erro ao enviar mensagem. Por favor, tente novamente.");
     } finally {
       setIsSubmitting(false);
@@ -83,9 +85,22 @@ export default function ContactPage() {
                   {...register("name")}
                   className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
-                )}
+                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+              </div>
+
+              {/* E-mail */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  {...register("email")}
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
+                />
+                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
               </div>
 
               {/* Telefone */}
@@ -100,12 +115,24 @@ export default function ContactPage() {
                   {...register("phone")}
                   className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
                 />
-                {errors.phone && (
-                  <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>
-                )}
+                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>}
               </div>
 
-              {/* Conteúdo */}
+              {/* Assunto */}
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                  Assunto
+                </label>
+                <input
+                  id="subject"
+                  type="text"
+                  placeholder="Qual o assunto da sua mensagem?"
+                  {...register("subject")}
+                  className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition"
+                />
+              </div>
+
+              {/* Mensagem */}
               <div>
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
                   Mensagem <span className="text-red-500">*</span>
@@ -117,9 +144,7 @@ export default function ContactPage() {
                   {...register("content")}
                   className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#b08c4f] focus:border-transparent transition resize-none"
                 />
-                {errors.content && (
-                  <p className="mt-1 text-xs text-red-500">{errors.content.message}</p>
-                )}
+                {errors.content && <p className="mt-1 text-xs text-red-500">{errors.content.message}</p>}
               </div>
 
               <button
@@ -138,13 +163,18 @@ export default function ContactPage() {
 
             {/* WhatsApp */}
             <button
-              onClick={() => window.open("https://wa.me/5511912290102?text=" + encodeURIComponent("Oi, eu vim do site cabelospremium e preciso de ajuda."), "_blank")}
+              onClick={() =>
+                window.open(
+                  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`,
+                  "_blank"
+                )
+              }
               className="w-full bg-[#25D366] text-white px-8 py-5 rounded-xl font-montserrat font-medium hover:bg-[#20BD5C] transition-colors flex items-center gap-4 shadow-md"
             >
               <FaWhatsapp size={36} />
               <div className="text-left">
                 <p className="text-lg font-semibold">WhatsApp</p>
-                <p className="text-sm opacity-90">(11) 99999-9999</p>
+                <p className="text-sm opacity-90">(11) 91229-0102</p>
               </div>
             </button>
 
@@ -177,4 +207,3 @@ export default function ContactPage() {
     </div>
   );
 }
- 

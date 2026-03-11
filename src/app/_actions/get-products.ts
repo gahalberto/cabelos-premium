@@ -21,6 +21,7 @@ export interface GetProductsOptions {
   filters?: ProductFilters;
   sortBy?: 'price' | 'name' | 'createdAt' | 'popularity';
   sortOrder?: 'asc' | 'desc';
+  includeInactive?: boolean;
 }
 
 export async function getProducts(options: GetProductsOptions = {}) {
@@ -30,13 +31,16 @@ export async function getProducts(options: GetProductsOptions = {}) {
     limit = 12,
     filters = {},
     sortBy = 'createdAt',
-    sortOrder = 'desc'
+    sortOrder = 'desc',
+    includeInactive = false,
   } = options;
 
   try {
-    const where: any = {
-      isActive: true,
-    };
+    const where: any = {};
+    if (!includeInactive) {
+      where.isActive = true;
+      where.stock = { gt: 0 };
+    }
 
     // Aplicar filtros
     if (filters.category) {
@@ -97,6 +101,8 @@ export async function getProducts(options: GetProductsOptions = {}) {
           price: true,
           salePrice: true,
           stock: true,
+          lowStockThreshold: true,
+          priceOnRequest: true,
           isActive: true,
           isFeatured: true,
           isNew: true,

@@ -2,6 +2,7 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "./log-activity";
 
 export interface CreateCategoryData {
   name: string;
@@ -42,6 +43,7 @@ export async function createCategoryAction(data: CreateCategoryData) {
 
     revalidatePath("/admin/categories");
     revalidatePath("/admin");
+    await logActivity({ action: "Criou", entity: "Categoria", entityId: category.id, entityName: category.name });
 
     return {
       success: true,

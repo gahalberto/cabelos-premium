@@ -101,7 +101,9 @@ model Product {
   price       Float
   salePrice   Float?
   sku         String   @unique
-  stock       Int      @default(0)
+  stock              Int      @default(0)
+  lowStockThreshold  Int      @default(0)
+  priceOnRequest     Boolean  @default(false)
   images      String[]
   isActive    Boolean  @default(true)
   isFeatured  Boolean  @default(false)
@@ -208,6 +210,7 @@ model CartItem {
 enum UserRole {
   CLIENTE
   ESPECIALISTA
+  VENDEDOR
   ADMIN
 }
 
@@ -291,11 +294,27 @@ model StoreConfig {
   updatedAt              DateTime @updatedAt
 }
 
+// Histórico de atividades do admin
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String
+  userName   String
+  userEmail  String
+  action     String   // "Criou" | "Editou" | "Excluiu" | "Leu"
+  entity     String   // "Produto" | "Categoria" | "Contato" | etc.
+  entityId   String?
+  entityName String?
+  details    String?
+  createdAt  DateTime @default(now())
+}
+
 // Modelo para contatos do formulário
 model Contact {
   id        String   @id @default(cuid())
   name      String
+  email     String?
   phone     String
+  subject   String?
   content   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())

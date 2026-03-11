@@ -12,8 +12,9 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
+  const isOffline = pathname === "/offline";
 
-  if (isAdmin) {
+  if (isAdmin || isOffline) {
     return <>{children}</>;
   }
 

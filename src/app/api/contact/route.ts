@@ -5,7 +5,9 @@ import { db } from "@/app/_lib/prisma";
 // Esquema de validação com Zod
 const contactSchema = z.object({
   name: z.string().min(3),
+  email: z.string().email().optional().or(z.literal("")),
   phone: z.string().min(10),
+  subject: z.string().optional(),
   content: z.string().min(5),
 });
 
@@ -21,7 +23,9 @@ export async function POST(request: Request) {
     const contact = await db.contact.create({
       data: {
         name: validatedData.name,
+        email: validatedData.email || null,
         phone: validatedData.phone,
+        subject: validatedData.subject || null,
         content: validatedData.content,
       },
     });

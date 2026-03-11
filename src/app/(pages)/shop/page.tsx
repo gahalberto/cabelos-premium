@@ -77,7 +77,7 @@ export default function ShopPage() {
   // Filtros
   const [filters, setFilters] = useState<ProductFilters>({
     search: "",
-    category: "",
+    category: "cosmeticos",
     minPrice: undefined,
     maxPrice: undefined,
     isFeatured: false,
@@ -157,7 +157,7 @@ export default function ShopPage() {
   const clearFilters = () => {
     setFilters({
       search: "",
-      category: "",
+      category: "cosmeticos",
       minPrice: undefined,
       maxPrice: undefined,
       isFeatured: false,
@@ -218,30 +218,6 @@ export default function ShopPage() {
                       onChange={(e) => handleSearch(e.target.value)}
                       className="pl-10 border-gray-300 focus:border-blue-500"
                     />
-                  </div>
-                </div>
-
-                {/* Categorias */}
-                <div>
-                  <Label className="text-gray-700">Categorias</Label>
-                  <div className="mt-2 space-y-2">
-                    {categories.map((category) => (
-                      <div key={category.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`category-${category.id}`}
-                          checked={filters.category === category.slug}
-                          onCheckedChange={(checked) => 
-                            handleFilterChange('category', checked ? category.slug : '')
-                          }
-                        />
-                        <Label 
-                          htmlFor={`category-${category.id}`} 
-                          className="text-sm text-gray-600 cursor-pointer"
-                        >
-                          {category.name} ({category._count.products})
-                        </Label>
-                      </div>
-                    ))}
                   </div>
                 </div>
 

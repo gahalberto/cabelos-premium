@@ -2,6 +2,7 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "./log-activity";
 
 interface CreateProductData {
   name: string;
@@ -19,6 +20,8 @@ interface CreateProductData {
   isActive: boolean;
   isFeatured: boolean;
   isNew: boolean;
+  lowStockThreshold?: number;
+  priceOnRequest?: boolean;
 }
 
 export async function createProduct(data: CreateProductData) {
@@ -70,6 +73,8 @@ export async function createProduct(data: CreateProductData) {
         isActive: data.isActive,
         isFeatured: data.isFeatured,
         isNew: data.isNew,
+        lowStockThreshold: data.lowStockThreshold ?? 0,
+        priceOnRequest: data.priceOnRequest ?? false,
         length: data.length,
         texture: data.texture,
         color: data.color,
@@ -90,6 +95,7 @@ export async function createProduct(data: CreateProductData) {
 
     revalidatePath("/admin");
     revalidatePath("/shop");
+    await logActivity({ action: "Criou", entity: "Produto", entityId: product.id, entityName: product.name });
 
     return { success: true, product };
   } catch (error) {

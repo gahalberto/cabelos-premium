@@ -2,7 +2,7 @@
 export const contactConfig = {
   whatsapp: {
     phoneNumber: "5511912290102",
-    message: "Oi, eu vim do site cabelospremium e preciso de ajuda.",
+    message: "Oi eu vim pelo site www.cabelospremium.com.br",
     businessHours: "Seg-Sex 8h às 18h",
     responseTime: "Resposta em até 2 horas"
   },

@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Eye, Trash2, Phone, MessageSquare, CheckCircle } from "lucide-react";
+import { Eye, Trash2, Phone, MessageSquare, CheckCircle, Mail } from "lucide-react";
 import { toast } from "sonner";
 
 interface Contact {
   id: string;
   name: string;
+  email?: string | null;
   phone: string;
+  subject?: string | null;
   content: string;
   read: boolean;
   createdAt: Date;
@@ -32,9 +34,7 @@ export function ContactsTable({ contacts: initialContacts }: ContactsTableProps)
         body: JSON.stringify({ read: true }),
       });
       if (!res.ok) throw new Error();
-      setContacts((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, read: true } : c))
-      );
+      setContacts((prev) => prev.map((c) => (c.id === id ? { ...c, read: true } : c)));
       if (selected?.id === id) setSelected((prev) => prev ? { ...prev, read: true } : prev);
     } catch {
       toast.error("Erro ao marcar como lida");
@@ -59,9 +59,7 @@ export function ContactsTable({ contacts: initialContacts }: ContactsTableProps)
 
   const openModal = async (contact: Contact) => {
     setSelected(contact);
-    if (!contact.read) {
-      await handleMarkRead(contact.id);
-    }
+    if (!contact.read) await handleMarkRead(contact.id);
   };
 
   if (contacts.length === 0) {
@@ -76,12 +74,13 @@ export function ContactsTable({ contacts: initialContacts }: ContactsTableProps)
 
   return (
     <>
-      <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-x-auto">
+        <table className="w-full text-sm min-w-[800px]">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="text-left px-6 py-3 font-semibold text-gray-600">Nome</th>
-              <th className="text-left px-6 py-3 font-semibold text-gray-600">Telefone</th>
+              <th className="text-left px-6 py-3 font-semibold text-gray-600">Contato</th>
+              <th className="text-left px-6 py-3 font-semibold text-gray-600">Assunto</th>
               <th className="text-left px-6 py-3 font-semibold text-gray-600">Mensagem</th>
               <th className="text-left px-6 py-3 font-semibold text-gray-600">Data</th>
               <th className="text-left px-6 py-3 font-semibold text-gray-600">Status</th>
@@ -100,10 +99,23 @@ export function ContactsTable({ contacts: initialContacts }: ContactsTableProps)
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-1.5 text-gray-600">
-                    <Phone className="h-3.5 w-3.5 text-gray-400" />
-                    {contact.phone}
+                  <div className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-1.5 text-gray-600">
+                      <Phone className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                      {contact.phone}
+                    </div>
+                    {contact.email && (
+                      <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                        <Mail className="h-3 w-3 text-gray-400 flex-shrink-0" />
+                        {contact.email}
+                      </div>
+                    )}
                   </div>
+                </td>
+                <td className="px-6 py-4 max-w-[140px]">
+                  <p className="truncate text-gray-600 text-xs">
+                    {contact.subject || <span className="text-gray-300 italic">—</span>}
+                  </p>
                 </td>
                 <td className="px-6 py-4 max-w-xs">
                   <p className="truncate text-gray-600">{contact.content}</p>
@@ -147,38 +159,54 @@ export function ContactsTable({ contacts: initialContacts }: ContactsTableProps)
         </table>
       </div>
 
-      {/* Modal de visualização */}
+      {/* Modal */}
       {selected && (
         <div
           className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl w-full max-w-lg"
+            className="bg-white rounded-2xl shadow-xl w-full max-w-lg flex flex-col max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-gray-100">
+            {/* Header fixo */}
+            <div className="p-6 border-b border-gray-100 flex-shrink-0">
               <div className="flex items-start justify-between">
-                <div>
+                <div className="space-y-1">
                   <h3 className="text-lg font-bold text-gray-900">{selected.name}</h3>
-                  <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
+                  <div className="flex items-center gap-1.5 text-sm text-gray-500">
                     <Phone className="h-3.5 w-3.5" />
                     {selected.phone}
                   </div>
+                  {selected.email && (
+                    <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                      <Mail className="h-3.5 w-3.5" />
+                      {selected.email}
+                    </div>
+                  )}
+                  {selected.subject && (
+                    <p className="text-sm font-medium text-gray-700 pt-1">
+                      Assunto: {selected.subject}
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => setSelected(null)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none"
+                  className="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none ml-4 flex-shrink-0"
                 >
                   ✕
                 </button>
               </div>
             </div>
-            <div className="p-6">
+
+            {/* Corpo com scroll */}
+            <div className="p-6 overflow-y-auto flex-1">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mensagem</p>
               <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{selected.content}</p>
             </div>
-            <div className="px-6 pb-6 flex items-center justify-between">
+
+            {/* Footer fixo */}
+            <div className="px-6 py-4 border-t border-gray-100 flex-shrink-0 flex items-center justify-between">
               <span className="text-xs text-gray-400">
                 {format(new Date(selected.createdAt), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR })}
               </span>
