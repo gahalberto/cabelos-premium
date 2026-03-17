@@ -29,7 +29,7 @@ export function NavigationMenuDemo() {
   return (
     <div className="w-full fixed top-0 left-0 z-50">
       {/* Barra superior com informações sobre os cabelos */}
-      <div className="w-full bg-[#8a7d5c]/60 backdrop-blur-md py-2 text-center">
+      <div className="w-full bg-[#8a7d5c]/30 backdrop-blur-md py-2 text-center">
         <p className="text-white font-montserrat text-[14px] font-light flex items-center justify-center">
           <Image 
             src="/images/bandeira.png" 
@@ -50,7 +50,7 @@ export function NavigationMenuDemo() {
       </div>
       
       {/* Menu principal */}
-      <div className="bg-[#8a7d5c]/60 backdrop-blur-md py-4">
+      <div className="bg-[#8a7d5c]/30 backdrop-blur-md py-4">
         <div className="max-w-6xl min-h-12 mx-auto px-4 flex items-center justify-between">
           {/* Logo - visível apenas no mobile */}
           <Link href="/" className="md:hidden flex-shrink-0">
@@ -64,12 +64,12 @@ export function NavigationMenuDemo() {
           </Link>
 
           {/* Links de navegação - Desktop */}
-          <nav className="hidden md:flex items-center justify-center gap-16 w-full">
+          <nav className="hidden md:flex items-center justify-center gap-10 w-full">
             <Link href="/" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               HOME
             </Link>
-            <Link href="/lancamento" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
-              LANÇAMENTO
+            <Link href="/megahair" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
+              MEGA HAIR
             </Link>
             <Link href="/colecao" className="uppercase font-bold text-[13px] tracking-wide text-white hover:text-[#f0efdb] transition-colors">
               COLEÇÃO
@@ -163,35 +163,35 @@ export function NavigationMenuDemo() {
                   >
                     HOME
                   </Link>
-                  
+
                   <Link
-                    href="/lancamento"
+                    href="/megahair"
                     className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
-                    LANÇAMENTO
+                    MEGA HAIR
                   </Link>
-                  
+
                   <Link
                     href="/colecao"
                     className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
                     COLEÇÃO
                   </Link>
-                  
+
                   <Link
                     href="/torne-se-expert"
                     className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
                     TORNE-SE EXPERT
                   </Link>
-                  
+
                   <Link
                     href="/shop"
                     className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
                     SHOP
                   </Link>
-                  
+
                   <Link
                     href="/contato"
                     className="p-3 text-gray-800 hover:bg-[#e6d7c9] rounded-md transition-colors"

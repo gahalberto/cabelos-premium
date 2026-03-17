@@ -65,10 +65,10 @@ export function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/lancamento" 
+                  href="/megahair" 
                   className="text-gray-300 hover:text-white hover:opacity-80 transition-all duration-300 text-sm"
                 >
-                  Lançamentos
+                  Mega Hair
                 </Link>
               </li>
               <li>

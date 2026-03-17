@@ -151,10 +151,10 @@ export const pageMetadata = {
     canonical: '/colecao',
   }),
 
-  lancamento: createMetadata({
+  megahair: createMetadata({
     title: 'Lançamentos | Novidades em Cabelos Premium',
     description: 'Confira os últimos lançamentos em extensões e alongamentos capilares. Tendências e novidades exclusivas.',
-    canonical: '/lancamento',
+    canonical: '/megahair',
   }),
 
   torneseExpert: createMetadata({

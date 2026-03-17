@@ -216,7 +216,7 @@ const WhoIsUs = () => {
             </p>
 
             <div className="flex justify-center pt-8">
-              <button className="rounded-xl bg-[#f0efdb] px-6 py-2 font-montserrat text-[24.1px] text-black">
+              <button className="rounded-xl bg-[#f0efdb] px-6 py-2 font-montserrat text-[24.1px] text-black text-n">
                 SAIBA MAIS
               </button>
             </div>
@@ -362,7 +362,7 @@ const WhoIsUs = () => {
             <p className="font-montserrat text-[#333333] hover:text-[#d4a249] transition-colors cursor-pointer">
               Conheça detalhes sobre toda nossa linha de tratamento clicando aqui.
             </p>
-          </div>
+          </div>x
       </section>
 
       {/* Seção de Contato */}

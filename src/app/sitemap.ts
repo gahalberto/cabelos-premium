@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/shop',
     '/contato',
     '/colecao',
-    '/lancamento',
+    '/megahair',
     '/torne-se-expert',
     '/politica-privacidade',
     '/termos-uso',

@@ -14,4 +14,18 @@ export default {
   env: {
     NEXT_PUBLIC_ASAAS: process.env.NEXT_PUBLIC_ASAAS,
   },
+  async redirects() {
+    return [
+      {
+        source: '/lancamento',
+        destination: '/megahair',
+        permanent: true,
+      },
+      {
+        source: '/lancamentos',
+        destination: '/megahair',
+        permanent: true,
+      },
+    ];
+  },
 };
