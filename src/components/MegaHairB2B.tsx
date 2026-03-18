@@ -24,19 +24,29 @@ const MegaHairB2B = () => {
 
       {/* Texto */}
       <div className="max-w-4xl mx-auto px-6 py-14">
-        <h2 className="font-montserrat font-bold text-xl md:text-2xl lg:text-3xl text-[#333] mb-5">
+        <h2 className="font-montserrat font-semibold text-[21px] text-[#333] mb-5">
           Atacado para Salões e Profissionais da Beleza
         </h2>
-        <p className="font-montserrat text-[15px] md:text-base text-[#555] leading-relaxed mb-10">
+        <p className="font-montserrat font-normal text-[13.5px] text-[#555] leading-relaxed mb-10">
           Com a Cabelos Premium, você terá uma ferramenta poderosa em seu salão para lotar
           sua agenda e faturar números nunca vistos antes. Aplique a técnica de mega hair
           com facilidade e rapidez, sem perder tempo ou comprometer a qualidade do serviço.{" "}
-          <strong className="text-[#3a3020]">
+          <strong className="font-bold text-[#3a3020]">
             Sinta a diferença e ofereça uma experiência premium aos seus clientes.
           </strong>
         </p>
 
-        <div className="flex justify-center">
+        <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2">
+          <Image
+            src="/images/mega-hair/last-image.png"
+            alt="Mega Hair Premium"
+            width={1200}
+            height={700}
+            className="block w-screen h-auto object-cover"
+          />
+        </div>
+
+        <div className="mt-10 flex justify-center">
           <Link
             href="/contato"
             className="inline-block bg-[#8a7d5c] hover:bg-[#6e6348] text-white font-montserrat font-semibold text-sm tracking-[0.18em] uppercase px-16 py-4 rounded-md transition-all duration-300"

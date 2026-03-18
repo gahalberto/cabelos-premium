@@ -22,7 +22,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex flex-col min-h-screen">
       <NavigationMenuDemo />
-      <main className="flex-1 pt-[116px] md:pt-[120px]">
+      <main className="flex-1 mt-[120px] md:mt-[124px]">
         {children}
       </main>
       <Footer />
