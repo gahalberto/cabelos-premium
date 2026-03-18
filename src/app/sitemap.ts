@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/sobre',
     '/shop',
     '/contato',
-    '/colecao',
+    '/laces',
     '/megahair',
     '/torne-se-expert',
     '/politica-privacidade',

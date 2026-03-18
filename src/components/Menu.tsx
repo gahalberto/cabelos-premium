@@ -71,8 +71,8 @@ export function NavigationMenuDemo() {
             <Link href="/megahair" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               MEGA HAIR
             </Link>
-            <Link href="/colecao" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
-              COLEÇÃO
+            <Link href="/laces" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
+              LACES
             </Link>
             <Link href="/torne-se-expert" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               TORNE-SE EXPERT
@@ -172,10 +172,10 @@ export function NavigationMenuDemo() {
                   </Link>
 
                   <Link
-                    href="/colecao"
+                    href="/laces"
                     className="p-3 text-black hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
-                    COLEÇÃO
+                    LACES
                   </Link>
 
                   <Link

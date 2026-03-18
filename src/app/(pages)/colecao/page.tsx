@@ -18,9 +18,9 @@ export default function ColecaoPage() {
         <div className="max-w-6xl mx-auto px-8 md:px-12 lg:px-16">
           <div className="text-center" data-aos="fade-up">
             <h1 className="font-le-jour text-[37px] text-white mb-6 tracking-wide uppercase">
-              coleção candy
+              Laces Hiper-Realistas
             </h1>
-            
+
             <h2 className="text-2xl md:text-3xl text-white mb-8">
               <span className="font-brittany italic">Uma doce</span>
               <span className="font-montserrat"> coleção de cores para nossas </span>
@@ -89,7 +89,7 @@ export default function ColecaoPage() {
       {/* Seção de Explicações das Cores */}
       <section className="w-full bg-[#8a7d5c] py-20">
         <div className="max-w-6xl mx-auto px-8 md:px-12 lg:px-16 space-y-20">
-          
+
           {/* Caramel - Imagem à direita */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center" data-aos="fade-up">
             <div className="order-2 md:order-1">
@@ -224,17 +224,17 @@ export default function ColecaoPage() {
               <span className="font-bold">Conforto e Leveza:</span>
               {" "}As fitas são finas e flexíveis, proporcionando uma sensação de leveza durante o uso.
             </p>
-            
+
             <p className="text-base text-white leading-relaxed font-montserrat font-thin text-center">
               <span className="font-bold">Durabilidade e Segurança:</span>
               {" "}Feitas com cabelo 100% brasileiro do Sul, garantem resistência e longevidade.
             </p>
-            
+
             <p className="text-base text-white leading-relaxed font-montserrat font-thin text-center">
               <span className="font-bold">Estilo e Versatilidade:</span>
               {" "}Diversas tonalidades para atender os vários gostos de descoloração.
             </p>
-            
+
             <p className="text-base text-white leading-relaxed font-montserrat font-thin text-center">
               <span className="font-bold">Qualidade Pro:</span>
               {" "}Produto exclusivo para salões e profissionais da beleza, desenvolvido com os mais altos padrões do mercado.

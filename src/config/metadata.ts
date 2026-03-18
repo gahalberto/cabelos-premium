@@ -148,7 +148,7 @@ export const pageMetadata = {
   colecao: createMetadata({
     title: 'Coleção Cabelos Premium | Conheça Nossos Produtos',
     description: 'Explore nossa coleção completa de cabelos naturais brasileiros. Qualidade superior, variedade de cores e texturas.',
-    canonical: '/colecao',
+    canonical: '/laces',
   }),
 
   megahair: createMetadata({
