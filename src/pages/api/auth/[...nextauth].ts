@@ -40,22 +40,26 @@ export const authOptions: NextAuthOptions = {
           });
         } else {
           // Se não é email, busca por CPF ou CNPJ
+          // Tenta tanto o valor formatado (como salvo no banco) quanto só os dígitos
           if (cleanIdentifier.length === 11) {
-            // É um CPF
-            user = await prisma.user.findUnique({
-              where: { cpf: cleanIdentifier }
-            });
+            user = await prisma.user.findUnique({ where: { cpf: identifier } });
+            if (!user) {
+              user = await prisma.user.findUnique({ where: { cpf: cleanIdentifier } });
+            }
           } else if (cleanIdentifier.length === 14) {
-            // É um CNPJ
-            user = await prisma.user.findUnique({
-              where: { cnpj: cleanIdentifier }
-            });
+            user = await prisma.user.findUnique({ where: { cnpj: identifier } });
+            if (!user) {
+              user = await prisma.user.findUnique({ where: { cnpj: cleanIdentifier } });
+            }
           }
         }
 
         // Verifica se a senha é válida
         if (user && user.password && bcrypt.compareSync(credentials.password, user.password)) {
-          console.log('Usuário autorizado:', user);
+          // Bloqueia login se e-mail não foi verificado
+          if (!user.emailVerified) {
+            throw new Error("EMAIL_NOT_VERIFIED");
+          }
           return {
             id: user.id.toString(),
             name: user.name,

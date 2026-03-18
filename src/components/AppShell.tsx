@@ -13,8 +13,9 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
   const isOffline = pathname === "/offline";
+  const isAuth = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"].includes(pathname ?? "");
 
-  if (isAdmin || isOffline) {
+  if (isAdmin || isOffline || isAuth) {
     return <>{children}</>;
   }
 

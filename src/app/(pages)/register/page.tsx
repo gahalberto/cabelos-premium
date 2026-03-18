@@ -1,414 +1,303 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { registerUser } from "@/app/_actions/register/postRegister";
 import Image from "next/image";
+import Link from "next/link";
 import { cpf, cnpj } from "cpf-cnpj-validator";
+import { Eye, EyeOff, UserPlus, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-// Esquema de validação usando Zod
 const schema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(50, "Nome muito longo"),
   lastName: z.string().min(1, "Sobrenome é obrigatório").max(50, "Sobrenome muito longo"),
   document: z.string().min(1, "Documento é obrigatório"),
   birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
-  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"], {
-    required_error: "Selecione um gênero",
-  }),
-  zipCode: z.string()
-    .min(8, "CEP deve ter 8 dígitos")
-    .max(9, "CEP inválido")
-    .regex(/^\d{5}-?\d{3}$/, "Formato de CEP inválido"),
-  email: z.string().email("Formato de email inválido"),
-  confirmEmail: z.string().email("Formato de email inválido"),
-  phone: z.string()
-    .min(10, "Telefone deve ter pelo menos 10 dígitos")
-    .max(15, "Telefone muito longo")
-    .regex(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, "Formato de telefone inválido (xx) xxxxx-xxxx"),
-  password: z.string().min(6, "A senha precisa ter pelo menos 6 caracteres"),
-  confirmPassword: z.string().min(6, "A confirmação de senha precisa ter pelo menos 6 caracteres"),
-}).refine((data) => data.email === data.confirmEmail, {
-  message: "Os emails não coincidem",
-  path: ["confirmEmail"],
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "As senhas não coincidem",
-  path: ["confirmPassword"],
-}).refine((data) => {
-  const cleanDocument = data.document.replace(/\D/g, "");
-  if (cleanDocument.length === 11) {
-    return cpf.isValid(data.document);
-  } else if (cleanDocument.length === 14) {
-    return cnpj.isValid(data.document);
-  }
-  return false;
-}, {
-  message: "Documento inválido (deve ser CPF com 11 dígitos ou CNPJ com 14 dígitos)",
-  path: ["document"],
-});
+  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"], { required_error: "Selecione um gênero" }),
+  zipCode: z.string().min(8, "CEP deve ter 8 dígitos").max(9).regex(/^\d{5}-?\d{3}$/, "CEP inválido"),
+  email: z.string().email("E-mail inválido"),
+  confirmEmail: z.string().email("E-mail inválido"),
+  phone: z.string().min(10).max(15).regex(/^\(\d{2}\)\s?\d{4,5}-?\d{4}$/, "Formato: (11) 99999-9999"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
+  confirmPassword: z.string().min(6, "Mínimo 6 caracteres"),
+})
+  .refine((d) => d.email === d.confirmEmail, { message: "Os e-mails não coincidem", path: ["confirmEmail"] })
+  .refine((d) => d.password === d.confirmPassword, { message: "As senhas não coincidem", path: ["confirmPassword"] })
+  .refine((d) => {
+    const clean = d.document.replace(/\D/g, "");
+    return clean.length === 11 ? cpf.isValid(d.document) : clean.length === 14 ? cnpj.isValid(d.document) : false;
+  }, { message: "CPF ou CNPJ inválido", path: ["document"] });
 
-// Tipagem dos dados do formulário com base no esquema Zod
 type FormData = z.infer<typeof schema>;
 
-const RegisterPage = () => {
+function FieldError({ msg }: { msg?: string }) {
+  if (!msg) return null;
+  return <p className="text-red-500 text-xs mt-1">{msg}</p>;
+}
+
+export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registered, setRegistered] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
-  // Use React Hook Form com Zod para validação
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  // Funções para formatação de campos
-  const formatDocument = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-    if (numericValue.length <= 11) {
-      // Formata como CPF
-      return numericValue
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d{1,2})/, "$1-$2");
-    } else if (numericValue.length <= 14) {
-      // Formata como CNPJ
-      return numericValue
-        .replace(/(\d{2})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1/$2")
-        .replace(/(\d{4})(\d{1,2})/, "$1-$2");
-    }
-    return value;
+  const fmtDoc = (v: string) => {
+    const d = v.replace(/\D/g, "");
+    if (d.length <= 11) return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})/, "$1-$2");
+    return d.replace(/(\d{2})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1/$2").replace(/(\d{4})(\d{1,2})/, "$1-$2");
+  };
+  const fmtCep = (v: string) => v.replace(/\D/g, "").replace(/(\d{5})(\d)/, "$1-$2").slice(0, 9);
+  const fmtPhone = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 10) return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d)/, "$1-$2");
+    return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
   };
 
-  const formatCEP = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-    if (numericValue.length <= 8) {
-      return numericValue.replace(/(\d{5})(\d)/, "$1-$2");
-    }
-    return value;
-  };
-
-  const formatPhone = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-    if (numericValue.length <= 11) {
-      if (numericValue.length <= 10) {
-        return numericValue
-          .replace(/(\d{2})(\d)/, "($1) $2")
-          .replace(/(\d{4})(\d)/, "$1-$2");
-      } else {
-        return numericValue
-          .replace(/(\d{2})(\d)/, "($1) $2")
-          .replace(/(\d{5})(\d)/, "$1-$2");
-      }
-    }
-    return value;
-  };
-
-  // Handlers para formatação em tempo real
-  const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatDocument(e.target.value);
-    setValue("document", formatted);
-  };
-
-  const handleCEPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCEP(e.target.value);
-    setValue("zipCode", formatted);
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhone(e.target.value);
-    setValue("phone", formatted);
-  };
-
-  // Função de envio de formulário
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    setError(null); // Resetando erro antes do envio
+    setError(null);
     try {
-      // Detecta automaticamente se é CPF ou CNPJ baseado no número de dígitos
-      const cleanDocument = data.document.replace(/\D/g, "");
-      const documentType = cleanDocument.length === 11 ? "CPF" : "CNPJ";
-
-      const response = await registerUser({
-        name: data.name,
-        lastName: data.lastName,
-        email: data.email,
-        document: data.document,
-        documentType: documentType,
-        birthDate: new Date(data.birthDate),
-        gender: data.gender,
-        userType: "CLIENTE", // Sempre CLIENTE por padrão
-        zipCode: data.zipCode,
-        phone: data.phone,
-        password: data.password,
+      const clean = data.document.replace(/\D/g, "");
+      await registerUser({
+        name: data.name, lastName: data.lastName, email: data.email,
+        document: data.document, documentType: clean.length === 11 ? "CPF" : "CNPJ",
+        birthDate: new Date(data.birthDate), gender: data.gender,
+        userType: "CLIENTE", zipCode: data.zipCode, phone: data.phone, password: data.password,
       });
-
-      if (response) {
-        // Loga o usuário após o registro
-        await signIn("credentials", {
-          redirect: false,
-          email: data.email,
-          password: data.password,
-        });
-        router.push("/"); // Redireciona para a home após o registro
-      }
+      setRegisteredEmail(data.email);
+      setRegistered(true);
     } catch (err) {
-      setError("Ocorreu um erro ao registrar. Por favor, tente novamente.");
+      setError(err instanceof Error ? err.message : "Erro ao criar conta. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const inputClass = (hasError: boolean) =>
+    `bg-white border-gray-200 focus-visible:ring-[#8a7d5c] focus-visible:border-[#8a7d5c] h-11 ${hasError ? "border-red-400" : ""}`;
+
+  if (registered) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F4F0] px-6">
+        <div className="max-w-md w-full text-center">
+          <Image src="/images/logo-cabelos.png" alt="Cabelos Premium" width={80} height={80} className="mx-auto mb-6" />
+          <CheckCircle2 className="w-16 h-16 text-[#8a7d5c] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-[#1a1611] mb-2">Conta criada!</h2>
+          <p className="text-sm text-gray-500 mb-2">
+            Enviamos um e-mail de confirmação para <strong>{registeredEmail}</strong>.
+          </p>
+          <p className="text-sm text-gray-500 mb-8">
+            Acesse sua caixa de entrada e clique no link para ativar sua conta antes de fazer login.
+          </p>
+          <Link href="/login" className="text-[#8a7d5c] hover:text-[#6d6247] font-medium text-sm hover:underline transition-colors">
+            Ir para o login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center bg-[#F5F4F0] w-full min-h-screen py-8">
-      <Image src={`/images/logo-cabelos.png`} alt="Logo Cabelos Premium" width={200} height={200} />
-      <form
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl mt-8"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Cadastro de Cliente</h2>
-        <p className="text-xs mb-6 text-center">Por favor, preencha os campos abaixo para criar sua conta de cliente na Cabelos Premium.</p>
-
-        {/* Exibir erro */}
-        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
-
-        {/* Grid de campos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Campo Nome */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Nome *</label>
-            <input
-              type="text"
-              {...register("name")}
-              className={`w-full p-3 mt-1 border ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="Seu nome"
-            />
-            {errors.name && (
-              <span className="text-red-500 text-sm">
-                {errors.name.message}
-              </span>
-            )}
-          </div>
-
-          {/* Campo Sobrenome */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Sobrenome *</label>
-            <input
-              type="text"
-              {...register("lastName")}
-              className={`w-full p-3 mt-1 border ${
-                errors.lastName ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="Seu sobrenome"
-            />
-            {errors.lastName && (
-              <span className="text-red-500 text-sm">
-                {errors.lastName.message}
-              </span>
-            )}
-          </div>
-
-          {/* Campo Documento (CPF/CNPJ) */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">CPF ou CNPJ *</label>
-            <input
-              type="text"
-              {...register("document")}
-              onChange={handleDocumentChange}
-              className={`w-full p-3 mt-1 border ${
-                errors.document ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="Digite seu CPF ou CNPJ"
-              maxLength={18}
-            />
-            {errors.document && (
-              <span className="text-red-500 text-sm">
-                {errors.document.message}
-              </span>
-            )}
-          </div>
-
-          {/* Campo Data de Nascimento */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Data de Nascimento *</label>
-            <input
-              type="date"
-              {...register("birthDate")}
-              className={`w-full p-3 mt-1 border ${
-                errors.birthDate ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            />
-            {errors.birthDate && (
-              <span className="text-red-500 text-sm">
-                {errors.birthDate.message}
-              </span>
-            )}
-          </div>
-
-          {/* Campo Gênero */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Gênero *</label>
-            <select
-              {...register("gender")}
-              className={`w-full p-3 mt-1 border ${
-                errors.gender ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            >
-              <option value="">Selecione seu gênero</option>
-              <option value="MALE">Masculino</option>
-              <option value="FEMALE">Feminino</option>
-              <option value="OTHER">Outro</option>
-              <option value="PREFER_NOT_TO_SAY">Prefiro não informar</option>
-            </select>
-            {errors.gender && (
-              <span className="text-red-500 text-sm">
-                {errors.gender.message}
-              </span>
-            )}
-          </div>
-
-          {/* Campo CEP */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">CEP *</label>
-            <input
-              type="text"
-              {...register("zipCode")}
-              onChange={handleCEPChange}
-              className={`w-full p-3 mt-1 border ${
-                errors.zipCode ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="00000-000"
-              maxLength={9}
-            />
-            {errors.zipCode && (
-              <span className="text-red-500 text-sm">
-                {errors.zipCode.message}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Campos de email em linha completa */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Email *</label>
-          <input
-            type="email"
-            {...register("email")}
-            className={`w-full p-3 mt-1 border ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            placeholder="seu@email.com"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">
-              {errors.email.message}
-            </span>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Confirme seu Email *</label>
-          <input
-            type="email"
-            {...register("confirmEmail")}
-            className={`w-full p-3 mt-1 border ${
-              errors.confirmEmail ? "border-red-500" : "border-gray-300"
-            } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            placeholder="confirme seu email"
-          />
-          {errors.confirmEmail && (
-            <span className="text-red-500 text-sm">
-              {errors.confirmEmail.message}
-            </span>
-          )}
-        </div>
-
-        {/* Campo Telefone */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium">Telefone *</label>
-          <input
-            type="text"
-            {...register("phone")}
-            onChange={handlePhoneChange}
-            className={`w-full p-3 mt-1 border ${
-              errors.phone ? "border-red-500" : "border-gray-300"
-            } rounded focus:border-[#8a7d5c] focus:outline-none`}
-            placeholder="(11) 99999-9999"
-            maxLength={15}
-          />
-          {errors.phone && (
-            <span className="text-red-500 text-sm">
-              {errors.phone.message}
-            </span>
-          )}
-        </div>
-
-        {/* Campos de senha em grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Senha *</label>
-            <input
-              type="password"
-              {...register("password")}
-              className={`w-full p-3 mt-1 border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="Mínimo 6 caracteres"
-            />
-            {errors.password && (
-              <span className="text-red-500 text-sm">
-                {errors.password.message}
-              </span>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium">Confirme a Senha *</label>
-            <input
-              type="password"
-              {...register("confirmPassword")}
-              className={`w-full p-3 mt-1 border ${
-                errors.confirmPassword ? "border-red-500" : "border-gray-300"
-              } rounded focus:border-[#8a7d5c] focus:outline-none`}
-              placeholder="Confirme sua senha"
-            />
-            {errors.confirmPassword && (
-              <span className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Botão de Enviar */}
-        <button
-          type="submit"
-          className="w-full bg-[#8a7d5c] text-white p-3 rounded hover:bg-[#6d6247] transition font-medium"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Criando Conta..." : "Criar Conta"}
-        </button>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Já tem uma conta?{" "}
-            <a href="/login" className="text-[#8a7d5c] hover:underline font-medium">
-              Faça login
-            </a>
+    <div className="min-h-screen flex">
+      {/* Painel esquerdo */}
+      <div className="hidden lg:flex lg:w-[340px] xl:w-[380px] flex-shrink-0 relative flex-col items-center justify-center bg-[#1a1611] overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(circle at 1.5px 1.5px, #8a7d5c 1.5px, transparent 0)", backgroundSize: "32px 32px" }}
+        />
+        <div className="relative z-10 text-center px-10">
+          <Image src="/images/logo-cabelos.png" alt="Cabelos Premium" width={130} height={130} className="mx-auto drop-shadow-2xl" />
+          <h1 className="text-white text-2xl font-light mt-8 tracking-[0.2em] uppercase">Cabelos Premium</h1>
+          <div className="w-10 h-px bg-[#8a7d5c] mx-auto mt-4 mb-4" />
+          <p className="text-[#a89870] text-xs tracking-widest uppercase">Crie sua conta</p>
+          <p className="text-[#6d6247] text-xs mt-4 leading-relaxed">
+            Após o cadastro, enviaremos um e-mail para confirmar sua conta.
           </p>
         </div>
-      </form>
+      </div>
+
+      {/* Painel direito — formulário */}
+      <div className="flex-1 overflow-y-auto bg-[#F5F4F0]">
+        <div className="max-w-2xl mx-auto px-6 py-12 sm:px-10">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8 text-center">
+            <Image src="/images/logo-cabelos.png" alt="Cabelos Premium" width={70} height={70} className="mx-auto" />
+            <p className="text-[#8a7d5c] text-xs tracking-widest uppercase mt-2">Cabelos Premium</p>
+          </div>
+
+          <h2 className="text-2xl font-bold text-[#1a1611] mb-1">Criar conta</h2>
+          <p className="text-sm text-gray-500 mb-8">Preencha seus dados para se cadastrar</p>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3 mb-6">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Dados pessoais */}
+            <div>
+              <h3 className="text-xs font-semibold text-[#8a7d5c] uppercase tracking-widest mb-4">Dados Pessoais</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Nome *</Label>
+                  <Input {...register("name")} placeholder="Seu nome" className={`mt-1.5 ${inputClass(!!errors.name)}`} />
+                  <FieldError msg={errors.name?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Sobrenome *</Label>
+                  <Input {...register("lastName")} placeholder="Seu sobrenome" className={`mt-1.5 ${inputClass(!!errors.lastName)}`} />
+                  <FieldError msg={errors.lastName?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">CPF ou CNPJ *</Label>
+                  <Input
+                    {...register("document")}
+                    onChange={(e) => setValue("document", fmtDoc(e.target.value))}
+                    placeholder="000.000.000-00"
+                    maxLength={18}
+                    className={`mt-1.5 ${inputClass(!!errors.document)}`}
+                  />
+                  <FieldError msg={errors.document?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Data de Nascimento *</Label>
+                  <Input type="date" {...register("birthDate")} className={`mt-1.5 ${inputClass(!!errors.birthDate)}`} />
+                  <FieldError msg={errors.birthDate?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Gênero *</Label>
+                  <select
+                    {...register("gender")}
+                    className={`mt-1.5 w-full h-11 px-3 rounded-md border bg-white text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[#8a7d5c] ${errors.gender ? "border-red-400" : "border-gray-200"}`}
+                  >
+                    <option value="">Selecione</option>
+                    <option value="MALE">Masculino</option>
+                    <option value="FEMALE">Feminino</option>
+                    <option value="OTHER">Outro</option>
+                    <option value="PREFER_NOT_TO_SAY">Prefiro não informar</option>
+                  </select>
+                  <FieldError msg={errors.gender?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">CEP *</Label>
+                  <Input
+                    {...register("zipCode")}
+                    onChange={(e) => setValue("zipCode", fmtCep(e.target.value))}
+                    placeholder="00000-000"
+                    maxLength={9}
+                    className={`mt-1.5 ${inputClass(!!errors.zipCode)}`}
+                  />
+                  <FieldError msg={errors.zipCode?.message} />
+                </div>
+              </div>
+            </div>
+
+            {/* Contato */}
+            <div>
+              <h3 className="text-xs font-semibold text-[#8a7d5c] uppercase tracking-widest mb-4">Contato</h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-[#1a1611] text-sm font-medium">E-mail *</Label>
+                    <Input type="email" {...register("email")} placeholder="seu@email.com" className={`mt-1.5 ${inputClass(!!errors.email)}`} />
+                    <FieldError msg={errors.email?.message} />
+                  </div>
+                  <div>
+                    <Label className="text-[#1a1611] text-sm font-medium">Confirmar E-mail *</Label>
+                    <Input type="email" {...register("confirmEmail")} placeholder="confirme seu e-mail" className={`mt-1.5 ${inputClass(!!errors.confirmEmail)}`} />
+                    <FieldError msg={errors.confirmEmail?.message} />
+                  </div>
+                </div>
+                <div className="sm:w-1/2">
+                  <Label className="text-[#1a1611] text-sm font-medium">Telefone *</Label>
+                  <Input
+                    {...register("phone")}
+                    onChange={(e) => setValue("phone", fmtPhone(e.target.value))}
+                    placeholder="(11) 99999-9999"
+                    maxLength={15}
+                    className={`mt-1.5 ${inputClass(!!errors.phone)}`}
+                  />
+                  <FieldError msg={errors.phone?.message} />
+                </div>
+              </div>
+            </div>
+
+            {/* Senha */}
+            <div>
+              <h3 className="text-xs font-semibold text-[#8a7d5c] uppercase tracking-widest mb-4">Senha</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Senha *</Label>
+                  <div className="relative mt-1.5">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      {...register("password")}
+                      placeholder="Mínimo 6 caracteres"
+                      className={`pr-10 ${inputClass(!!errors.password)}`}
+                    />
+                    <button type="button" tabIndex={-1} onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <FieldError msg={errors.password?.message} />
+                </div>
+                <div>
+                  <Label className="text-[#1a1611] text-sm font-medium">Confirmar Senha *</Label>
+                  <div className="relative mt-1.5">
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      {...register("confirmPassword")}
+                      placeholder="Confirme a senha"
+                      className={`pr-10 ${inputClass(!!errors.confirmPassword)}`}
+                    />
+                    <button type="button" tabIndex={-1} onClick={() => setShowConfirmPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <FieldError msg={errors.confirmPassword?.message} />
+                </div>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-11 bg-[#8a7d5c] hover:bg-[#6d6247] text-white font-medium tracking-wide transition-colors"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Criando conta...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <UserPlus className="w-4 h-4" />
+                  Criar Conta
+                </span>
+              )}
+            </Button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Já tem uma conta?{" "}
+            <Link href="/login" className="text-[#8a7d5c] hover:text-[#6d6247] font-medium hover:underline transition-colors">
+              Faça login
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default RegisterPage;
+}

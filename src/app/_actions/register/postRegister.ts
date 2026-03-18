@@ -2,6 +2,8 @@
 
 import { db } from "@/app/_lib/prisma";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { sendVerificationEmail } from "@/app/services/emailService";
 
 interface RegisterUserData {
   name: string;
@@ -19,32 +21,20 @@ interface RegisterUserData {
 
 export const registerUser = async (userData: RegisterUserData) => {
   try {
-    // Verificar se o usuário já existe
     const existingUserByEmail = await db.user.findUnique({
       where: { email: userData.email },
     });
+    if (existingUserByEmail) throw new Error("Este e-mail já está em uso.");
 
-    if (existingUserByEmail) {
-      throw new Error("Este e-mail já está em uso.");
-    }
-
-    // Verificar se o documento já existe
-    const whereClause = userData.documentType === "CPF" 
+    const whereClause = userData.documentType === "CPF"
       ? { cpf: userData.document }
       : { cnpj: userData.document };
-      
-    const existingUserByDocument = await db.user.findUnique({
-      where: whereClause,
-    });
 
-    if (existingUserByDocument) {
-      throw new Error(`Este ${userData.documentType} já está em uso.`);
-    }
+    const existingUserByDocument = await db.user.findUnique({ where: whereClause });
+    if (existingUserByDocument) throw new Error(`Este ${userData.documentType} já está em uso.`);
 
-    // Criptografar a senha
     const hashedPassword = await bcrypt.hash(userData.password, 12);
 
-    // Criar o usuário
     const baseUserData = {
       name: userData.name,
       lastName: userData.lastName,
@@ -57,14 +47,24 @@ export const registerUser = async (userData: RegisterUserData) => {
       password: hashedPassword,
     };
 
-    // Adicionar CPF ou CNPJ baseado no tipo
-    const createUserData = userData.documentType === "CPF" 
+    const createUserData = userData.documentType === "CPF"
       ? { ...baseUserData, cpf: userData.document }
       : { ...baseUserData, cnpj: userData.document };
 
-    const user = await db.user.create({
-      data: createUserData,
-    });
+    const user = await db.user.create({ data: createUserData });
+
+    // Gerar e enviar token de verificação de e-mail
+    try {
+      await db.verificationToken.deleteMany({ where: { identifier: userData.email } });
+      const token = crypto.randomBytes(32).toString("hex");
+      const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); // 24h
+      await db.verificationToken.create({
+        data: { identifier: userData.email, token, expires },
+      });
+      await sendVerificationEmail(userData.email, userData.name, token);
+    } catch {
+      // Não bloqueia o cadastro se o e-mail falhar
+    }
 
     return { success: true, user };
   } catch (error) {

@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, MapPin, Package, Phone, User, FileText, BadgeCheck, Pencil } from "lucide-react";
+import { Eye, MapPin, Package, Phone, User, FileText, BadgeCheck, Pencil, UserPlus, Trash2, AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import { adminUpdateUser } from "@/app/_actions/admin/update-user";
+import { adminCreateUser } from "@/app/_actions/admin/create-user";
+import { adminDeleteUser } from "@/app/_actions/admin/delete-user";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserData {
@@ -39,6 +41,20 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
     const [editRole, setEditRole] = useState<UserRole | "">("");
     const [isSaving, setIsSaving] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
+
+    // Create user state
+    const [createOpen, setCreateOpen] = useState(false);
+    const [createName, setCreateName] = useState("");
+    const [createLastName, setCreateLastName] = useState("");
+    const [createEmail, setCreateEmail] = useState("");
+    const [createPassword, setCreatePassword] = useState("");
+    const [createPhone, setCreatePhone] = useState("");
+    const [createRole, setCreateRole] = useState<UserRole>("VENDEDOR");
+    const [isCreating, setIsCreating] = useState(false);
+
+    // Delete user state
+    const [deleteUser, setDeleteUser] = useState<UserData | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const openEdit = (user: UserData) => {
         setEditingUser(user);
@@ -79,6 +95,69 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
         }
     };
 
+    const handleCreate = async () => {
+        setIsCreating(true);
+        try {
+            const result = await adminCreateUser({
+                name: createName,
+                lastName: createLastName,
+                email: createEmail,
+                password: createPassword,
+                role: createRole,
+                phone: createPhone,
+            });
+
+            const newUser: UserData = {
+                id: result.userId,
+                name: createName,
+                lastName: createLastName || null,
+                email: createEmail.trim().toLowerCase(),
+                phone: createPhone || null,
+                city: null,
+                state: null,
+                cpf: null,
+                cnpj: null,
+                role: createRole,
+                createdAt: new Date(),
+                ordersCount: 0,
+                image: null,
+            };
+            setUsers(prev => [newUser, ...prev]);
+
+            toast({ title: "Usuário criado com sucesso!" });
+            setCreateOpen(false);
+            setCreateName(""); setCreateLastName(""); setCreateEmail("");
+            setCreatePassword(""); setCreatePhone(""); setCreateRole("VENDEDOR");
+        } catch (err) {
+            toast({
+                title: "Erro ao criar usuário",
+                description: err instanceof Error ? err.message : "Erro desconhecido",
+                variant: "destructive",
+            });
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!deleteUser) return;
+        setIsDeleting(true);
+        try {
+            await adminDeleteUser(deleteUser.id);
+            setUsers(prev => prev.filter(u => u.id !== deleteUser.id));
+            toast({ title: "Usuário excluído com sucesso." });
+            setDeleteUser(null);
+        } catch (err) {
+            toast({
+                title: "Erro ao excluir usuário",
+                description: err instanceof Error ? err.message : "Erro desconhecido",
+                variant: "destructive",
+            });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     const getRoleBadge = (role: UserRole) => {
         const badges: Record<UserRole, { class: string; label: string }> = {
             CLIENTE: { class: "bg-gray-100 text-gray-800", label: "Cliente" },
@@ -92,6 +171,132 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
 
     return (
         <>
+            {/* Dialog de Confirmação de Exclusão */}
+            <Dialog open={!!deleteUser} onOpenChange={(open) => { if (!open) setDeleteUser(null); }}>
+                <DialogContent className="max-w-md bg-white p-6 sm:rounded-xl">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-red-600 text-xl">
+                            <AlertTriangle className="w-5 h-5" />
+                            Excluir Usuário
+                        </DialogTitle>
+                        <DialogDescription>
+                            Esta ação é <strong>permanente e irreversível</strong>.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="mt-2 space-y-3">
+                        <p className="text-sm text-gray-700">
+                            Você está prestes a excluir o usuário:
+                        </p>
+                        <div className="bg-gray-50 rounded-lg px-4 py-3 text-sm">
+                            <p className="font-semibold text-gray-900">{deleteUser?.name} {deleteUser?.lastName}</p>
+                            <p className="text-gray-500">{deleteUser?.email}</p>
+                        </div>
+
+                        <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 space-y-1.5">
+                            <p className="text-sm font-semibold text-red-700 flex items-center gap-1.5">
+                                <AlertTriangle className="w-4 h-4" /> Consequências desta ação:
+                            </p>
+                            <ul className="text-xs text-red-600 space-y-1 list-disc list-inside">
+                                <li>Todos os dados do usuário serão removidos do sistema</li>
+                                <li>O histórico de pedidos vinculado será perdido</li>
+                                <li>O usuário perderá acesso imediato à plataforma</li>
+                                <li>Carrinho, favoritos e endereços serão deletados</li>
+                                <li><strong>Não é possível desfazer esta operação</strong></li>
+                            </ul>
+                        </div>
+
+                        <div className="flex gap-2 pt-2 justify-end">
+                            <Button variant="outline" onClick={() => setDeleteUser(null)} disabled={isDeleting}>
+                                Cancelar
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                onClick={handleDelete}
+                                disabled={isDeleting}
+                                className="bg-red-600 hover:bg-red-700"
+                            >
+                                {isDeleting ? (
+                                    <span className="flex items-center gap-2">
+                                        <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Excluindo...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center gap-2">
+                                        <Trash2 className="w-4 h-4" />
+                                        Sim, excluir permanentemente
+                                    </span>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Modal de Criação */}
+            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                <DialogContent className="max-w-md bg-white p-6 sm:rounded-xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl">Criar Novo Usuário</DialogTitle>
+                        <DialogDescription>
+                            Preencha os dados para criar um acesso de Vendedor ou outro nível.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-3 mt-2">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <Label htmlFor="create-name">Nome *</Label>
+                                <Input id="create-name" value={createName} onChange={(e) => setCreateName(e.target.value)} className="mt-1" />
+                            </div>
+                            <div>
+                                <Label htmlFor="create-lastname">Sobrenome</Label>
+                                <Input id="create-lastname" value={createLastName} onChange={(e) => setCreateLastName(e.target.value)} className="mt-1" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <Label htmlFor="create-email">E-mail *</Label>
+                            <Input id="create-email" type="email" value={createEmail} onChange={(e) => setCreateEmail(e.target.value)} className="mt-1" autoComplete="off" />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="create-phone">Telefone</Label>
+                            <Input id="create-phone" value={createPhone} onChange={(e) => setCreatePhone(e.target.value)} className="mt-1" />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="create-password">Senha * <span className="text-gray-400 font-normal">(mínimo 6 caracteres)</span></Label>
+                            <Input id="create-password" type="password" value={createPassword} onChange={(e) => setCreatePassword(e.target.value)} className="mt-1" autoComplete="new-password" />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="create-role">Nível de acesso</Label>
+                            <Select value={createRole} onValueChange={(v) => setCreateRole(v as UserRole)}>
+                                <SelectTrigger id="create-role" className="mt-1">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="VENDEDOR">Vendedor</SelectItem>
+                                    <SelectItem value="CLIENTE">Cliente</SelectItem>
+                                    <SelectItem value="ESPECIALISTA">Especialista</SelectItem>
+                                    <SelectItem value="ADMIN">Admin</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="flex gap-2 pt-2 justify-end">
+                            <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={isCreating}>
+                                Cancelar
+                            </Button>
+                            <Button onClick={handleCreate} disabled={isCreating}>
+                                {isCreating ? "Criando..." : "Criar Usuário"}
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             {/* Modal de Edição */}
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
                 <DialogContent className="max-w-md bg-white p-6 sm:rounded-xl">
@@ -154,6 +359,14 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Botão Criar */}
+            <div className="flex justify-end mb-4">
+                <Button onClick={() => setCreateOpen(true)} className="gap-2">
+                    <UserPlus className="w-4 h-4" />
+                    Criar Usuário
+                </Button>
+            </div>
 
             {/* Tabela */}
             <div className="rounded-md border bg-white">
@@ -221,6 +434,17 @@ export function AdminUsersTable({ users: initialUsers }: { users: UserData[] }) 
                                             >
                                                 <Pencil className="w-3.5 h-3.5" />
                                                 Editar
+                                            </Button>
+
+                                            {/* Botão Excluir */}
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="h-8 gap-1 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-400"
+                                                onClick={() => setDeleteUser(user)}
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                                Excluir
                                             </Button>
 
                                             {/* Botão Detalhes */}

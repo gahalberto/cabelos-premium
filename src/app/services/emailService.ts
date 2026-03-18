@@ -1,394 +1,129 @@
-// services/emailService.js
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailersend.net",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "MS_XCg85X@inmemorian.com.br",
-    pass: "mssp.y7prp3Q.jy7zpl93nnrl5vx6.0xAF1Dg",
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM = "Cabelos Premium <noreply@cabelospremium.com.br>";
+const BASE_URL = process.env.NEXTAUTH_URL || "https://cabelospremium.com.br";
 
-export const sendWelcomeEmail = async (toEmail: string, userName: string, verificationToken: string) => {
-  const mailOptions = {
-    from: "hello@inmemorian.com.br",
-    to: toEmail,
-    subject: "Bem-vindo ao InMemorian!",
-    html: `
-      <!doctype html>
-<html lang="en"> 
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Simple Transactional Email</title>
-    <style media="all" type="text/css">
-    /* -------------------------------------
-    GLOBAL RESETS
-------------------------------------- */
-    
-    body {
-      font-family: Helvetica, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      font-size: 16px;
-      line-height: 1.3;
-      -ms-text-size-adjust: 100%;
-      -webkit-text-size-adjust: 100%;
-    }
-    
-    table {
-      border-collapse: separate;
-      mso-table-lspace: 0pt;
-      mso-table-rspace: 0pt;
-      width: 100%;
-    }
-    
-    table td {
-      font-family: Helvetica, sans-serif;
-      font-size: 16px;
-      vertical-align: top;
-    }
-    /* -------------------------------------
-    BODY & CONTAINER
-------------------------------------- */
-    
-    body {
-      background-color: #f4f5f6;
-      margin: 0;
-      padding: 0;
-    }
-    
-    .body {
-      background-color: #f4f5f6;
-      width: 100%;
-    }
-    
-    .container {
-      margin: 0 auto !important;
-      max-width: 600px;
-      padding: 0;
-      padding-top: 24px;
-      width: 600px;
-    }
-    
-    .content {
-      box-sizing: border-box;
-      display: block;
-      margin: 0 auto;
-      max-width: 600px;
-      padding: 0;
-    }
-    /* -------------------------------------
-    HEADER, FOOTER, MAIN
-------------------------------------- */
-    
-    .main {
-      background: #ffffff;
-      border: 1px solid #eaebed;
-      border-radius: 16px;
-      width: 100%;
-    }
-    
-    .wrapper {
-      box-sizing: border-box;
-      padding: 24px;
-    }
-    
-    .footer {
-      clear: both;
-      padding-top: 24px;
-      text-align: center;
-      width: 100%;
-    }
-    
-    .footer td,
-    .footer p,
-    .footer span,
-    .footer a {
-      color: #9a9ea6;
-      font-size: 16px;
-      text-align: center;
-    }
-    /* -------------------------------------
-    TYPOGRAPHY
-------------------------------------- */
-    
-    p {
-      font-family: Helvetica, sans-serif;
-      font-size: 16px;
-      font-weight: normal;
-      margin: 0;
-      margin-bottom: 16px;
-    }
-    
-    a {
-      color: #0867ec;
-      text-decoration: underline;
-    }
-    /* -------------------------------------
-    BUTTONS
-------------------------------------- */
-    
-    .btn {
-      box-sizing: border-box;
-      min-width: 100% !important;
-      width: 100%;
-    }
-    
-    .btn > tbody > tr > td {
-      padding-bottom: 16px;
-    }
-    
-    .btn table {
-      width: auto;
-    }
-    
-    .btn table td {
-      background-color: #ffffff;
-      border-radius: 4px;
-      text-align: center;
-    }
-    
-    .btn a {
-      background-color: #ffffff;
-      border: solid 2px #0867ec;
-      border-radius: 4px;
-      box-sizing: border-box;
-      color: #0867ec;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 16px;
-      font-weight: bold;
-      margin: 0;
-      padding: 12px 24px;
-      text-decoration: none;
-      text-transform: capitalize;
-    }
-    
-    .btn-primary table td {
-      background-color: #0867ec;
-    }
-    
-    .btn-primary a {
-      background-color: #0867ec;
-      border-color: #0867ec;
-      color: #ffffff;
-    }
-    
-    @media all {
-      .btn-primary table td:hover {
-        background-color: #ec0867 !important;
-      }
-      .btn-primary a:hover {
-        background-color: #ec0867 !important;
-        border-color: #ec0867 !important;
-      }
-    }
-    
-    /* -------------------------------------
-    OTHER STYLES THAT MIGHT BE USEFUL
-------------------------------------- */
-    
-    .last {
-      margin-bottom: 0;
-    }
-    
-    .first {
-      margin-top: 0;
-    }
-    
-    .align-center {
-      text-align: center;
-    }
-    
-    .align-right {
-      text-align: right;
-    }
-    
-    .align-left {
-      text-align: left;
-    }
-    
-    .text-link {
-      color: #0867ec !important;
-      text-decoration: underline !important;
-    }
-    
-    .clear {
-      clear: both;
-    }
-    
-    .mt0 {
-      margin-top: 0;
-    }
-    
-    .mb0 {
-      margin-bottom: 0;
-    }
-    
-    .preheader {
-      color: transparent;
-      display: none;
-      height: 0;
-      max-height: 0;
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      mso-hide: all;
-      visibility: hidden;
-      width: 0;
-    }
-    
-    .powered-by a {
-      text-decoration: none;
-    }
-    
-    /* -------------------------------------
-    RESPONSIVE AND MOBILE FRIENDLY STYLES
-------------------------------------- */
-    
-    @media only screen and (max-width: 640px) {
-      .main p,
-      .main td,
-      .main span {
-        font-size: 16px !important;
-      }
-      .wrapper {
-        padding: 8px !important;
-      }
-      .content {
-        padding: 0 !important;
-      }
-      .container {
-        padding: 0 !important;
-        padding-top: 8px !important;
-        width: 100% !important;
-      }
-      .main {
-        border-left-width: 0 !important;
-        border-radius: 0 !important;
-        border-right-width: 0 !important;
-      }
-      .btn table {
-        max-width: 100% !important;
-        width: 100% !important;
-      }
-      .btn a {
-        font-size: 16px !important;
-        max-width: 100% !important;
-        width: 100% !important;
-      }
-    }
-    /* -------------------------------------
-    PRESERVE THESE STYLES IN THE HEAD
-------------------------------------- */
-    
-    @media all {
-      .ExternalClass {
-        width: 100%;
-      }
-      .ExternalClass,
-      .ExternalClass p,
-      .ExternalClass span,
-      .ExternalClass font,
-      .ExternalClass td,
-      .ExternalClass div {
-        line-height: 100%;
-      }
-      .apple-link a {
-        color: inherit !important;
-        font-family: inherit !important;
-        font-size: inherit !important;
-        font-weight: inherit !important;
-        line-height: inherit !important;
-        text-decoration: none !important;
-      }
-      #MessageViewBody a {
-        color: inherit;
-        text-decoration: none;
-        font-size: inherit;
-        font-family: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-      }
-    }
-    </style>
-  </head>
-  <body>
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
+const brandColor = "#8a7d5c";
+
+function emailLayout(title: string, body: string) {
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title}</title>
+</head>
+<body style="margin:0;padding:0;background:#F5F4F0;font-family:Georgia,serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F4F0;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding:0 0 24px 0;">
+              <span style="font-family:Georgia,serif;font-size:22px;font-weight:bold;color:#1a1611;letter-spacing:2px;">
+                CABELOS PREMIUM
+              </span>
+            </td>
+          </tr>
+          <!-- Card -->
+          <tr>
+            <td style="background:#ffffff;border-radius:12px;padding:40px 48px;border:1px solid #e8e4dc;">
+              ${body}
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding:24px 0 0 0;">
+              <p style="color:#9a9585;font-size:12px;margin:0;font-family:Helvetica,sans-serif;">
+                © ${new Date().getFullYear()} Cabelos Premium. Todos os direitos reservados.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export async function sendVerificationEmail(toEmail: string, userName: string, token: string) {
+  const url = `${BASE_URL}/verify-email?email=${encodeURIComponent(toEmail)}&token=${encodeURIComponent(token)}`;
+
+  const body = `
+    <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:#1a1611;margin:0 0 8px 0;">
+      Confirme seu e-mail
+    </h1>
+    <div style="width:40px;height:2px;background:${brandColor};margin:0 0 24px 0;"></div>
+    <p style="font-family:Helvetica,sans-serif;font-size:15px;color:#4a4540;line-height:1.6;margin:0 0 16px 0;">
+      Olá, <strong>${userName}</strong>!
+    </p>
+    <p style="font-family:Helvetica,sans-serif;font-size:15px;color:#4a4540;line-height:1.6;margin:0 0 32px 0;">
+      Bem-vindo à Cabelos Premium. Para ativar sua conta, confirme seu endereço de e-mail clicando no botão abaixo.
+    </p>
+    <table cellpadding="0" cellspacing="0" style="margin:0 0 32px 0;">
       <tr>
-        <td>&nbsp;</td>
-        <td class="container">
-          <div class="content">
-
-            <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
-
-              <!-- START MAIN CONTENT AREA -->
-              <tr>
-                <td class="wrapper">
-                  <p>Olá ${userName}, Bem-vindo ao InMemorian</p>
-                  <p>A sua conta está pronta e seu perfil está sendo carregado, para entrar e ter acesso ao seu perfil, por favor confirme o seu e-mail.</p>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                    <tbody>
-                      <tr>
-                        <td align="left">
-                          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                            <tbody>
-                              <tr>
-                                <td> <a href="https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}" target="_blank">Confirma E-mail</a> </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <p>Caso o botão não esteja funcionando acesse o link abaixo</p>
-                  <a href="https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}">https://inmemorian.com.br/verify-email?email=${toEmail}&token=${verificationToken}</a>
-                </td>
-              </tr>
-
-              <!-- END MAIN CONTENT AREA -->
-              </table>
-
-            <!-- START FOOTER -->
-            <div class="footer">
-              <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td class="content-block">
-                    <span class="apple-link">InMemorian - Eternize quem você ama!</span>
-                    <br> Não gosta desses e-mails? <a href="http://htmlemail.io/blog">Unsubscribe</a>.
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- END FOOTER -->
-            
-<!-- END CENTERED WHITE CONTAINER --></div>
+        <td style="background:${brandColor};border-radius:6px;">
+          <a href="${url}" style="display:inline-block;padding:14px 32px;font-family:Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+            Confirmar E-mail
+          </a>
         </td>
-        <td>&nbsp;</td>
       </tr>
     </table>
-  </body>
-</html>
-     `,
-    // attachments: [
-    //   {
-    //     filename: "logo.png",
-    //     path: "./images/logo.png", // Caminho para o logo no seu servidor
-    //     cid: "logo", // O CID deve corresponder ao src no HTML
-    //   },
-    // ],
-  };
+    <p style="font-family:Helvetica,sans-serif;font-size:13px;color:#9a9585;margin:0 0 8px 0;">
+      O link expira em 24 horas. Caso não consiga clicar, copie e cole o endereço:
+    </p>
+    <p style="font-family:Helvetica,sans-serif;font-size:12px;color:${brandColor};word-break:break-all;margin:0;">
+      ${url}
+    </p>
+  `;
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("E-mail de boas-vindas enviado com sucesso!");
-  } catch (error) {
-    console.error("Erro ao enviar e-mail:", error);
-  }
-};
+  await resend.emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: "Confirme seu e-mail — Cabelos Premium",
+    html: emailLayout("Confirme seu e-mail", body),
+  });
+}
+
+export async function sendPasswordResetEmail(toEmail: string, userName: string, token: string) {
+  const url = `${BASE_URL}/reset-password?email=${encodeURIComponent(toEmail)}&token=${encodeURIComponent(token)}`;
+
+  const body = `
+    <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:#1a1611;margin:0 0 8px 0;">
+      Redefinir senha
+    </h1>
+    <div style="width:40px;height:2px;background:${brandColor};margin:0 0 24px 0;"></div>
+    <p style="font-family:Helvetica,sans-serif;font-size:15px;color:#4a4540;line-height:1.6;margin:0 0 16px 0;">
+      Olá, <strong>${userName}</strong>!
+    </p>
+    <p style="font-family:Helvetica,sans-serif;font-size:15px;color:#4a4540;line-height:1.6;margin:0 0 32px 0;">
+      Recebemos uma solicitação para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha.
+      Se não foi você, ignore este e-mail.
+    </p>
+    <table cellpadding="0" cellspacing="0" style="margin:0 0 32px 0;">
+      <tr>
+        <td style="background:${brandColor};border-radius:6px;">
+          <a href="${url}" style="display:inline-block;padding:14px 32px;font-family:Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+            Redefinir Senha
+          </a>
+        </td>
+      </tr>
+    </table>
+    <p style="font-family:Helvetica,sans-serif;font-size:13px;color:#9a9585;margin:0 0 8px 0;">
+      Este link expira em 1 hora. Caso não consiga clicar, copie e cole:
+    </p>
+    <p style="font-family:Helvetica,sans-serif;font-size:12px;color:${brandColor};word-break:break-all;margin:0;">
+      ${url}
+    </p>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: "Redefinir senha — Cabelos Premium",
+    html: emailLayout("Redefinir senha", body),
+  });
+}

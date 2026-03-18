@@ -357,7 +357,12 @@ const AdminProductsPage = () => {
                 />
               </div>
 
-              <ImageUpload onImagesChange={setProductImages} maxImages={10} />
+              <ImageUpload
+                key={editingProduct?.id ?? "new"}
+                initialImages={editingProduct?.images ?? []}
+                onImagesChange={setProductImages}
+                maxImages={10}
+              />
 
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center space-x-2">
