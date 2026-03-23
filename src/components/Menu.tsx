@@ -29,7 +29,7 @@ export function NavigationMenuDemo() {
   return (
     <div className="w-full fixed top-0 left-0 z-50 h-[120px] md:h-[124px] bg-[#8a7d5c]/30 backdrop-blur-md">
       {/* Barra superior com informações sobre os cabelos */}
-      <div className="w-full py-2 text-center">
+      <div className="w-full py-2 text-center bg-[#8a7d5c]">
         <p className="text-white font-montserrat text-[14px] font-light flex items-center justify-center">
           <Image 
             src="/images/bandeira.png" 
