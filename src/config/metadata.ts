@@ -157,10 +157,10 @@ export const pageMetadata = {
     canonical: '/megahair',
   }),
 
-  torneseExpert: createMetadata({
-    title: 'Torne-se Expert | Seja Parceiro Cabelos Premium',
-    description: 'Faça parte da nossa rede de experts. Cadastre-se e comece a trabalhar com os melhores cabelos naturais do Brasil.',
-    canonical: '/torne-se-expert',
+  topoCapilar: createMetadata({
+    title: 'Topo Capilar | Cabelos Premium',
+    description: 'Conheça o Topo Capilar da Cabelos Premium. Soluções exclusivas em cabelo natural para quem busca qualidade e sofisticação.',
+    canonical: '/topo-capilar',
   }),
 
   wishlist: createMetadata({

@@ -174,7 +174,20 @@ export default function LacesPage() {
                             SAIBA MAIS
                         </Link>
                     </div>
+
                 </div>
+            </section>
+
+            {/* Vídeo — 100% da tela */}
+            <section className="w-full h-screen overflow-hidden">
+                <video
+                    src="/videos/2.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                />
             </section>
 
             {/* Seção de descrições individuais de cada Lace */}

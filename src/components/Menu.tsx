@@ -74,8 +74,8 @@ export function NavigationMenuDemo() {
             <Link href="/laces" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               LACES
             </Link>
-            <Link href="/torne-se-expert" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
-              TORNE-SE EXPERT
+            <Link href="/topo-capilar" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
+              TOPO CAPILAR
             </Link>
             <Link href="/shop" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               SHOP
@@ -179,10 +179,10 @@ export function NavigationMenuDemo() {
                   </Link>
 
                   <Link
-                    href="/torne-se-expert"
+                    href="/topo-capilar"
                     className="p-3 text-black hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >
-                    TORNE-SE EXPERT
+                    TOPO CAPILAR
                   </Link>
 
                   <Link

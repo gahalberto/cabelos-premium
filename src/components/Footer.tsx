@@ -24,10 +24,10 @@ export function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/torne-se-expert" 
+                  href="/topo-capilar" 
                   className="text-gray-300 hover:text-white hover:opacity-80 transition-all duration-300 text-sm"
                 >
-                  Seja um Expert
+                  Topo Capilar
                 </Link>
               </li>
               <li>
@@ -73,10 +73,10 @@ export function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/torne-se-expert" 
+                  href="/topo-capilar" 
                   className="text-gray-300 hover:text-white hover:opacity-80 transition-all duration-300 text-sm"
                 >
-                  Ser um Expert
+                  Topo Capilar
                 </Link>
               </li>
             </ul>

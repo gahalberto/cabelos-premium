@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/contato',
     '/laces',
     '/megahair',
-    '/torne-se-expert',
+    '/topo-capilar',
     '/politica-privacidade',
     '/termos-uso',
   ].map((route) => ({
