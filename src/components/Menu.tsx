@@ -88,13 +88,13 @@ export function NavigationMenuDemo() {
           {/* Ícones de ação - Desktop e Mobile */}
           <div className="flex items-center gap-4 md:gap-6">
             {/* Favoritos - Oculto no mobile, visível no desktop */}
-            <Link href="/wishlist" className="hidden md:block text-white hover:text-[#f0efdb] transition-colors">
+            <Link href="/wishlist" className="hidden md:block text-black hover:text-gray-700 transition-colors">
               <HeartIcon className="h-5 w-5" />
             </Link>
             
             {/* Carrinho */}
             <CartSheet>
-              <button className="text-white hover:text-[#f0efdb] transition-colors relative">
+              <button className="text-black hover:text-gray-700 transition-colors relative">
                 <ShoppingCartIcon className="h-5 w-5" />
                 {itemCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
@@ -107,7 +107,7 @@ export function NavigationMenuDemo() {
             {/* Conta - Desktop */}
             {data?.user ? (
               <div className="hidden md:block relative group">
-                <UserIcon className="h-5 w-5 text-white cursor-pointer" />
+                <UserIcon className="h-5 w-5 text-black cursor-pointer" />
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <div className="p-3 border-b border-gray-100">
                     <p className="font-medium text-sm">{data.user.name}</p>
@@ -129,7 +129,7 @@ export function NavigationMenuDemo() {
                 </div>
               </div>
             ) : (
-              <Link href="/login" className="hidden md:block text-white hover:text-[#f0efdb] transition-colors">
+              <Link href="/login" className="hidden md:block text-black hover:text-gray-700 transition-colors">
                 <UserIcon className="h-5 w-5" />
               </Link>
             )}
@@ -137,7 +137,7 @@ export function NavigationMenuDemo() {
             {/* Menu hambúrguer - Mobile */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="md:hidden text-white focus:outline-none">
+                <button className="md:hidden text-black focus:outline-none">
                   <MenuIcon className="h-6 w-6" />
                 </button>
               </SheetTrigger>
