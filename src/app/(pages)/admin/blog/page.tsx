@@ -24,7 +24,7 @@ import {
   ChevronUp,
   X,
 } from "lucide-react";
-import { getPosts } from "@/app/_actions/admin/blog/get-posts";
+import { getPosts, getPostBySlug } from "@/app/_actions/admin/blog/get-posts";
 import { createPost } from "@/app/_actions/admin/blog/create-post";
 import { updatePost } from "@/app/_actions/admin/blog/update-post";
 import { deletePost } from "@/app/_actions/admin/blog/delete-post";
@@ -131,23 +131,28 @@ export default function AdminBlogPage() {
     setShowForm(true);
   }
 
-  function openEdit(post: Post & { content?: string; metaTitle?: string | null; metaDescription?: string | null; keywords?: string | null; canonicalUrl?: string | null }) {
+  async function openEdit(post: Post) {
+    setShowForm(true);
     setEditingPost(post);
     setCoverPreview(post.coverImage || "");
     setSeoOpen(false);
+
+    // Busca o post completo (getPosts não retorna content para economizar banda)
+    const full = await getPostBySlug(post.slug);
+    if (!full) return;
+
     reset({
-      title: post.title,
-      content: (post as any).content || "",
-      summary: post.summary || "",
-      author: post.author,
-      published: post.published,
-      slug: post.slug,
-      metaTitle: (post as any).metaTitle || "",
-      metaDescription: (post as any).metaDescription || "",
-      keywords: (post as any).keywords || "",
-      canonicalUrl: (post as any).canonicalUrl || "",
+      title: full.title,
+      content: full.content || "",
+      summary: full.summary || "",
+      author: full.author,
+      published: full.published,
+      slug: full.slug,
+      metaTitle: full.metaTitle || "",
+      metaDescription: full.metaDescription || "",
+      keywords: full.keywords || "",
+      canonicalUrl: full.canonicalUrl || "",
     });
-    setShowForm(true);
   }
 
   function compressCover(file: File, maxWidth = 1280, quality = 0.82): Promise<Blob> {
@@ -466,7 +471,7 @@ export default function AdminBlogPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => openEdit(post as any)}
+                        onClick={() => openEdit(post)}
                         className="text-gray-500 hover:text-gray-900"
                       >
                         <Edit className="h-4 w-4" />
