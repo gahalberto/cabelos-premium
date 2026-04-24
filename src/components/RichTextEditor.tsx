@@ -10,7 +10,7 @@ import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Highlight from "@tiptap/extension-highlight";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import {
   Bold, Italic, UnderlineIcon, Strikethrough,
   Heading1, Heading2, Heading3,
@@ -105,6 +105,24 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       },
     },
   });
+
+  // Sincroniza quando o valor externo muda (ex: abrir edição de outro post / reset do form)
+  const isInternalChange = useRef(false);
+  useEffect(() => {
+    if (!editor || isInternalChange.current) return;
+    const current = editor.getHTML();
+    if (current !== value) {
+      editor.commands.setContent(value || "", { emitUpdate: false });
+    }
+  }, [editor, value]);
+
+  // Marca mudanças vindas do próprio editor para não fazer loop
+  useEffect(() => {
+    if (!editor) return;
+    const handler = () => { isInternalChange.current = true; setTimeout(() => { isInternalChange.current = false; }, 0); };
+    editor.on("update", handler);
+    return () => { editor.off("update", handler); };
+  }, [editor]);
 
   const insertLink = useCallback(() => {
     if (!linkUrl || !editor) return;
