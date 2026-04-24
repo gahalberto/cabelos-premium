@@ -150,18 +150,43 @@ export default function AdminBlogPage() {
     setShowForm(true);
   }
 
+  function compressCover(file: File, maxWidth = 1280, quality = 0.82): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("Canvas não suportado"));
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => (blob ? resolve(blob) : reject(new Error("Compressão falhou"))),
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
   async function handleUploadCover(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
-    const fd = new FormData();
-    fd.append("image", file);
-
     try {
+      const compressed = await compressCover(file);
+      const fd = new FormData();
+      fd.append("image", compressed, file.name.replace(/\.[^.]+$/, ".jpg"));
       const res = await fetch("/api/admin/upload-blog-image", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erro no upload");
+      const text = await res.text();
+      if (!res.ok) throw new Error(`Erro ${res.status}`);
+      const data = JSON.parse(text);
       setCoverPreview(data.url);
       toast({ title: "Imagem enviada com sucesso!" });
     } catch (err) {
