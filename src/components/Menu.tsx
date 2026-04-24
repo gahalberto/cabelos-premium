@@ -196,6 +196,13 @@ export function NavigationMenuDemo() {
                   </Link>
 
                   <Link
+                    href="/blog"
+                    className="p-3 text-black hover:bg-[#e6d7c9] rounded-md transition-colors"
+                  >
+                    BLOG
+                  </Link>
+
+                  <Link
                     href="/contato"
                     className="p-3 text-black hover:bg-[#e6d7c9] rounded-md transition-colors"
                   >

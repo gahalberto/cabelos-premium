@@ -2,6 +2,18 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { getPosts } from "@/app/_actions/admin/blog/get-posts";
+
+type PostSummary = {
+  id: string;
+  title: string;
+  slug: string;
+  summary: string | null;
+  coverImage: string | null;
+  author: string;
+  published: boolean;
+  createdAt: Date;
+};
+
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Calendar, User, ArrowRight } from "lucide-react";
@@ -17,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getPosts(true);
+  const posts = (await getPosts(true)) as PostSummary[];
 
   return (
     <main className="min-h-screen bg-white">
