@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Arquivo excede 5 MB' }, { status: 400 });
     }
 
-    const uploadDir = join(process.cwd(), 'public', 'blog');
+    const uploadDir = join(process.cwd(), 'public', 'uploads', 'blog');
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     await writeFile(filePath, Buffer.from(bytes));
 
-    return NextResponse.json({ success: true, url: `/blog/${fileName}` });
+    return NextResponse.json({ success: true, url: `/uploads/blog/${fileName}` });
   } catch (error) {
     console.error('Erro no upload de imagem do blog:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
