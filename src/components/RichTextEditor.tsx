@@ -81,6 +81,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const fileRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
       ImageWithAlt.configure({ inline: false, allowBase64: true }),
