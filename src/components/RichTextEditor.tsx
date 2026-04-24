@@ -124,15 +124,30 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Imagem muito grande. Máximo 5 MB.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+
     setUploading(true);
     const fd = new FormData();
     fd.append("image", file);
     try {
       const res = await fetch("/api/admin/upload-blog-image", { method: "POST", body: fd });
-      const data = await res.json();
-      if (data.url) {
-        setImgUrl(data.url);
+      const text = await res.text();
+      if (!res.ok) {
+        const msg = res.status === 413
+          ? "Imagem muito grande para o servidor. Peça ao admin para aumentar client_max_body_size no nginx."
+          : `Erro ${res.status} no upload`;
+        alert(msg);
+        return;
       }
+      const data = JSON.parse(text);
+      if (data.url) setImgUrl(data.url);
+    } catch {
+      alert("Erro ao enviar imagem. Tente novamente.");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
