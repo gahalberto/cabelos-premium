@@ -301,6 +301,13 @@ model ExpertApplication {
 model StoreConfig {
   id                     String   @id @default("default")
   freeShippingThreshold  Float    @default(0)
+  // WhatsApp
+  whatsappMain           String?
+  whatsappSP             String?
+  whatsappRJ             String?
+  whatsappMessage        String?
+  phoneSP                String?
+  // Rastreamento
   gtmId                  String?
   ga4Id                  String?
   metaPixelId            String?

@@ -1,14 +1,17 @@
 "use client";
+
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Home, Phone } from "lucide-react";
+import { useContactConfig } from "@/contexts/ContactConfigContext";
+import { getWhatsAppUrl } from "@/config/contact";
 
 const ContactSection = () => {
+  const { whatsappSP, whatsappRJ, whatsappMessage, phoneSP } = useContactConfig();
+
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-    });
+    AOS.init({ duration: 1000 });
   }, []);
 
   return (
@@ -16,7 +19,7 @@ const ContactSection = () => {
       <div className="max-w-6xl mx-auto" data-aos="fade-up">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 items-end">
           <a
-            href="tel:+551138252050"
+            href={`tel:+${phoneSP.replace(/\D/g, "")}`}
             className="flex flex-col items-center"
             aria-label="Telefone"
           >
@@ -27,7 +30,7 @@ const ContactSection = () => {
           </a>
 
           <a
-            href="https://wa.me/5511974172074"
+            href={getWhatsAppUrl(whatsappSP, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center"
@@ -42,7 +45,7 @@ const ContactSection = () => {
           </a>
 
           <a
-            href="https://wa.me/5521999999999"
+            href={getWhatsAppUrl(whatsappRJ, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center"
@@ -61,4 +64,4 @@ const ContactSection = () => {
   );
 };
 
-export default ContactSection; 
+export default ContactSection;

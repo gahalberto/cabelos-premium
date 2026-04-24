@@ -17,7 +17,7 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 import { useCart } from "@/contexts/CartContext";
 import Link from "next/link";
-import { contactConfig } from "@/config/contact";
+import { useContactConfig } from "@/contexts/ContactConfigContext";
 
 interface ProductCardProps {
   product: {
@@ -53,6 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
+  const { whatsappMain, whatsappMessage } = useContactConfig();
 
   const handleAddToCart = async () => {
     if (!session?.user) {
@@ -275,7 +276,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.priceOnRequest && (
           <Button
             onClick={() => window.open(
-              `https://wa.me/${contactConfig.whatsapp.phoneNumber}?text=${encodeURIComponent(`Olá! Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`)}`,
+              `https://wa.me/${whatsappMain.replace(/\D/g, "")}?text=${encodeURIComponent(`${whatsappMessage} — Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`)}`,
               "_blank"
             )}
             className="w-full bg-[#25D366] hover:bg-[#20BD5C] text-white"

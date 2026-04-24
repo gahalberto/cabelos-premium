@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AppShell } from "@/components/AppShell";
 import { siteConfig } from "@/config/metadata";
 import { db } from "@/app/_lib/prisma";
+import { ContactConfigProvider, defaultContactConfig, type ContactConfig } from "@/contexts/ContactConfigContext";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -77,7 +78,7 @@ export const viewport = {
   maximumScale: 5,
 };
 
-async function getTrackingConfig() {
+async function getLayoutConfig() {
   try {
     return await db.storeConfig.findUnique({
       where: { id: "default" },
@@ -87,6 +88,11 @@ async function getTrackingConfig() {
         metaPixelId: true,
         customHeadScripts: true,
         customBodyScripts: true,
+        whatsappMain: true,
+        whatsappSP: true,
+        whatsappRJ: true,
+        whatsappMessage: true,
+        phoneSP: true,
       },
     });
   } catch {
@@ -95,7 +101,16 @@ async function getTrackingConfig() {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const tracking = await getTrackingConfig();
+  const config = await getLayoutConfig();
+  const tracking = config;
+
+  const contactConfig: ContactConfig = {
+    whatsappMain:    config?.whatsappMain    || defaultContactConfig.whatsappMain,
+    whatsappSP:      config?.whatsappSP      || defaultContactConfig.whatsappSP,
+    whatsappRJ:      config?.whatsappRJ      || defaultContactConfig.whatsappRJ,
+    whatsappMessage: config?.whatsappMessage || defaultContactConfig.whatsappMessage,
+    phoneSP:         config?.phoneSP         || defaultContactConfig.phoneSP,
+  };
 
   return (
     <html lang="pt-BR" className={unna.variable}>
@@ -171,13 +186,15 @@ fbq('init','${tracking.metaPixelId}');fbq('track','PageView');`,
           </noscript>
         )}
 
-        <ThemeProvider>
-          <AuthProvider>
-            <CartProvider>
-              <AppShell>{children}</AppShell>
-            </CartProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <ContactConfigProvider config={contactConfig}>
+          <ThemeProvider>
+            <AuthProvider>
+              <CartProvider>
+                <AppShell>{children}</AppShell>
+              </CartProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </ContactConfigProvider>
 
         <Toaster />
 

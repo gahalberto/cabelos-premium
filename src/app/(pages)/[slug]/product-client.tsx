@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { type ProductDetails } from "@/app/_actions/get-product-by-slug";
-import { contactConfig } from "@/config/contact";
+import { useContactConfig } from "@/contexts/ContactConfigContext";
 
 interface ProductPageClientProps {
   product: ProductDetails;
@@ -48,6 +48,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
   const { toast } = useToast();
   const { data: session } = useSession();
   const { addItem } = useCart();
+  const { whatsappMain, whatsappMessage } = useContactConfig();
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -222,8 +223,8 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                 <Button
                   onClick={() =>
                     window.open(
-                      `https://wa.me/${contactConfig.whatsapp.phoneNumber}?text=${encodeURIComponent(
-                        `Olá! Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`
+                      `https://wa.me/${whatsappMain.replace(/\D/g, "")}?text=${encodeURIComponent(
+                        `${whatsappMessage} — Tenho interesse no produto *${product.name}* e gostaria de saber o preço.`
                       )}`,
                       "_blank"
                     )

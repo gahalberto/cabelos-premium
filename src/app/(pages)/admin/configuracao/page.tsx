@@ -38,11 +38,20 @@ export default async function AdminConfigPage() {
         </div>
         <div>
           <h2 className="text-xl font-bold text-gray-900">Configurações Gerais</h2>
-          <p className="text-sm text-gray-500">Configure frete, descontos e outros parâmetros da loja.</p>
+          <p className="text-sm text-gray-500">Configure frete, WhatsApp e outros parâmetros da loja.</p>
         </div>
       </div>
 
-      <StoreConfigForm initialThreshold={config.freeShippingThreshold} />
+      <StoreConfigForm
+        initialThreshold={config.freeShippingThreshold}
+        initialWhatsapp={{
+          whatsappMain:    config.whatsappMain    ?? "",
+          whatsappSP:      config.whatsappSP      ?? "",
+          whatsappRJ:      config.whatsappRJ      ?? "",
+          whatsappMessage: config.whatsappMessage ?? "",
+          phoneSP:         config.phoneSP         ?? "",
+        }}
+      />
     </AdminLayout>
   );
 }
