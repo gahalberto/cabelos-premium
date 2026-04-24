@@ -1,6 +1,6 @@
 import { FaHome, FaWhatsapp } from "react-icons/fa";
 import { db } from "@/app/_lib/prisma";
-import { defaultContactConfig } from "@/contexts/ContactConfigContext";
+import { defaultContactConfig } from "@/config/contact-defaults";
 
 async function getContactConfig() {
   try {
