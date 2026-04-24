@@ -108,7 +108,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
   const insertLink = useCallback(() => {
     if (!linkUrl || !editor) return;
-    editor.chain().focus().extendMarkToLink({ href: linkUrl }).setLink({ href: linkUrl }).run();
+    editor.chain().focus().setLink({ href: linkUrl }).run();
     setLinkUrl("");
     setLinkDialogOpen(false);
   }, [editor, linkUrl]);
