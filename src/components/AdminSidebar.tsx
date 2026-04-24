@@ -19,6 +19,7 @@ import {
   ChevronRight,
   LogOut,
   History,
+  BookOpen,
 } from "lucide-react";
 
 const allMenuItems = [
@@ -26,6 +27,7 @@ const allMenuItems = [
   { title: "Produtos",           href: "/admin/products",            icon: Package,        roles: ["ADMIN", "VENDEDOR"] },
   { title: "Categorias",         href: "/admin/categories",          icon: FileText,       roles: ["ADMIN", "VENDEDOR"] },
   { title: "Pedidos",            href: "/admin/orders",              icon: ShoppingCart,   roles: ["ADMIN", "VENDEDOR"] },
+  { title: "Blog",               href: "/admin/blog",                icon: BookOpen,       roles: ["ADMIN", "VENDEDOR"] },
   { title: "Aplicações Expert",  href: "/admin/expert-applications", icon: Building2,      roles: ["ADMIN"] },
   { title: "Usuários",           href: "/admin/users",               icon: Users,          roles: ["ADMIN"] },
   { title: "Contatos",           href: "/admin/contacts",            icon: MessageSquare,  roles: ["ADMIN"] },

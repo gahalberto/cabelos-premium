@@ -308,6 +308,24 @@ model ActivityLog {
   createdAt  DateTime @default(now())
 }
 
+// Modelo de posts do Blog
+model Post {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  content         String   @db.Text
+  summary         String?
+  coverImage      String?
+  author          String
+  published       Boolean  @default(false)
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  canonicalUrl    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 // Modelo para contatos do formulário
 model Contact {
   id        String   @id @default(cuid())

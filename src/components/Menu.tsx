@@ -80,6 +80,9 @@ export function NavigationMenuDemo() {
             <Link href="/shop" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               SHOP
             </Link>
+            <Link href="/blog" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
+              BLOG
+            </Link>
             <Link href="/contato" className="uppercase font-bold text-[13px] tracking-wide text-black hover:text-[#333] transition-colors">
               CONTATO
             </Link>
