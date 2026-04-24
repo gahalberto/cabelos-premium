@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { AdminLayout } from "@/components/AdminLayout";
+import { RichTextEditor } from "@/components/RichTextEditor";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -248,13 +249,11 @@ export default function AdminBlogPage() {
 
                 {/* Conteúdo */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="content">Conteúdo (HTML) *</Label>
-                  <Textarea
-                    id="content"
-                    {...register("content", { required: true })}
-                    rows={12}
-                    placeholder="<h2>Introdução</h2><p>Seu conteúdo aqui...</p>"
-                    className="font-mono text-sm"
+                  <Label>Conteúdo *</Label>
+                  <RichTextEditor
+                    value={watch("content")}
+                    onChange={(val) => setValue("content", val, { shouldValidate: true })}
+                    placeholder="Escreva o conteúdo do artigo..."
                   />
                 </div>
 
