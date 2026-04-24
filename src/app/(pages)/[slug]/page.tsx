@@ -17,24 +17,59 @@ export async function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-async function getProduct(slug: string) {
-  const product = await db.product.findUnique({
+interface FullProduct {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  price: number;
+  salePrice: number | null;
+  sku: string;
+  stock: number;
+  priceOnRequest: boolean;
+  isActive: boolean;
+  isFeatured: boolean;
+  isNew: boolean;
+  length: string | null;
+  texture: string | null;
+  color: string | null;
+  weight: string | null;
+  origin: string | null;
+  images: string[];
+  categoryId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  // SEO fields (added via migration)
+  metaTitle: string | null;
+  metaDescription: string | null;
+  canonicalUrl: string | null;
+  keywords: string | null;
+  ogImage: string | null;
+  category: { id: string; name: string; slug: string; description: string | null };
+  reviews: { rating: number }[];
+  reviewCount: number;
+  averageRating: number;
+}
+
+async function getProduct(slug: string): Promise<FullProduct | null> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = await (db as any).product.findUnique({
     where: { slug, isActive: true },
     include: {
       category: { select: { id: true, name: true, slug: true, description: true } },
       reviews: { where: { isApproved: true }, select: { rating: true } },
     },
-  });
+  }) as FullProduct | null;
 
-  if (!product) return null;
+  if (!raw) return null;
 
-  const reviewCount = product.reviews.length;
+  const reviewCount = raw.reviews.length;
   const averageRating =
     reviewCount > 0
-      ? product.reviews.reduce((s, r) => s + r.rating, 0) / reviewCount
+      ? raw.reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviewCount
       : 0;
 
-  return { ...product, reviewCount, averageRating };
+  return { ...raw, reviewCount, averageRating };
 }
 
 // ─── generateMetadata ────────────────────────────────────────────────────────
