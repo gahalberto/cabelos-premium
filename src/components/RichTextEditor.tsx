@@ -121,33 +121,44 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     setImgDialogOpen(false);
   }, [editor, imgUrl, imgAlt]);
 
+  const compressImage = (file: File, maxWidth = 1280, quality = 0.82): Promise<Blob> =>
+    new Promise((resolve, reject) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("Canvas não suportado"));
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => (blob ? resolve(blob) : reject(new Error("Compressão falhou"))),
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Imagem muito grande. Máximo 5 MB.");
-      if (fileRef.current) fileRef.current.value = "";
-      return;
-    }
-
     setUploading(true);
-    const fd = new FormData();
-    fd.append("image", file);
     try {
+      const compressed = await compressImage(file);
+      const fd = new FormData();
+      fd.append("image", compressed, file.name.replace(/\.[^.]+$/, ".jpg"));
       const res = await fetch("/api/admin/upload-blog-image", { method: "POST", body: fd });
       const text = await res.text();
-      if (!res.ok) {
-        const msg = res.status === 413
-          ? "Imagem muito grande para o servidor. Peça ao admin para aumentar client_max_body_size no nginx."
-          : `Erro ${res.status} no upload`;
-        alert(msg);
-        return;
-      }
+      if (!res.ok) throw new Error(`Erro ${res.status}`);
       const data = JSON.parse(text);
       if (data.url) setImgUrl(data.url);
-    } catch {
-      alert("Erro ao enviar imagem. Tente novamente.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar imagem.");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
