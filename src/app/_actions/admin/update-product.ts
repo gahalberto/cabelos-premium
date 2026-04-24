@@ -22,6 +22,12 @@ interface UpdateProductData {
   isNew: boolean;
   lowStockThreshold?: number;
   priceOnRequest?: boolean;
+  // SEO
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
 }
 
 export async function updateProduct(id: string, data: UpdateProductData) {
@@ -56,6 +62,11 @@ export async function updateProduct(id: string, data: UpdateProductData) {
         origin: data.origin,
         images: data.images || [],
         categoryId: category.id,
+        metaTitle: data.metaTitle || null,
+        metaDescription: data.metaDescription || null,
+        keywords: data.keywords || null,
+        ogImage: data.ogImage || null,
+        canonicalUrl: data.canonicalUrl || null,
       },
       include: {
         category: {

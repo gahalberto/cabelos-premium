@@ -140,8 +140,6 @@ const WhoIsUs = () => {
             Criada especialmente para profissionais da beleza, ela combina facilidade de aplicação, segurança e resultados duradouros – tudo para deixar os cabelos de suas clientes deslumbrantes!
           </div>
         </div>
-        <div className="font-bold font-montserrat text-center pt-10">Conheça detalhes sobre todo nosso lançamento clicando aqui.
-        </div>
       </section>
 
       {/* Seção Quem Somos */}

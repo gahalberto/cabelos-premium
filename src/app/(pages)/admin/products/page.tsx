@@ -24,6 +24,7 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
+  Globe,
 } from "lucide-react";
 import { getProducts, getCategories } from "@/app/_actions/get-products";
 import { createProduct as createProductAction } from "@/app/_actions/admin/create-product";
@@ -53,6 +54,11 @@ interface Product {
   images?: string[];
   category: { name: string; slug: string };
   createdAt: Date;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  keywords?: string | null;
+  ogImage?: string | null;
+  canonicalUrl?: string | null;
 }
 
 interface Category {
@@ -90,11 +96,17 @@ const emptyForm = {
   isFeatured: false,
   isNew: false,
   priceOnRequest: false,
+  metaTitle: "",
+  metaDescription: "",
+  keywords: "",
+  ogImage: "",
+  canonicalUrl: "",
 };
 
 const AdminProductsPage = () => {
   const { data: session, status } = useSession();
   const isVendedor = (session?.user as any)?.role === "VENDEDOR";
+  const isAdmin = (session?.user as any)?.role === "ADMIN";
   const { toast } = useToast();
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -173,6 +185,11 @@ const AdminProductsPage = () => {
         stock: parseInt(formData.stock),
         lowStockThreshold: formData.lowStockThreshold ? parseInt(formData.lowStockThreshold) : 0,
         images: productImages.filter((img) => img.uploaded).map((img) => img.url || img.preview),
+        metaTitle: isAdmin ? formData.metaTitle : undefined,
+        metaDescription: isAdmin ? formData.metaDescription : undefined,
+        keywords: isAdmin ? formData.keywords : undefined,
+        ogImage: isAdmin ? formData.ogImage : undefined,
+        canonicalUrl: isAdmin ? formData.canonicalUrl : undefined,
       };
 
       if (editingProduct) {
@@ -216,6 +233,11 @@ const AdminProductsPage = () => {
       isFeatured: product.isFeatured,
       isNew: product.isNew,
       priceOnRequest: (product as any).priceOnRequest ?? false,
+      metaTitle: product.metaTitle || "",
+      metaDescription: product.metaDescription || "",
+      keywords: product.keywords || "",
+      ogImage: product.ogImage || "",
+      canonicalUrl: product.canonicalUrl || "",
     });
     setProductImages(
       product.images?.map((url, i) => ({ id: `existing-${i}`, preview: url, uploaded: true, url })) || []
@@ -394,6 +416,90 @@ const AdminProductsPage = () => {
                   <Label htmlFor="priceOnRequest">Preço Sob Consulta</Label>
                 </div>
               </div>
+
+              {/* SEO — visível apenas para ADMIN */}
+              {isAdmin && (
+                <div className="border border-amber-200 rounded-lg p-4 space-y-4 bg-amber-50/40">
+                  <div className="flex items-center gap-2 text-amber-800 font-semibold text-sm">
+                    <Globe className="h-4 w-4" />
+                    SEO do Produto
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <Label htmlFor="metaTitle">
+                        Meta Title
+                        <span className="ml-2 text-xs text-gray-400 font-normal">
+                          ({formData.metaTitle.length}/60) — deixe em branco para usar o nome do produto
+                        </span>
+                      </Label>
+                      <Input
+                        id="metaTitle"
+                        maxLength={70}
+                        value={formData.metaTitle}
+                        onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                        placeholder={`${formData.name || "Nome do produto"} | Cabelos Premium`}
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="metaDescription">
+                        Meta Description
+                        <span className="ml-2 text-xs text-gray-400 font-normal">
+                          ({formData.metaDescription.length}/160)
+                        </span>
+                      </Label>
+                      <Textarea
+                        id="metaDescription"
+                        rows={2}
+                        maxLength={200}
+                        value={formData.metaDescription}
+                        onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                        placeholder="Compre... com qualidade premium. Entrega para todo o Brasil."
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label htmlFor="keywords">
+                        Palavras-chave
+                        <span className="ml-2 text-xs text-gray-400 font-normal">separadas por vírgula</span>
+                      </Label>
+                      <Input
+                        id="keywords"
+                        value={formData.keywords}
+                        onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                        placeholder="mega hair, extensão capilar, cabelo natural"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ogImage">
+                        Imagem Open Graph (URL)
+                        <span className="ml-2 text-xs text-gray-400 font-normal">1200×630px ideal</span>
+                      </Label>
+                      <Input
+                        id="ogImage"
+                        value={formData.ogImage}
+                        onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })}
+                        placeholder="https://..."
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="canonicalUrl">
+                        URL Canônica
+                        <span className="ml-2 text-xs text-gray-400 font-normal">apenas se houver duplicata</span>
+                      </Label>
+                      <Input
+                        id="canonicalUrl"
+                        value={formData.canonicalUrl}
+                        onChange={(e) => setFormData({ ...formData, canonicalUrl: e.target.value })}
+                        placeholder={`https://cabelospremium.com.br/${formData.name.toLowerCase().replace(/\s+/g, "-") || "slug-do-produto"}`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="flex gap-2 pt-2">
                 <Button type="submit">
