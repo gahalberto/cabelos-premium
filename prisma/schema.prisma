@@ -81,42 +81,52 @@ model VerificationToken {
 
 // E-commerce Models
 model Category {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String    @unique
-  description String?
-  image       String?
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  name            String    @unique
+  slug            String    @unique
+  description     String?
+  image           String?
+  isActive        Boolean   @default(true)
+  metaTitle       String?
+  metaDescription String?
+  canonicalUrl    String?
+  keywords        String?
+  noIndex         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   products Product[]
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  price       Float
-  salePrice   Float?
-  sku         String   @unique
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  description        String?
+  price              Float
+  salePrice          Float?
+  sku                String   @unique
   stock              Int      @default(0)
   lowStockThreshold  Int      @default(0)
   priceOnRequest     Boolean  @default(false)
-  images      String[]
-  isActive    Boolean  @default(true)
-  isFeatured  Boolean  @default(false)
-  isNew       Boolean  @default(false)
-  length      String?  // comprimento do cabelo
-  texture     String?  // textura (liso, ondulado, cacheado)
-  color       String?  // cor
-  weight      String?  // peso
-  origin      String?  // origem do cabelo
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  images             String[]
+  isActive           Boolean  @default(true)
+  isFeatured         Boolean  @default(false)
+  isNew              Boolean  @default(false)
+  length             String?
+  texture            String?
+  color              String?
+  weight             String?
+  origin             String?
+  metaTitle          String?
+  metaDescription    String?
+  canonicalUrl       String?
+  keywords           String?
+  ogImage            String?
+  category           Category @relation(fields: [categoryId], references: [id])
+  categoryId         String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   orderItems   OrderItem[]
   reviews      Review[]
@@ -290,8 +300,25 @@ model ExpertApplication {
 // Configurações globais da loja (singleton – sempre id = "default")
 model StoreConfig {
   id                     String   @id @default("default")
-  freeShippingThreshold  Float    @default(0)   // 0 = desativado
+  freeShippingThreshold  Float    @default(0)
+  gtmId                  String?
+  ga4Id                  String?
+  metaPixelId            String?
+  customHeadScripts      String?  @db.Text
+  customBodyScripts      String?  @db.Text
+  robotsContent          String?  @db.Text
   updatedAt              DateTime @updatedAt
+}
+
+// Configuração de SEO por página (home, shop, sobre, contato, etc.)
+model SEOConfig {
+  id              String   @id  // identificador da página: "home" | "shop" | "sobre" | "contato"
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  keywords        String?
+  noIndex         Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
 }
 
 // Histórico de atividades do admin

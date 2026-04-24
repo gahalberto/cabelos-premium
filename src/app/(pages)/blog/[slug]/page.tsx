@@ -18,27 +18,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = post.metaTitle || post.title;
   const description = post.metaDescription || post.summary || "";
-  const url = post.canonicalUrl || `https://cabelospremium.com.br/blog/${post.slug}`;
+  // URL canônica: usa o campo do banco se preenchido, senão monta com siteUrl
+  const canonicalUrl = post.canonicalUrl || `https://cabelospremium.com.br/blog/${post.slug}`;
+  // Imagem OG: URL relativa é suficiente pois metadataBase está no root layout
+  const ogImage = post.coverImage
+    ? { url: post.coverImage, width: 1200, height: 630, alt: title }
+    : { url: "/images/logoouro.png", width: 1200, height: 630, alt: "Cabelos Premium" };
 
   return {
-    title: `${title} | Cabelos Premium`,
+    // Só o título — o template `%s | Cabelos Premium` do root layout completa
+    title,
     description,
     keywords: post.keywords || undefined,
-    alternates: { canonical: url },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title,
       description,
       type: "article",
+      url: canonicalUrl,
+      siteName: "Cabelos Premium",
+      locale: "pt_BR",
       publishedTime: post.createdAt.toISOString(),
       modifiedTime: post.updatedAt.toISOString(),
       authors: [post.author],
-      images: post.coverImage ? [{ url: post.coverImage, width: 1200, height: 630 }] : [],
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: post.coverImage ? [post.coverImage] : [],
+      images: [ogImage.url],
     },
   };
 }

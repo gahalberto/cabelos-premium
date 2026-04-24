@@ -20,6 +20,7 @@ import {
   LogOut,
   History,
   BookOpen,
+  Globe,
 } from "lucide-react";
 
 const allMenuItems = [
@@ -28,6 +29,7 @@ const allMenuItems = [
   { title: "Categorias",         href: "/admin/categories",          icon: FileText,       roles: ["ADMIN", "VENDEDOR"] },
   { title: "Pedidos",            href: "/admin/orders",              icon: ShoppingCart,   roles: ["ADMIN", "VENDEDOR"] },
   { title: "Blog",               href: "/admin/blog",                icon: BookOpen,       roles: ["ADMIN", "VENDEDOR"] },
+  { title: "SEO",                href: "/admin/seo",                 icon: Globe,          roles: ["ADMIN"] },
   { title: "Aplicações Expert",  href: "/admin/expert-applications", icon: Building2,      roles: ["ADMIN"] },
   { title: "Usuários",           href: "/admin/users",               icon: Users,          roles: ["ADMIN"] },
   { title: "Contatos",           href: "/admin/contacts",            icon: MessageSquare,  roles: ["ADMIN"] },
