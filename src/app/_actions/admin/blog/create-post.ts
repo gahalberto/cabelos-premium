@@ -56,6 +56,8 @@ export async function createPost(data: CreatePostData) {
   });
 
   revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
+  revalidatePath("/sitemap.xml");
   revalidatePath("/admin/blog");
   await logActivity({ action: "Criou", entity: "Post", entityId: post.id, entityName: post.title });
 

@@ -94,7 +94,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             <span>/</span>
             <Link href="/shop" className="hover:text-gray-700">Shop</Link>
             <span>/</span>
-            <Link href={`/shop?category=${product.category.slug}`} className="hover:text-gray-700">
+            <Link href={`/shop/${product.category.slug}`} className="hover:text-gray-700">
               {product.category.name}
             </Link>
             <span>/</span>

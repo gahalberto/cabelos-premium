@@ -57,6 +57,7 @@ export async function updatePost(data: UpdatePostData) {
 
   revalidatePath("/blog");
   revalidatePath(`/blog/${slug}`);
+  revalidatePath("/sitemap.xml");
   revalidatePath("/admin/blog");
   await logActivity({ action: "Editou", entity: "Post", entityId: post.id, entityName: post.title });
 
